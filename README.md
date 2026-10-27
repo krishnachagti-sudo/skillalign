@@ -9,13 +9,14 @@ The engine is plain Python (standard library only). The website runs that same P
 | Path | What it is |
 |---|---|
 | `engine/` | The Python engine: taxonomy, dataset, demand, alignment, learner, api |
-| `data/skills.json` | 79 skills, 393 phrases (incl. ITI trades and Marathi words) |
+| `data/skills.json` | 100 skills, 718 phrases (incl. ITI trades, business skills and Marathi words) |
 | `data/programs.json` | 10 illustrative training programs |
-| `data/job_postings.csv` | 2,236 SYNTHETIC postings across 12 Maharashtra districts (made by `tools/generate_sample_data.py`) |
+| `data/job_postings.csv` | 2,214 SYNTHETIC postings across 12 Maharashtra districts (made by `tools/generate_sample_data.py`) |
+| `data/real_postings_india_2026.csv` | 19,390 REAL Indian postings, Jan-Jun 2026, from Fliar Research (CC BY-NC 4.0), made by `tools/import_fliar.py`; see `docs/DATA-SOURCES.md` |
 | `tools/validate.py` | Runs the method on trend-free and trended synthetic data; writes `docs/validation.md` |
 | `vendor/pyodide/` | Self-hosted Pyodide 0.28.3 core (MPL-2.0), so the site needs no CDN |
 | `site/` | The web page (HTML, CSS, JS) |
-| `tests/` | 49 pytest tests |
+| `tests/` | 51 pytest tests |
 | `build.py` | Builds the publishable `dist/` folder |
 | `docs/sources.md` | Verified facts and links used in the report |
 
@@ -23,7 +24,7 @@ The engine is plain Python (standard library only). The website runs that same P
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install pytest
-.venv/bin/python -m pytest -q          # 49 tests
+.venv/bin/python -m pytest -q          # 51 tests
 .venv/bin/python tools/validate.py      # fake-trend and stability checks
 python3 build.py                        # writes dist/
 python3 -m http.server 3025 --directory dist
@@ -31,7 +32,7 @@ python3 -m http.server 3025 --directory dist
 
 Open http://localhost:3025. The first load fetches Python (about 12 MB); after that the site is cached and works offline.
 
-Regenerate the sample postings: `python3 tools/generate_sample_data.py`.
+Regenerate the sample postings: `python3 tools/generate_sample_data.py`. Re-import the real postings: download `job_postings_2026_sample.csv` from https://huggingface.co/datasets/fliarbi/job-postings-2026 and run `python3 tools/import_fliar.py <that file>`.
 
 ## Publish on a Conyso subdomain
 

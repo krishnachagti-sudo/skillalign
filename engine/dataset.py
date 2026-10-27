@@ -177,7 +177,7 @@ def parse_postings(csv_text, extractor):
             postings.append(Posting(
                 title=row["title"], description=text, date=row["date"], quarter=quarter,
                 sector=row.get("sector", ""), district=row.get("district", ""), state=row.get("state", ""),
-                skills=extractor.extract(text),
+                skills=extractor.extract(row.get("description", "")) | extractor.extract(row.get("skills", ""), as_list=True),
             ))
     except csv.Error as err:
         raise ValueError(f"could not read the CSV: {err}") from None

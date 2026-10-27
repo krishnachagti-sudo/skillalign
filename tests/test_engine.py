@@ -85,6 +85,14 @@ def test_trades_and_marathi(extractor):
     assert extractor.extract("MS-CIT certificate") == {"digital_literacy"}
 
 
+def test_skills_list_mode(extractor):
+    # in a job board's skills list, lowercase and one-letter names can only mean the skill
+    assert extractor.extract("aws|excel|react|c|r|go|sales", as_list=True) == \
+        {"cloud", "excel", "react", "c_lang", "statistics", "golang", "sales"}
+    # ...but in running text they do not
+    assert extractor.extract("excel in sales and go to the office, learn C quickly") == set()
+
+
 def test_evidence_and_unrecognised(extractor):
     assert extractor.extract_with_evidence("MySQL and PostgreSQL") == {"sql": ["MySQL", "PostgreSQL"]}
     assert extractor.unrecognised("C++, Express, Compiler Design (30 hrs)") == ["Express", "Compiler Design"]
@@ -287,6 +295,18 @@ def test_api_round_trip():
     uploaded = json.loads(api.load_uploaded("title,description,date\nData Analyst,SQL,2026-01-02\n"))
     assert uploaded["postings"] == 1 and uploaded["source"] == "uploaded"
     assert json.loads(api.use_sample())["source"] == "sample"
+
+
+def test_real_dataset_and_state_filter():
+    api.init(DATA)
+    real = json.loads(api.use_dataset("real"))
+    assert real["source"] == "real" and real["postings"] > 15000 and "Maharashtra" in real["states"]
+    maharashtra = json.loads(api.overview("", "", "Maharashtra"))
+    assert 0 < maharashtra["postings"] < real["postings"]
+    assert all(r["future_score"] is None for r in json.loads(api.programs_summary()))  # 2 quarters: no forecast
+    with pytest.raises(ValueError):
+        api.use_dataset("nope")
+    assert json.loads(api.use_dataset("sample"))["source"] == "sample"
 
 
 def test_failed_upload_keeps_old_data():

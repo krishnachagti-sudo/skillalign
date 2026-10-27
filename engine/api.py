@@ -10,16 +10,26 @@ import os
 
 from .alignment import assess_program
 from .dataset import load_postings, load_programs, parse_postings, program_from_syllabus
-from .demand import declining_skills, emerging_skills, filter_postings, role_family, sort_quarters, trend_table
+from .demand import (declining_skills, emerging_skills, filter_postings, role_family, sort_quarters, split_windows,
+                     trend_table)
 from .learner import assess_learner
 from .taxonomy import SkillExtractor, load_taxonomy
 
 
+DATASETS = {
+    "sample": {"file": "job_postings.csv",
+               "label": "Synthetic demo data (Maharashtra, 8 quarters)"},
+    "real": {"file": "real_postings_india_2026.csv",
+             "label": "Real postings, India, Jan-Jun 2026 (Fliar Research, CC BY-NC 4.0)"},
+}
+
+
 class State:
+    data_dir = "data"
     skills = {}
     extractor = None
     postings = []
-    sample_postings = []
+    loaded = {}        # dataset name -> postings, parsed once
     programs = []
     source = "sample"
     problems = []
@@ -32,11 +42,25 @@ def _json(value):
 
 
 def init(data_dir="data"):
+    State.data_dir = data_dir
     State.skills = load_taxonomy(os.path.join(data_dir, "skills.json"))
     State.extractor = SkillExtractor(State.skills)
-    State.sample_postings, State.problems = load_postings(os.path.join(data_dir, "job_postings.csv"), State.extractor)
     State.programs = load_programs(os.path.join(data_dir, "programs.json"), State.extractor)
-    _use(State.sample_postings, [], "sample")
+    State.loaded = {}
+    return use_dataset("sample")
+
+
+def use_dataset(name):
+    """Switch to a built-in dataset ('sample' or 'real'), parsing it the first time."""
+    if name not in DATASETS:
+        raise ValueError(f"unknown dataset '{name}'")
+    if name not in State.loaded:
+        path = os.path.join(State.data_dir, DATASETS[name]["file"])
+        if not os.path.exists(path):
+            raise ValueError(f"the {name} dataset is not available")
+        State.loaded[name] = load_postings(path, State.extractor)
+    postings, problems = State.loaded[name]
+    _use(postings, problems, name)
     return meta()
 
 
@@ -54,10 +78,13 @@ def _meta_dict(postings, problems, source):
             families[fam] = families.get(fam, 0) + 1
     return {
         "source": source,
+        "source_label": DATASETS[source]["label"] if source in DATASETS else "Your uploaded file",
+        "datasets": {k: v["label"] for k, v in DATASETS.items()},
         "postings": len(postings),
         "quarters": quarters,
         "sectors": sorted({p.sector for p in postings if p.sector}),
         "districts": sorted({p.district for p in postings if p.district}),
+        "states": sorted({p.state for p in postings if p.state}),
         "roles": sorted(((f, n) for f, n in families.items() if n >= 3), key=lambda r: -r[1]),
         "skills": [{"id": s.id, "name": s.name, "category": s.category} for s in State.skills.values()],
         "synonyms": sum(len(s.synonyms) for s in State.skills.values()),
@@ -71,10 +98,10 @@ def meta():
     return _json(_meta_dict(State.postings, State.problems, State.source))
 
 
-def _reports(sector="", district=""):
-    key = (sector, district)
+def _reports(sector="", district="", state=""):
+    key = (sector, district, state)
     if key not in State.cache:
-        selected = filter_postings(State.postings, sector=sector or None, district=district or None)
+        selected = filter_postings(State.postings, sector=sector or None, district=district or None, state=state or None)
         State.cache[key] = {p.id: assess_program(p, selected, State.skills) for p in State.programs}
     return State.cache[key]
 
@@ -87,13 +114,16 @@ def _skill_row(skill_id, t):
             "postings": t["count"], "n": t["n"], "series": t["series"]}
 
 
-def overview(sector="", district=""):
-    selected = filter_postings(State.postings, sector=sector or None, district=district or None)
+def overview(sector="", district="", state=""):
+    selected = filter_postings(State.postings, sector=sector or None, district=district or None, state=state or None)
     table = trend_table(selected)
     top = sorted(table.items(), key=lambda kv: kv[1]["share"], reverse=True)
-    scored = [r for r in _reports(sector, district).values() if r["scored"]]
+    scored = [r for r in _reports(sector, district, state).values() if r["scored"]]
     recent_n = next(iter(table.values()))["n"] if table else 0
+    recent_q, previous_q = split_windows(selected)
     return _json({
+        "has_previous": bool(previous_q),
+        "quarters_present": len(recent_q) + len(previous_q),
         "postings": len(selected),
         "recent_postings": recent_n,
         "skills_seen": len(table),
@@ -107,7 +137,7 @@ def overview(sector="", district=""):
 
 
 SUMMARY_KEYS = ("id", "name", "provider", "sector", "duration", "postings", "scored", "score", "score_low",
-                "score_high", "future_score", "grade", "low_data", "hours_on_demand_pct", "unmatched_pct",
+                "score_high", "future_score", "forecast_ok", "grade", "low_data", "hours_on_demand_pct", "unmatched_pct",
                 "core_count", "covered_count", "warning")
 
 
@@ -183,5 +213,4 @@ def load_uploaded(csv_text):
 
 
 def use_sample():
-    _use(State.sample_postings, [], "sample")
-    return meta()
+    return use_dataset("sample")

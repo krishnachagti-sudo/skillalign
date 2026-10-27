@@ -80,7 +80,7 @@ def matches_role(posting, patterns):
     return any(p.search(title) for p in patterns)
 
 
-def filter_postings(postings, roles=None, sector=None, district=None, quarters=None):
+def filter_postings(postings, roles=None, sector=None, district=None, quarters=None, state=None):
     patterns = role_patterns(roles) if roles else None
     selected = []
     for p in postings:
@@ -89,6 +89,8 @@ def filter_postings(postings, roles=None, sector=None, district=None, quarters=N
         if sector and p.sector != sector:
             continue
         if district and p.district != district:
+            continue
+        if state and p.state != state:
             continue
         if quarters is not None and p.quarter not in quarters:
             continue

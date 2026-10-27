@@ -14,7 +14,7 @@
 <header class="top">
   <div class="wrap top-row">
     <a class="brand" href="./"><span class="mark" aria-hidden="true"></span>SkillAlign</a>
-    <p class="source" id="source">Loading…</p>
+    <div class="source-wrap"><label class="ds"><span class="sr">Data</span><select id="dataset" aria-label="Which job postings to use" disabled><option>Loading…</option></select></label><p class="source" id="source"></p></div>
   </div>
   <div class="tabs-wrap">
     <nav class="wrap tabs" role="tablist" aria-label="Sections">
@@ -36,7 +36,7 @@
     <p class="mute" id="boot-step">Loading Python (about 12 MB, first visit only; later visits work offline)…</p>
   </div>
 
-  <p class="demo-banner" id="demo-banner" hidden><b>Demo data.</b> These job postings are synthetic, generated to show how the method works, so the numbers are not facts about real jobs. <a href="#data">Upload real postings</a> and every number is recomputed from them.</p>
+  <p class="demo-banner" id="demo-banner" hidden></p>
 
   <!-- MARKET PULSE -->
   <section id="tab-pulse" class="tab" role="tabpanel" aria-labelledby="t-pulse" hidden>
@@ -46,7 +46,8 @@
     </div>
     <div class="filters">
       <label>Sector <select id="f-sector"><option value="">All sectors</option></select></label>
-      <label>District <select id="f-district"><option value="">All districts</option></select></label>
+      <label id="f-state-wrap">State <select id="f-state"><option value="">All states</option></select></label>
+      <label>District / city <select id="f-district"><option value="">All districts</option></select></label>
     </div>
     <div class="kpis" id="kpis"></div>
     <div class="grid2">
@@ -167,7 +168,7 @@ Business communication (20 hrs) [mandatory]</textarea></label>
     <h1>How it works</h1>
     <p class="lede">Every number on this site is computed by a small Python program that runs in your browser. There is no AI model and no server: the same data always gives the same answer, and every rule below can be checked by hand.</p>
     <h2>1. Reading skills out of text</h2>
-    <p>A taxonomy lists <span id="m-skills">79</span> skills with <span id="m-syn">393</span> ways of writing them, including ITI trades and Marathi words. The text is split into words, and at each word the longest known phrase (up to four words) is looked up in a dictionary. Short ambiguous words only count in their proper form ("Excel", not "excel at"), plurals and hyphens are tolerated, and a skill right after "no", "not" or "without" is skipped. Skills come from the posting description only, never the job title.</p>
+    <p>A taxonomy lists <span id="m-skills">100</span> skills with <span id="m-syn">718</span> ways of writing them, including ITI trades, business skills and Marathi words. In a job board's skills list (like "python|sql|excel") lowercase names and one-letter languages such as C and R count too, because there they can only mean the skill. The text is split into words, and at each word the longest known phrase (up to four words) is looked up in a dictionary. Short ambiguous words only count in their proper form ("Excel", not "excel at"), plurals and hyphens are tolerated, and a skill right after "no", "not" or "without" is skipped. Skills come from the posting description only, never the job title.</p>
     <h2>2. Measuring demand, honestly</h2>
     <p>A skill's <b>share</b> is the fraction of postings that mention it, shown with a 95% range. Change compares the latest four calendar quarters with the four before. A change is only called <b>emerging</b> or <b>declining</b> when a two-proportion z-test says it is beyond chance, corrected for testing dozens of skills at once (Bonferroni), and when the same change shows up within job roles, so a shift in which roles are hiring is not mistaken for a skill trend. A straight-line forecast is drawn only with six or more quarters.</p>
     <h2>3. Scoring a program</h2>
@@ -181,7 +182,9 @@ Business communication (20 hrs) [mandatory]</textarea></label>
       <li><b>Review</b>: still asked for, but falling beyond chance within the same roles. Never applied to mandatory modules.</li>
     </ul>
     <h2>Checked against fake trends</h2>
-    <p>On sample data generated with no trends at all, across 20 random samples, this method reports no emerging or declining skills; the first version reported about one per sample. On trended samples, every trend it reported (42 of 42) was really in the data. It is deliberately cautious, so small changes go unreported. Scores move by a few points between samples, which is what the ranges show.</p>
+    <p>On sample data generated with no trends at all, across 20 random samples, this method reports no emerging or declining skills; the first version reported about one per sample. On trended samples, every trend it reported (33 of 33) was really in the data. It is deliberately cautious, so small changes go unreported. Scores move by a few points between samples, which is what the ranges show.</p>
+    <h2>Real data</h2>
+    <p>Switch the data menu at the top to <b>Real postings</b> for 19,390 Indian job ads from January to June 2026, published by Fliar Research under CC BY-NC 4.0 (<a href="https://huggingface.co/datasets/fliarbi/job-postings-2026">source</a>). They come with a skills list per posting; SkillAlign recognises 54% of the skill mentions in them, and at least one skill in 92% of postings. Two quarters is too short for trends, so this view shows real demand and scores without forecasts. It also shows a gap no synthetic sample could: only 292 of the 19,390 postings (1.5%) ask for a hands-on trade skill such as wiring, welding, plumbing or EV work, and 42 (0.2%) for bedside patient care, so courses such as Solar PV Installer and General Duty Assistant have no matching postings at all. Online job boards are not where vocational demand shows up.</p>
     <h2>Limits</h2>
     <p>Postings say what employers advertise, mostly in the formal sector, not everything a job needs. A skill outside the taxonomy is invisible, so the page lists what it could not read. The built-in data is synthetic; upload real postings for real conclusions.</p>
   </section>

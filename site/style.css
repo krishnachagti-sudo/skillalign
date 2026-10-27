@@ -226,3 +226,8 @@ table.matrix td.dark { color: #fff; }
 .tabs button:focus-visible { outline-offset: -3px; }
 body.busy, body.busy * { cursor: progress !important; }
 .foot a { color: var(--ink-soft); }
+.source-wrap { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.ds select { font-size: .82rem; padding: .25rem .4rem; width: auto; max-width: 260px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.demo-banner.real { background: var(--signal-tint); border-color: #BFE3CB; }
+.demo-banner.real a { color: var(--signal-dp); }

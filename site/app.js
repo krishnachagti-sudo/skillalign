@@ -3,6 +3,8 @@
 
 const VERSION = window.SKILLALIGN_VERSION || "dev";
 let api = null;
+let PY = null;
+let MANIFEST = null;
 let META = null;
 const rendered = new Set();
 
@@ -48,7 +50,8 @@ async function boot() {
     if (typeof loadPyodide !== "function") throw new Error("the Python runtime did not load");
     const pyodide = await loadPyodide({ indexURL: new URL("vendor/pyodide/", location.href).href });
     step.textContent = "Loading the SkillAlign engine and data…";
-    const manifest = JSON.parse(await fetchText(`py/manifest.json?v=${VERSION}`));
+    const manifest = (MANIFEST = JSON.parse(await fetchText(`py/manifest.json?v=${VERSION}`)));
+    PY = pyodide;
     pyodide.FS.mkdirTree("/app/engine");
     pyodide.FS.mkdirTree("/app/data");
     await Promise.all(manifest.files.map(async (f) => {
@@ -121,12 +124,29 @@ function dataChanged() {
   RENDER[tab]();
 }
 
+const SHORT = { sample: "Synthetic demo data", real: "Real postings: India 2026", uploaded: "Your uploaded file" };
+
 function setupStatic() {
   const q = META.quarters;
-  const tag = META.source === "sample" ? '<span class="tag sample">Synthetic demo data</span>' : '<span class="tag uploaded">Your data</span>';
-  $("#source").innerHTML = `${tag}<b>${fmt(META.postings)}</b> postings · ${esc(q[0] || "")} to ${esc(q[q.length - 1] || "")}`;
-  $("#demo-banner").hidden = META.source !== "sample";
+  const ds = $("#dataset");
+  const names = Object.keys(META.datasets).concat(META.source === "uploaded" ? ["uploaded"] : []);
+  ds.innerHTML = names.map((k) => `<option value="${esc(k)}">${esc(SHORT[k] || k)}</option>`).join("");
+  ds.value = META.source;
+  ds.disabled = false;
+  $("#source").innerHTML = `<b>${fmt(META.postings)}</b> postings · ${esc(q[0] || "")} to ${esc(q[q.length - 1] || "")}`;
+  const banner = $("#demo-banner");
+  banner.classList.toggle("real", META.source !== "sample");
+  if (META.source === "sample") {
+    banner.innerHTML = '<b>Demo data.</b> These job postings are synthetic, generated to show how the method works, so the numbers are not facts about real jobs. Switch the data menu to <b>Real postings</b>, or <a href="#data">upload your own</a>.';
+  } else if (META.source === "real") {
+    banner.innerHTML = `<b>Real postings.</b> ${fmt(META.postings)} Indian job ads, ${esc(q[0])} to ${esc(q[q.length - 1])}, from Fliar Research (<a href="https://huggingface.co/datasets/fliarbi/job-postings-2026">CC BY-NC 4.0</a>). Two quarters only, so shares and scores but no trends or forecasts. Online job boards list few vocational jobs, so trade courses may have no matching postings.`;
+  } else {
+    banner.innerHTML = q.length < 6 ? `<b>Your data.</b> ${q.length} quarter${q.length === 1 ? "" : "s"} of postings: shares and scores, but at least six quarters are needed for forecasts and eight for year-on-year trends.` : "<b>Your data.</b> Every number on the site is computed from your file.";
+  }
+  banner.hidden = false;
   fillSelect($("#f-sector"), META.sectors, "All sectors");
+  fillSelect($("#f-state"), META.states, "All states");
+  $("#f-state-wrap").hidden = META.states.length < 2;
   fillSelect($("#f-district"), META.districts, "All districts");
   $("#role-list").innerHTML = META.roles.map(([r]) => `<option value="${esc(r)}">`).join("");
   $("#l-role").innerHTML = META.roles.map(([r, n]) => `<option value="${esc(r)}">${esc(titleCase(r))} (${n} postings)</option>`).join("");
@@ -192,7 +212,7 @@ function ring(value) {
 // ---- market pulse ------------------------------------------------------------
 let PULSE = null;
 function renderPulse() {
-  PULSE = call("overview", $("#f-sector").value, $("#f-district").value);
+  PULSE = call("overview", $("#f-sector").value, $("#f-district").value, $("#f-state").value);
   const o = PULSE;
   $("#kpis").innerHTML = [
     [fmt(o.postings), "postings in this view"],
@@ -208,7 +228,9 @@ function renderPulse() {
       <span class="num">${pct(r.share)}</span><span class="num">${growth(r)}</span></button></li>`).join("")
     : '<li class="empty">No postings match these filters.</li>';
   const mover = (r) => `<li><button type="button" data-skill="${esc(r.id)}"><span>${esc(r.name)}<span class="sub">${pct(r.share)} of postings${r.within_growth != null ? ` · ${r.within_growth > 0 ? "+" : "−"}${Math.abs(Math.round(r.within_growth * 100))}% within roles` : ""}</span></span>${sparkline(r.series)}<span class="num">${growth(r)}</span></button></li>`;
-  const quiet = `No change here passes the significance test with ${fmt(o.recent_postings)} recent postings. Smaller samples need bigger changes before SkillAlign calls them a trend.`;
+  const quiet = !o.has_previous
+    ? `Trends compare the latest four quarters with the four before; this data has no earlier year to compare with (${o.quarters_present} quarter${o.quarters_present === 1 ? "" : "s"}).`
+    : `No change here passes the significance test with ${fmt(o.recent_postings)} recent postings. Smaller samples need bigger changes before SkillAlign calls them a trend.`;
   $("#emerging").innerHTML = o.emerging.map(mover).join("") || `<li class="empty">${quiet}</li>`;
   $("#declining").innerHTML = o.declining.map(mover).join("") || `<li class="empty">${quiet}</li>`;
 }
@@ -229,6 +251,33 @@ $("#tab-pulse").addEventListener("click", (e) => {
 $("#trend-close").addEventListener("click", () => ($("#trend-card").hidden = true));
 $("#f-sector").addEventListener("change", renderPulse);
 $("#f-district").addEventListener("change", renderPulse);
+$("#f-state").addEventListener("change", renderPulse);
+
+$("#dataset").addEventListener("change", async (e) => {
+  if (!api || e.target.value === META.source || e.target.value === "uploaded") return;
+  e.target.disabled = true;
+  $("#source").textContent = "Loading postings…";
+  busy(true);
+  await new Promise((r) => setTimeout(r, 30)); // let the message paint before Python runs
+  try {
+    const lazy = MANIFEST.lazy?.[e.target.value];
+    if (lazy && !PY.FS.analyzePath(`/app/${lazy}`).exists) {
+      $("#source").textContent = "Downloading postings…";
+      PY.FS.writeFile(`/app/${lazy}`, await fetchText(`py/${lazy}?v=${MANIFEST.version}`));
+      $("#source").textContent = "Reading postings…";
+      await new Promise((r) => setTimeout(r, 30));
+    }
+    META = call("use_dataset", e.target.value);
+    for (const id of ["#f-sector", "#f-state", "#f-district"]) $(id).value = "";
+    dataChanged();
+  } catch (ex) {
+    $("#source").textContent = `Could not load: ${ex.message}`;
+    e.target.value = META.source;
+  } finally {
+    e.target.disabled = false;
+    busy(false);
+  }
+});
 
 // ---- programs -----------------------------------------------------------------
 function scoreCell(r) {
@@ -246,7 +295,7 @@ function renderPrograms() {
       <span class="pname">${esc(r.name)}<span class="psub">${esc(r.provider)} · ${esc(r.duration)} · ${fmt(r.postings)} matching postings${r.warning ? ` · <span class="warn-text">${esc(r.warning)}</span>` : ""}</span></span>
       <span class="meter col-meter">${r.scored ? `<i style="width:${r.score}%;background:${scoreColor(r.score)}"></i>` : ""}</span>
       <span>${scoreCell(r)}</span>
-      <span class="num">${r.scored ? Math.round(r.future_score) : "–"} ${r.scored && r.future_score < r.score - 2 ? '<span class="down">↓</span>' : r.scored && r.future_score > r.score + 2 ? '<span class="up">↑</span>' : ""}</span>
+      <span class="num">${r.scored && r.forecast_ok ? Math.round(r.future_score) : "–"} ${r.scored && r.forecast_ok && r.future_score < r.score - 2 ? '<span class="down">↓</span>' : r.scored && r.forecast_ok && r.future_score > r.score + 2 ? '<span class="up">↑</span>' : ""}</span>
       <span class="num col-hours">${r.scored ? `${Math.round(r.hours_on_demand_pct)}%` : "–"}</span></button>`).join("");
 }
 
@@ -278,7 +327,7 @@ function reportHTML(r) {
     ${r.warnings.map((w) => `<p class="notice">${esc(w)}</p>`).join("")}
     ${r.scored ? `<div class="scores">
       <div class="kpi"><div class="v" style="color:${scoreColor(r.score)}">${Math.round(r.score)}</div><div class="l">alignment today · ${r.grade}${borderline(r) ? " (borderline)" : ""}${r.score_low != null ? `<br>range ${Math.round(r.score_low)}–${Math.round(r.score_high)}` : ""}</div></div>
-      <div class="kpi"><div class="v">${Math.round(r.future_score)}</div><div class="l">alignment next year if unchanged</div></div>
+      <div class="kpi"><div class="v">${r.forecast_ok ? Math.round(r.future_score) : "–"}</div><div class="l">${r.forecast_ok ? "alignment next year if unchanged" : "no forecast: needs six quarters of postings"}</div></div>
       <div class="kpi"><div class="v">${r.covered_count} / ${r.core_count}</div><div class="l">core skills taught</div></div>
       <div class="kpi"><div class="v">${Math.round(r.hours_on_demand_pct)}%</div><div class="l">of ${fmt(r.hours_total)} hours on core skills</div></div>
     </div>
@@ -302,9 +351,9 @@ document.addEventListener("click", (e) => {
 function downloadReport(r) {
   const lines = [
     `# SkillAlign report: ${r.name}`, "",
-    `Compared with ${r.postings} job postings for: ${r.target_roles.join(", ")} (${META.source === "sample" ? "SYNTHETIC demo data" : "uploaded data"}, ${META.quarters[0]} to ${META.quarters[META.quarters.length - 1]}).`, "",
+    `Compared with ${r.postings} job postings for: ${r.target_roles.join(", ")} (${META.source === "sample" ? "SYNTHETIC demo data" : META.source === "real" ? "real postings, Fliar Research 2026, CC BY-NC 4.0" : "uploaded data"}, ${META.quarters[0]} to ${META.quarters[META.quarters.length - 1]}).`, "",
     `- Alignment today: ${r.score} / 100 (${r.grade}${borderline(r) ? ", borderline" : ""}), range ${r.score_low ?? "-"} to ${r.score_high ?? "-"}`,
-    `- Alignment next year if unchanged: ${r.future_score} / 100`,
+    `- Alignment next year if unchanged: ${r.forecast_ok ? `${r.future_score} / 100` : "no forecast (fewer than six quarters of postings)"}`,
     `- Core skills taught: ${r.covered_count} of ${r.core_count}`,
     `- Training hours on core skills: ${r.hours_on_demand_pct}% of ${r.hours_total}`,
     ...r.warnings.map((w) => `- Note: ${w}`), "",

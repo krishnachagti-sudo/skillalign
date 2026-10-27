@@ -1,88 +1,1420 @@
 [
-  {"id": "python", "name": "Python", "category": "Software & IT", "synonyms": ["python", "python 3", "python programming", "pandas", "django", "flask"]},
-  {"id": "java", "name": "Java", "category": "Software & IT", "synonyms": ["java", "core java", "java programming", "spring boot", "j2ee"]},
-  {"id": "javascript", "name": "JavaScript", "category": "Software & IT", "synonyms": ["javascript", "=JS", "es6", "typescript"]},
-  {"id": "c_lang", "name": "C Programming", "category": "Software & IT", "synonyms": ["c programming", "programming in c", "c language", "embedded c", "ansi c"]},
-  {"id": "cpp", "name": "C++", "category": "Software & IT", "synonyms": ["c++", "cpp"]},
-  {"id": "csharp", "name": "C# and .NET", "category": "Software & IT", "synonyms": ["c#", ".net", "asp.net", "dotnet"]},
-  {"id": "html_css", "name": "HTML & CSS", "category": "Software & IT", "synonyms": ["html", "css", "html/css", "html and css", "html5", "css3", "web page design", "bootstrap"]},
-  {"id": "react", "name": "React", "category": "Software & IT", "synonyms": ["=React", "react.js", "reactjs"]},
-  {"id": "nodejs", "name": "Node.js", "category": "Software & IT", "synonyms": ["node.js", "nodejs", "express.js", "expressjs"]},
-  {"id": "mobile_dev", "name": "Mobile App Development", "category": "Software & IT", "synonyms": ["android development", "android app", "flutter", "kotlin", "react native", "mobile app development", "ios development", "swift programming"]},
-  {"id": "sql", "name": "SQL & Databases", "category": "Software & IT", "synonyms": ["sql", "mysql", "postgresql", "database queries", "rdbms", "=DBMS", "oracle database", "=Oracle", "sql server", "database management"]},
-  {"id": "nosql", "name": "NoSQL Databases", "category": "Software & IT", "synonyms": ["mongodb", "nosql", "firebase", "dynamodb"]},
-  {"id": "dsa", "name": "Data Structures & Algorithms", "category": "Software & IT", "synonyms": ["data structure", "algorithms", "=DSA"]},
-  {"id": "os", "name": "Operating Systems", "category": "Software & IT", "synonyms": ["operating system"]},
-  {"id": "linux", "name": "Linux & Shell", "category": "Software & IT", "synonyms": ["linux", "unix", "shell scripting", "bash scripting"]},
-  {"id": "networking", "name": "Computer Networking", "category": "Software & IT", "synonyms": ["computer network", "computer networking", "=CCNA", "tcp/ip", "network administration", "routing and switching"]},
-  {"id": "git", "name": "Git & Version Control", "category": "Software & IT", "synonyms": ["git", "github", "gitlab", "version control"]},
-  {"id": "rest_api", "name": "REST APIs", "category": "Software & IT", "synonyms": ["rest api", "restful service", "api integration", "web service"]},
-  {"id": "testing", "name": "Software Testing", "category": "Software & IT", "synonyms": ["software testing", "unit testing", "test case", "manual testing", "selenium", "test automation"]},
-  {"id": "cloud", "name": "Cloud Computing", "category": "Software & IT", "synonyms": ["cloud computing", "=AWS", "azure", "google cloud", "=GCP", "cloud platform"]},
-  {"id": "devops", "name": "DevOps & Containers", "category": "Software & IT", "synonyms": ["devops", "docker", "kubernetes", "ci/cd", "containerisation", "containerization", "jenkins"]},
-  {"id": "cybersecurity", "name": "Cybersecurity", "category": "Software & IT", "synonyms": ["cybersecurity", "cyber security", "network security", "information security", "=SIEM", "ethical hacking", "penetration testing"]},
-  {"id": "cloud_security", "name": "Cloud Security", "category": "Software & IT", "synonyms": ["cloud security", "=IAM policies", "zero trust"]},
-
-  {"id": "data_analysis", "name": "Data Analysis", "category": "Data & AI", "synonyms": ["data analysis", "data analytics", "analysing data", "analyzing data", "business analytics"]},
-  {"id": "excel", "name": "MS Excel", "category": "Data & AI", "synonyms": ["ms excel", "microsoft excel", "advanced excel", "=Excel", "spreadsheet", "pivot table", "vlookup", "एक्सेल"]},
-  {"id": "data_viz", "name": "Data Visualisation", "category": "Data & AI", "synonyms": ["power bi", "powerbi", "tableau", "data visualisation", "data visualization", "dashboarding", "dashboard design"]},
-  {"id": "statistics", "name": "Statistics", "category": "Data & AI", "synonyms": ["statistics", "statistical analysis", "hypothesis testing"]},
-  {"id": "ml", "name": "Machine Learning", "category": "Data & AI", "synonyms": ["machine learning", "ml model", "predictive modelling", "predictive modeling", "scikit-learn", "deep learning"]},
-  {"id": "genai", "name": "Generative AI Tools", "category": "Data & AI", "synonyms": ["generative ai", "genai", "gen ai", "ai tool", "chatgpt", "=LLM", "ai assistant", "copilot"]},
-  {"id": "prompt_eng", "name": "Prompt Engineering", "category": "Data & AI", "synonyms": ["prompt engineering", "prompt writing", "writing prompts"]},
-
-  {"id": "ms_office", "name": "MS Office (Word, PowerPoint)", "category": "Office & Business", "synonyms": ["ms office", "microsoft office", "ms word", "powerpoint", "ms powerpoint"]},
-  {"id": "typing", "name": "Typing Speed", "category": "Office & Business", "synonyms": ["typing", "typing speed", "touch typing", "=WPM", "wpm"]},
-  {"id": "data_entry", "name": "Data Entry", "category": "Office & Business", "synonyms": ["data entry", "record keeping", "form filling", "डेटा एंट्री"]},
-  {"id": "tally", "name": "Tally & Accounting Software", "category": "Office & Business", "synonyms": ["=Tally", "tally prime", "tally erp", "accounting software", "bookkeeping", "टॅली"]},
-  {"id": "gst", "name": "GST & Tax Compliance", "category": "Office & Business", "synonyms": ["gst", "gst filing", "gst return", "tax compliance", "e-invoicing", "=TDS"]},
-  {"id": "digital_marketing", "name": "Digital Marketing", "category": "Office & Business", "synonyms": ["digital marketing", "online marketing", "performance marketing", "google ads"]},
-  {"id": "seo", "name": "SEO", "category": "Office & Business", "synonyms": ["seo", "search engine optimisation", "search engine optimization"]},
-  {"id": "social_media", "name": "Social Media Marketing", "category": "Office & Business", "synonyms": ["social media marketing", "social media", "instagram marketing", "content calendar"]},
-  {"id": "ecommerce", "name": "E-commerce Operations", "category": "Office & Business", "synonyms": ["e-commerce", "ecommerce", "online store", "marketplace listing", "=ONDC"]},
-
-  {"id": "wiring", "name": "Electrical Wiring", "category": "Manufacturing & Trades", "synonyms": ["electrical wiring", "house wiring", "wiring", "electrical installation", "panel wiring", "वायरिंग", "विद्युत जोडणी"]},
-  {"id": "motors", "name": "Electric Motors & Transformers", "category": "Manufacturing & Trades", "synonyms": ["electric motor", "motor rewinding", "motor winding", "transformer", "electrical machine", "dc motor"]},
-  {"id": "plc", "name": "PLC & Industrial Automation", "category": "Manufacturing & Trades", "synonyms": ["=PLC", "plc programming", "industrial automation", "=SCADA"]},
-  {"id": "iot", "name": "IoT & Smart Sensors", "category": "Manufacturing & Trades", "synonyms": ["=IoT", "internet of things", "smart sensor", "industry 4.0", "predictive maintenance"]},
-  {"id": "cnc", "name": "CNC Operation", "category": "Manufacturing & Trades", "synonyms": ["cnc", "cnc operation", "cnc machining", "=VMC", "g-code"]},
-  {"id": "welding", "name": "Welding", "category": "Manufacturing & Trades", "synonyms": ["welding", "arc welding", "mig welding", "tig welding", "वेल्डिंग"]},
-  {"id": "autocad", "name": "AutoCAD & Drawing Reading", "category": "Manufacturing & Trades", "synonyms": ["autocad", "=CAD", "engineering drawing", "blueprint reading", "solidworks"]},
-  {"id": "quality_control", "name": "Quality Control", "category": "Manufacturing & Trades", "synonyms": ["quality control", "quality inspection", "=5S", "kaizen", "measuring instrument"]},
-  {"id": "safety", "name": "Workplace Safety", "category": "Manufacturing & Trades", "synonyms": ["workplace safety", "industrial safety", "safety procedure", "=PPE", "lockout tagout"]},
-  {"id": "plumbing", "name": "Plumbing", "category": "Manufacturing & Trades", "synonyms": ["plumbing", "pipe fitting", "plumber", "sanitary fitting", "प्लंबिंग"]},
-  {"id": "carpentry", "name": "Carpentry", "category": "Manufacturing & Trades", "synonyms": ["carpentry", "woodwork", "furniture making", "सुतारकाम"]},
-  {"id": "masonry", "name": "Masonry & Construction", "category": "Manufacturing & Trades", "synonyms": ["masonry", "bar bending", "shuttering", "construction site work", "tiling"]},
-  {"id": "hvac", "name": "Refrigeration & AC", "category": "Manufacturing & Trades", "synonyms": ["refrigeration", "air conditioning", "=HVAC", "ac repair", "ac servicing", "एसी दुरुस्ती"]},
-  {"id": "electronics", "name": "Electronics Repair", "category": "Manufacturing & Trades", "synonyms": ["electronics repair", "soldering", "circuit board", "pcb assembly"]},
-  {"id": "mobile_repair", "name": "Mobile Phone Repair", "category": "Manufacturing & Trades", "synonyms": ["mobile phone repair", "mobile repair", "smartphone repair", "मोबाईल दुरुस्ती"]},
-  {"id": "tailoring", "name": "Tailoring & Garments", "category": "Manufacturing & Trades", "synonyms": ["tailoring", "sewing machine operation", "garment making", "stitching", "sewing", "शिवणकाम"]},
-
-  {"id": "solar_pv", "name": "Solar PV Installation", "category": "Green Energy & Automotive", "synonyms": ["solar pv", "solar panel installation", "rooftop solar", "solar installation", "solar inverter", "सौर पॅनेल"]},
-  {"id": "ev_maint", "name": "EV Maintenance", "category": "Green Energy & Automotive", "synonyms": ["ev maintenance", "electric vehicle servicing", "ev servicing", "ev diagnostics", "electric vehicle"]},
-  {"id": "bms", "name": "Battery Management Systems", "category": "Green Energy & Automotive", "synonyms": ["battery management system", "battery management", "=BMS", "lithium-ion battery", "lithium-ion batteries", "battery pack"]},
-  {"id": "energy_audit", "name": "Energy Auditing", "category": "Green Energy & Automotive", "synonyms": ["energy audit", "energy auditing", "energy efficiency"]},
-  {"id": "ic_engine", "name": "IC Engine Servicing", "category": "Green Energy & Automotive", "synonyms": ["ic engine", "engine overhaul", "petrol engine", "diesel engine", "engine servicing"]},
-  {"id": "auto_chassis", "name": "Transmission, Brakes & Chassis", "category": "Green Energy & Automotive", "synonyms": ["gearbox", "brake system", "clutch", "suspension system", "transmission repair", "wheel alignment"]},
-
-  {"id": "patient_care", "name": "Patient Care", "category": "Healthcare", "synonyms": ["patient care", "bedside care", "patient handling", "elderly care", "रुग्णसेवा", "रुग्ण सेवा"]},
-  {"id": "vitals", "name": "Vital Signs Monitoring", "category": "Healthcare", "synonyms": ["vital signs", "vitals monitoring", "blood pressure measurement", "pulse oximetry"]},
-  {"id": "infection_control", "name": "Infection Control", "category": "Healthcare", "synonyms": ["infection control", "biomedical waste", "sterilisation", "sterilization", "hand hygiene"]},
-  {"id": "first_aid", "name": "First Aid & BLS", "category": "Healthcare", "synonyms": ["first aid", "basic life support", "=BLS", "=CPR", "प्रथमोपचार"]},
-  {"id": "ehr", "name": "Electronic Health Records", "category": "Healthcare", "synonyms": ["electronic health record", "=EHR", "hospital information system", "=ABHA"]},
-  {"id": "telehealth", "name": "Telehealth Tools", "category": "Healthcare", "synonyms": ["telehealth", "telemedicine", "esanjeevani", "teleconsultation"]},
-  {"id": "beauty", "name": "Beauty & Wellness", "category": "Healthcare", "synonyms": ["beautician", "beauty therapy", "hair styling", "makeup artistry", "skin care", "ब्युटीशियन"]},
-
-  {"id": "customer_service", "name": "Customer Service", "category": "Retail, Logistics & Hospitality", "synonyms": ["customer service", "customer handling", "customer support", "customer care", "ग्राहक सेवा"]},
-  {"id": "pos", "name": "POS Billing", "category": "Retail, Logistics & Hospitality", "synonyms": ["pos billing", "point of sale", "=POS", "billing counter", "upi payment"]},
-  {"id": "inventory", "name": "Inventory Management", "category": "Retail, Logistics & Hospitality", "synonyms": ["inventory management", "stock management", "inventory", "stock audit"]},
-  {"id": "wms", "name": "Warehouse Management Systems", "category": "Retail, Logistics & Hospitality", "synonyms": ["warehouse management system", "=WMS", "barcode scanning", "handheld scanner"]},
-  {"id": "hospitality", "name": "Hospitality & Food Service", "category": "Retail, Logistics & Hospitality", "synonyms": ["food and beverage service", "housekeeping", "front office", "hospitality"]},
-  {"id": "food_processing", "name": "Food Processing & Safety", "category": "Retail, Logistics & Hospitality", "synonyms": ["food processing", "=FSSAI", "food safety"]},
-
-  {"id": "communication", "name": "Communication", "category": "Core & Soft Skills", "synonyms": ["communication skill", "communication", "communicate clearly", "संवाद कौशल्य"]},
-  {"id": "english", "name": "English Proficiency", "category": "Core & Soft Skills", "synonyms": ["spoken english", "english communication", "english proficiency", "basic english", "english", "इंग्रजी"]},
-  {"id": "teamwork", "name": "Teamwork", "category": "Core & Soft Skills", "synonyms": ["teamwork", "team player", "working in teams"]},
-  {"id": "problem_solving", "name": "Problem Solving", "category": "Core & Soft Skills", "synonyms": ["problem solving", "problem-solving", "troubleshooting", "analytical thinking"]},
-  {"id": "digital_literacy", "name": "Digital Literacy", "category": "Core & Soft Skills", "synonyms": ["digital literacy", "basic computer skill", "computer basics", "smartphone app", "digital tool", "=MS-CIT", "mscit", "संगणक ज्ञान", "संगणक"]}
+ {
+  "id": "python",
+  "name": "Python",
+  "category": "Software & IT",
+  "synonyms": [
+   "python",
+   "python 3",
+   "python programming",
+   "pandas",
+   "django",
+   "flask",
+   "fastapi",
+   "numpy"
+  ]
+ },
+ {
+  "id": "java",
+  "name": "Java",
+  "category": "Software & IT",
+  "synonyms": [
+   "java",
+   "core java",
+   "java programming",
+   "spring boot",
+   "j2ee",
+   "spring",
+   "hibernate",
+   "maven",
+   "junit"
+  ]
+ },
+ {
+  "id": "javascript",
+  "name": "JavaScript",
+  "category": "Software & IT",
+  "synonyms": [
+   "javascript",
+   "=JS",
+   "es6",
+   "typescript",
+   "~js",
+   "jquery"
+  ]
+ },
+ {
+  "id": "c_lang",
+  "name": "C Programming",
+  "category": "Software & IT",
+  "synonyms": [
+   "c programming",
+   "programming in c",
+   "c language",
+   "embedded c",
+   "ansi c",
+   "~c"
+  ]
+ },
+ {
+  "id": "cpp",
+  "name": "C++",
+  "category": "Software & IT",
+  "synonyms": [
+   "c++",
+   "cpp"
+  ]
+ },
+ {
+  "id": "csharp",
+  "name": "C# and .NET",
+  "category": "Software & IT",
+  "synonyms": [
+   "c#",
+   ".net",
+   "asp.net",
+   "dotnet"
+  ]
+ },
+ {
+  "id": "html_css",
+  "name": "HTML & CSS",
+  "category": "Software & IT",
+  "synonyms": [
+   "html",
+   "css",
+   "html/css",
+   "html and css",
+   "html5",
+   "css3",
+   "web page design",
+   "bootstrap"
+  ]
+ },
+ {
+  "id": "react",
+  "name": "React",
+  "category": "Software & IT",
+  "synonyms": [
+   "=React",
+   "react.js",
+   "reactjs",
+   "~react",
+   "next.js",
+   "nextjs",
+   "redux"
+  ]
+ },
+ {
+  "id": "nodejs",
+  "name": "Node.js",
+  "category": "Software & IT",
+  "synonyms": [
+   "node.js",
+   "nodejs",
+   "express.js",
+   "expressjs"
+  ]
+ },
+ {
+  "id": "mobile_dev",
+  "name": "Mobile App Development",
+  "category": "Software & IT",
+  "synonyms": [
+   "android development",
+   "android app",
+   "flutter",
+   "kotlin",
+   "react native",
+   "mobile app development",
+   "ios development",
+   "swift programming",
+   "~android",
+   "~ios"
+  ]
+ },
+ {
+  "id": "sql",
+  "name": "SQL & Databases",
+  "category": "Software & IT",
+  "synonyms": [
+   "sql",
+   "mysql",
+   "postgresql",
+   "database queries",
+   "rdbms",
+   "=DBMS",
+   "oracle database",
+   "=Oracle",
+   "sql server",
+   "database management",
+   "~oracle",
+   "~dbms",
+   "pl/sql",
+   "data modeling",
+   "data modelling"
+  ]
+ },
+ {
+  "id": "nosql",
+  "name": "NoSQL Databases",
+  "category": "Software & IT",
+  "synonyms": [
+   "mongodb",
+   "nosql",
+   "firebase",
+   "dynamodb",
+   "redis"
+  ]
+ },
+ {
+  "id": "dsa",
+  "name": "Data Structures & Algorithms",
+  "category": "Software & IT",
+  "synonyms": [
+   "data structure",
+   "algorithms",
+   "=DSA"
+  ]
+ },
+ {
+  "id": "os",
+  "name": "Operating Systems",
+  "category": "Software & IT",
+  "synonyms": [
+   "operating system",
+   "~windows"
+  ]
+ },
+ {
+  "id": "linux",
+  "name": "Linux & Shell",
+  "category": "Software & IT",
+  "synonyms": [
+   "linux",
+   "unix",
+   "shell scripting",
+   "bash scripting",
+   "powershell",
+   "linux administration",
+   "unix administration",
+   "~bash",
+   "~scripting"
+  ]
+ },
+ {
+  "id": "networking",
+  "name": "Computer Networking",
+  "category": "Software & IT",
+  "synonyms": [
+   "computer network",
+   "computer networking",
+   "=CCNA",
+   "tcp/ip",
+   "network administration",
+   "routing and switching",
+   "~networking",
+   "network engineering",
+   "firewall",
+   "dns",
+   "active directory"
+  ]
+ },
+ {
+  "id": "git",
+  "name": "Git & Version Control",
+  "category": "Software & IT",
+  "synonyms": [
+   "git",
+   "github",
+   "gitlab",
+   "version control"
+  ]
+ },
+ {
+  "id": "rest_api",
+  "name": "REST APIs",
+  "category": "Software & IT",
+  "synonyms": [
+   "rest api",
+   "restful service",
+   "api integration",
+   "web service",
+   "~apis",
+   "~api",
+   "~rest",
+   "restful api",
+   "json",
+   "xml",
+   "graphql",
+   "soap"
+  ]
+ },
+ {
+  "id": "testing",
+  "name": "Software Testing",
+  "category": "Software & IT",
+  "synonyms": [
+   "software testing",
+   "unit testing",
+   "test case",
+   "manual testing",
+   "selenium",
+   "test automation",
+   "~testing",
+   "quality assurance testing",
+   "qa testing",
+   "postman",
+   "api testing",
+   "playwright",
+   "automation testing",
+   "debugging"
+  ]
+ },
+ {
+  "id": "cloud",
+  "name": "Cloud Computing",
+  "category": "Software & IT",
+  "synonyms": [
+   "cloud computing",
+   "=AWS",
+   "azure",
+   "google cloud",
+   "=GCP",
+   "cloud platform",
+   "~cloud",
+   "~aws",
+   "~gcp",
+   "amazon web services",
+   "windows azure",
+   "microsoft azure"
+  ]
+ },
+ {
+  "id": "devops",
+  "name": "DevOps & Containers",
+  "category": "Software & IT",
+  "synonyms": [
+   "devops",
+   "docker",
+   "kubernetes",
+   "ci/cd",
+   "containerisation",
+   "containerization",
+   "jenkins",
+   "terraform",
+   "ansible",
+   "cicd",
+   "grafana",
+   "prometheus",
+   "github actions",
+   "infrastructure as code"
+  ]
+ },
+ {
+  "id": "cybersecurity",
+  "name": "Cybersecurity",
+  "category": "Software & IT",
+  "synonyms": [
+   "cybersecurity",
+   "cyber security",
+   "network security",
+   "information security",
+   "=SIEM",
+   "ethical hacking",
+   "penetration testing",
+   "~security",
+   "vulnerability assessment",
+   "soc analysis",
+   "splunk",
+   "oauth"
+  ]
+ },
+ {
+  "id": "cloud_security",
+  "name": "Cloud Security",
+  "category": "Software & IT",
+  "synonyms": [
+   "cloud security",
+   "=IAM policies",
+   "zero trust",
+   "~iam"
+  ]
+ },
+ {
+  "id": "data_analysis",
+  "name": "Data Analysis",
+  "category": "Data & AI",
+  "synonyms": [
+   "data analysis",
+   "data analytics",
+   "analysing data",
+   "analyzing data",
+   "business analytics",
+   "analytics",
+   "reporting",
+   "mis reporting",
+   "google analytics",
+   "web analytics"
+  ]
+ },
+ {
+  "id": "excel",
+  "name": "MS Excel",
+  "category": "Data & AI",
+  "synonyms": [
+   "ms excel",
+   "microsoft excel",
+   "advanced excel",
+   "=Excel",
+   "spreadsheet",
+   "pivot table",
+   "vlookup",
+   "एक्सेल",
+   "~excel",
+   "google sheets",
+   "ms-excel"
+  ]
+ },
+ {
+  "id": "data_viz",
+  "name": "Data Visualisation",
+  "category": "Data & AI",
+  "synonyms": [
+   "power bi",
+   "powerbi",
+   "tableau",
+   "data visualisation",
+   "data visualization",
+   "dashboarding",
+   "dashboard design"
+  ]
+ },
+ {
+  "id": "statistics",
+  "name": "Statistics",
+  "category": "Data & AI",
+  "synonyms": [
+   "statistics",
+   "statistical analysis",
+   "hypothesis testing",
+   "~r",
+   "r programming",
+   "statistical modelling",
+   "statistical modeling"
+  ]
+ },
+ {
+  "id": "ml",
+  "name": "Machine Learning",
+  "category": "Data & AI",
+  "synonyms": [
+   "machine learning",
+   "ml model",
+   "predictive modelling",
+   "predictive modeling",
+   "scikit-learn",
+   "deep learning",
+   "artificial intelligence",
+   "~ai",
+   "pytorch",
+   "tensorflow",
+   "data science",
+   "nlp",
+   "natural language processing",
+   "computer vision",
+   "keras",
+   "mlops",
+   "~ml"
+  ]
+ },
+ {
+  "id": "genai",
+  "name": "Generative AI Tools",
+  "category": "Data & AI",
+  "synonyms": [
+   "generative ai",
+   "genai",
+   "gen ai",
+   "ai tool",
+   "chatgpt",
+   "=LLM",
+   "ai assistant",
+   "copilot",
+   "~llm",
+   "rag",
+   "langchain",
+   "large language model",
+   "openai api",
+   "~llms",
+   "agentic ai",
+   "langgraph"
+  ]
+ },
+ {
+  "id": "prompt_eng",
+  "name": "Prompt Engineering",
+  "category": "Data & AI",
+  "synonyms": [
+   "prompt engineering",
+   "prompt writing",
+   "writing prompts"
+  ]
+ },
+ {
+  "id": "ms_office",
+  "name": "MS Office (Word, PowerPoint)",
+  "category": "Office & Business",
+  "synonyms": [
+   "ms office",
+   "microsoft office",
+   "ms word",
+   "powerpoint",
+   "ms powerpoint",
+   "~word",
+   "microsoft word",
+   "ms office suite"
+  ]
+ },
+ {
+  "id": "typing",
+  "name": "Typing Speed",
+  "category": "Office & Business",
+  "synonyms": [
+   "typing",
+   "typing speed",
+   "touch typing",
+   "=WPM",
+   "wpm"
+  ]
+ },
+ {
+  "id": "data_entry",
+  "name": "Data Entry",
+  "category": "Office & Business",
+  "synonyms": [
+   "data entry",
+   "record keeping",
+   "form filling",
+   "डेटा एंट्री"
+  ]
+ },
+ {
+  "id": "tally",
+  "name": "Tally & Accounting Software",
+  "category": "Office & Business",
+  "synonyms": [
+   "=Tally",
+   "tally prime",
+   "tally erp",
+   "accounting software",
+   "bookkeeping",
+   "टॅली",
+   "~tally"
+  ]
+ },
+ {
+  "id": "gst",
+  "name": "GST & Tax Compliance",
+  "category": "Office & Business",
+  "synonyms": [
+   "gst",
+   "gst filing",
+   "gst return",
+   "tax compliance",
+   "e-invoicing",
+   "=TDS",
+   "taxation",
+   "direct tax",
+   "indirect tax",
+   "income tax"
+  ]
+ },
+ {
+  "id": "digital_marketing",
+  "name": "Digital Marketing",
+  "category": "Office & Business",
+  "synonyms": [
+   "digital marketing",
+   "online marketing",
+   "performance marketing",
+   "google ads",
+   "sem",
+   "ppc",
+   "email marketing",
+   "marketing automation",
+   "growth marketing",
+   "campaign management",
+   "meta ads",
+   "content marketing",
+   "social media advertising"
+  ]
+ },
+ {
+  "id": "seo",
+  "name": "SEO",
+  "category": "Office & Business",
+  "synonyms": [
+   "seo",
+   "search engine optimisation",
+   "search engine optimization"
+  ]
+ },
+ {
+  "id": "social_media",
+  "name": "Social Media Marketing",
+  "category": "Office & Business",
+  "synonyms": [
+   "social media marketing",
+   "social media",
+   "instagram marketing",
+   "content calendar"
+  ]
+ },
+ {
+  "id": "ecommerce",
+  "name": "E-commerce Operations",
+  "category": "Office & Business",
+  "synonyms": [
+   "e-commerce",
+   "ecommerce",
+   "online store",
+   "marketplace listing",
+   "=ONDC"
+  ]
+ },
+ {
+  "id": "wiring",
+  "name": "Electrical Wiring",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "electrical wiring",
+   "house wiring",
+   "wiring",
+   "electrical installation",
+   "panel wiring",
+   "वायरिंग",
+   "विद्युत जोडणी"
+  ]
+ },
+ {
+  "id": "motors",
+  "name": "Electric Motors & Transformers",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "electric motor",
+   "motor rewinding",
+   "motor winding",
+   "transformer",
+   "electrical machine",
+   "dc motor"
+  ]
+ },
+ {
+  "id": "plc",
+  "name": "PLC & Industrial Automation",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "=PLC",
+   "plc programming",
+   "industrial automation",
+   "=SCADA",
+   "~plc"
+  ]
+ },
+ {
+  "id": "iot",
+  "name": "IoT & Smart Sensors",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "=IoT",
+   "internet of things",
+   "smart sensor",
+   "industry 4.0",
+   "predictive maintenance",
+   "~iot"
+  ]
+ },
+ {
+  "id": "cnc",
+  "name": "CNC Operation",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "cnc",
+   "cnc operation",
+   "cnc machining",
+   "=VMC",
+   "g-code"
+  ]
+ },
+ {
+  "id": "welding",
+  "name": "Welding",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "welding",
+   "arc welding",
+   "mig welding",
+   "tig welding",
+   "वेल्डिंग"
+  ]
+ },
+ {
+  "id": "autocad",
+  "name": "AutoCAD & Drawing Reading",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "autocad",
+   "=CAD",
+   "engineering drawing",
+   "blueprint reading",
+   "solidworks",
+   "~cad",
+   "revit"
+  ]
+ },
+ {
+  "id": "quality_control",
+  "name": "Quality Control",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "quality control",
+   "quality inspection",
+   "=5S",
+   "kaizen",
+   "measuring instrument",
+   "six sigma",
+   "lean manufacturing"
+  ]
+ },
+ {
+  "id": "safety",
+  "name": "Workplace Safety",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "workplace safety",
+   "industrial safety",
+   "safety procedure",
+   "=PPE",
+   "lockout tagout"
+  ]
+ },
+ {
+  "id": "plumbing",
+  "name": "Plumbing",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "plumbing",
+   "pipe fitting",
+   "plumber",
+   "sanitary fitting",
+   "प्लंबिंग"
+  ]
+ },
+ {
+  "id": "carpentry",
+  "name": "Carpentry",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "carpentry",
+   "woodwork",
+   "furniture making",
+   "सुतारकाम"
+  ]
+ },
+ {
+  "id": "masonry",
+  "name": "Masonry & Construction",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "masonry",
+   "bar bending",
+   "shuttering",
+   "construction site work",
+   "tiling"
+  ]
+ },
+ {
+  "id": "hvac",
+  "name": "Refrigeration & AC",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "refrigeration",
+   "air conditioning",
+   "=HVAC",
+   "ac repair",
+   "ac servicing",
+   "एसी दुरुस्ती"
+  ]
+ },
+ {
+  "id": "electronics",
+  "name": "Electronics Repair",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "electronics repair",
+   "soldering",
+   "circuit board",
+   "pcb assembly"
+  ]
+ },
+ {
+  "id": "mobile_repair",
+  "name": "Mobile Phone Repair",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "mobile phone repair",
+   "mobile repair",
+   "smartphone repair",
+   "मोबाईल दुरुस्ती"
+  ]
+ },
+ {
+  "id": "tailoring",
+  "name": "Tailoring & Garments",
+  "category": "Manufacturing & Trades",
+  "synonyms": [
+   "tailoring",
+   "sewing machine operation",
+   "garment making",
+   "stitching",
+   "sewing",
+   "शिवणकाम"
+  ]
+ },
+ {
+  "id": "solar_pv",
+  "name": "Solar PV Installation",
+  "category": "Green Energy & Automotive",
+  "synonyms": [
+   "solar pv",
+   "solar panel installation",
+   "rooftop solar",
+   "solar installation",
+   "solar inverter",
+   "सौर पॅनेल"
+  ]
+ },
+ {
+  "id": "ev_maint",
+  "name": "EV Maintenance",
+  "category": "Green Energy & Automotive",
+  "synonyms": [
+   "ev maintenance",
+   "electric vehicle servicing",
+   "ev servicing",
+   "ev diagnostics",
+   "electric vehicle"
+  ]
+ },
+ {
+  "id": "bms",
+  "name": "Battery Management Systems",
+  "category": "Green Energy & Automotive",
+  "synonyms": [
+   "battery management system",
+   "battery management",
+   "=BMS",
+   "lithium-ion battery",
+   "lithium-ion batteries",
+   "battery pack",
+   "~bms"
+  ]
+ },
+ {
+  "id": "energy_audit",
+  "name": "Energy Auditing",
+  "category": "Green Energy & Automotive",
+  "synonyms": [
+   "energy audit",
+   "energy auditing",
+   "energy efficiency"
+  ]
+ },
+ {
+  "id": "ic_engine",
+  "name": "IC Engine Servicing",
+  "category": "Green Energy & Automotive",
+  "synonyms": [
+   "ic engine",
+   "engine overhaul",
+   "petrol engine",
+   "diesel engine",
+   "engine servicing"
+  ]
+ },
+ {
+  "id": "auto_chassis",
+  "name": "Transmission, Brakes & Chassis",
+  "category": "Green Energy & Automotive",
+  "synonyms": [
+   "gearbox",
+   "brake system",
+   "clutch",
+   "suspension system",
+   "transmission repair",
+   "wheel alignment"
+  ]
+ },
+ {
+  "id": "patient_care",
+  "name": "Patient Care",
+  "category": "Healthcare",
+  "synonyms": [
+   "patient care",
+   "bedside care",
+   "patient handling",
+   "elderly care",
+   "रुग्णसेवा",
+   "रुग्ण सेवा"
+  ]
+ },
+ {
+  "id": "vitals",
+  "name": "Vital Signs Monitoring",
+  "category": "Healthcare",
+  "synonyms": [
+   "vital signs",
+   "vitals monitoring",
+   "blood pressure measurement",
+   "pulse oximetry"
+  ]
+ },
+ {
+  "id": "infection_control",
+  "name": "Infection Control",
+  "category": "Healthcare",
+  "synonyms": [
+   "infection control",
+   "biomedical waste",
+   "sterilisation",
+   "sterilization",
+   "hand hygiene"
+  ]
+ },
+ {
+  "id": "first_aid",
+  "name": "First Aid & BLS",
+  "category": "Healthcare",
+  "synonyms": [
+   "first aid",
+   "basic life support",
+   "=BLS",
+   "=CPR",
+   "प्रथमोपचार",
+   "~bls",
+   "~cpr"
+  ]
+ },
+ {
+  "id": "ehr",
+  "name": "Electronic Health Records",
+  "category": "Healthcare",
+  "synonyms": [
+   "electronic health record",
+   "=EHR",
+   "hospital information system",
+   "=ABHA",
+   "~ehr"
+  ]
+ },
+ {
+  "id": "telehealth",
+  "name": "Telehealth Tools",
+  "category": "Healthcare",
+  "synonyms": [
+   "telehealth",
+   "telemedicine",
+   "esanjeevani",
+   "teleconsultation"
+  ]
+ },
+ {
+  "id": "beauty",
+  "name": "Beauty & Wellness",
+  "category": "Healthcare",
+  "synonyms": [
+   "beautician",
+   "beauty therapy",
+   "hair styling",
+   "makeup artistry",
+   "skin care",
+   "ब्युटीशियन"
+  ]
+ },
+ {
+  "id": "customer_service",
+  "name": "Customer Service",
+  "category": "Retail, Logistics & Hospitality",
+  "synonyms": [
+   "customer service",
+   "customer handling",
+   "customer support",
+   "customer care",
+   "ग्राहक सेवा",
+   "technical support",
+   "customer success",
+   "client servicing",
+   "customer experience"
+  ]
+ },
+ {
+  "id": "pos",
+  "name": "POS Billing",
+  "category": "Retail, Logistics & Hospitality",
+  "synonyms": [
+   "pos billing",
+   "point of sale",
+   "=POS",
+   "billing counter",
+   "upi payment",
+   "~pos"
+  ]
+ },
+ {
+  "id": "inventory",
+  "name": "Inventory Management",
+  "category": "Retail, Logistics & Hospitality",
+  "synonyms": [
+   "inventory management",
+   "stock management",
+   "inventory",
+   "stock audit",
+   "supply chain management",
+   "supply chain",
+   "logistics management",
+   "~logistics"
+  ]
+ },
+ {
+  "id": "wms",
+  "name": "Warehouse Management Systems",
+  "category": "Retail, Logistics & Hospitality",
+  "synonyms": [
+   "warehouse management system",
+   "=WMS",
+   "barcode scanning",
+   "handheld scanner",
+   "~wms",
+   "warehouse operations"
+  ]
+ },
+ {
+  "id": "hospitality",
+  "name": "Hospitality & Food Service",
+  "category": "Retail, Logistics & Hospitality",
+  "synonyms": [
+   "food and beverage service",
+   "housekeeping",
+   "front office",
+   "hospitality"
+  ]
+ },
+ {
+  "id": "food_processing",
+  "name": "Food Processing & Safety",
+  "category": "Retail, Logistics & Hospitality",
+  "synonyms": [
+   "food processing",
+   "=FSSAI",
+   "food safety"
+  ]
+ },
+ {
+  "id": "communication",
+  "name": "Communication",
+  "category": "Core & Soft Skills",
+  "synonyms": [
+   "communication skill",
+   "communication",
+   "communicate clearly",
+   "संवाद कौशल्य",
+   "presentation skill",
+   "interpersonal skill",
+   "verbal communication",
+   "written communication",
+   "~presentation",
+   "storytelling"
+  ]
+ },
+ {
+  "id": "english",
+  "name": "English Proficiency",
+  "category": "Core & Soft Skills",
+  "synonyms": [
+   "spoken english",
+   "english communication",
+   "english proficiency",
+   "basic english",
+   "english",
+   "इंग्रजी"
+  ]
+ },
+ {
+  "id": "teamwork",
+  "name": "Teamwork",
+  "category": "Core & Soft Skills",
+  "synonyms": [
+   "teamwork",
+   "team player",
+   "working in teams",
+   "collaboration",
+   "cross-functional collaboration",
+   "~coordination"
+  ]
+ },
+ {
+  "id": "problem_solving",
+  "name": "Problem Solving",
+  "category": "Core & Soft Skills",
+  "synonyms": [
+   "problem solving",
+   "problem-solving",
+   "troubleshooting",
+   "analytical thinking",
+   "problemsolving",
+   "analytical skill",
+   "critical thinking",
+   "problem solving skill",
+   "problemsolving skill",
+   "root cause analysis"
+  ]
+ },
+ {
+  "id": "digital_literacy",
+  "name": "Digital Literacy",
+  "category": "Core & Soft Skills",
+  "synonyms": [
+   "digital literacy",
+   "basic computer skill",
+   "computer basics",
+   "smartphone app",
+   "digital tool",
+   "=MS-CIT",
+   "mscit",
+   "संगणक ज्ञान",
+   "संगणक"
+  ]
+ },
+ {
+  "id": "dataeng",
+  "name": "Data Engineering",
+  "category": "Data & AI",
+  "synonyms": [
+   "data engineering",
+   "=ETL",
+   "~etl",
+   "apache spark",
+   "pyspark",
+   "~spark",
+   "kafka",
+   "databricks",
+   "snowflake",
+   "airflow",
+   "data pipeline",
+   "data warehousing",
+   "hadoop",
+   "big data",
+   "bigquery",
+   "data quality",
+   "data management",
+   "data migration",
+   "data integration",
+   "~scala"
+  ]
+ },
+ {
+  "id": "frontend_fw",
+  "name": "Angular & Vue",
+  "category": "Software & IT",
+  "synonyms": [
+   "angular",
+   "angularjs",
+   "vue.js",
+   "vuejs",
+   "~vue"
+  ]
+ },
+ {
+  "id": "sysdesign",
+  "name": "System Design & Microservices",
+  "category": "Software & IT",
+  "synonyms": [
+   "microservices",
+   "microservices architecture",
+   "system design",
+   "distributed systems",
+   "software architecture",
+   "solution architecture"
+  ]
+ },
+ {
+  "id": "golang",
+  "name": "Go",
+  "category": "Software & IT",
+  "synonyms": [
+   "golang",
+   "~go"
+  ]
+ },
+ {
+  "id": "uiux",
+  "name": "UI/UX Design",
+  "category": "Design & Content",
+  "synonyms": [
+   "ui/ux",
+   "ux design",
+   "ui design",
+   "user experience",
+   "user interface design",
+   "figma",
+   "wireframing",
+   "prototyping"
+  ]
+ },
+ {
+  "id": "graphic",
+  "name": "Graphic & Video Design",
+  "category": "Design & Content",
+  "synonyms": [
+   "graphic design",
+   "photoshop",
+   "adobe photoshop",
+   "illustrator",
+   "adobe illustrator",
+   "canva",
+   "video editing",
+   "premiere pro",
+   "adobe premiere pro",
+   "after effects",
+   "adobe after effects",
+   "motion graphics",
+   "coreldraw",
+   "adobe creative suite",
+   "typography"
+  ]
+ },
+ {
+  "id": "content",
+  "name": "Content Writing",
+  "category": "Design & Content",
+  "synonyms": [
+   "content writing",
+   "content creation",
+   "copywriting",
+   "content strategy",
+   "technical writing",
+   "documentation"
+  ]
+ },
+ {
+  "id": "sales",
+  "name": "Sales & Business Development",
+  "category": "Business & Management",
+  "synonyms": [
+   "~sales",
+   "business development",
+   "lead generation",
+   "b2b sales",
+   "sales strategy",
+   "inside sales",
+   "field sales",
+   "cold calling",
+   "sales management",
+   "key account management",
+   "account management",
+   "channel sales"
+  ]
+ },
+ {
+  "id": "negotiation",
+  "name": "Negotiation",
+  "category": "Business & Management",
+  "synonyms": [
+   "negotiation",
+   "negotiation skill"
+  ]
+ },
+ {
+  "id": "crm",
+  "name": "CRM Tools",
+  "category": "Business & Management",
+  "synonyms": [
+   "=CRM",
+   "crm tool",
+   "salesforce",
+   "hubspot",
+   "zoho crm",
+   "crm software"
+  ]
+ },
+ {
+  "id": "erp",
+  "name": "SAP & ERP",
+  "category": "Business & Management",
+  "synonyms": [
+   "=SAP",
+   "=ERP",
+   "erp system",
+   "sap fico",
+   "sap mm",
+   "oracle erp"
+  ]
+ },
+ {
+  "id": "project_mgmt",
+  "name": "Project Management & Agile",
+  "category": "Business & Management",
+  "synonyms": [
+   "project management",
+   "agile",
+   "scrum",
+   "jira",
+   "confluence",
+   "agile methodology",
+   "project planning",
+   "kanban",
+   "=PMP",
+   "program management",
+   "~sdlc"
+  ]
+ },
+ {
+  "id": "stakeholder",
+  "name": "Stakeholder & Vendor Management",
+  "category": "Business & Management",
+  "synonyms": [
+   "stakeholder management",
+   "vendor management",
+   "relationship management",
+   "client relationship management",
+   "relationship building",
+   "procurement"
+  ]
+ },
+ {
+  "id": "leadership",
+  "name": "Leadership & Team Management",
+  "category": "Business & Management",
+  "synonyms": [
+   "leadership",
+   "team management",
+   "team leadership",
+   "people management",
+   "mentoring",
+   "change management",
+   "strategic planning",
+   "strategic thinking"
+  ]
+ },
+ {
+  "id": "accounting",
+  "name": "Accounting & Finance",
+  "category": "Business & Management",
+  "synonyms": [
+   "accounting",
+   "financial analysis",
+   "financial reporting",
+   "financial modeling",
+   "financial modelling",
+   "budgeting",
+   "forecasting",
+   "financial planning",
+   "accounts payable",
+   "accounts receivable",
+   "~ca",
+   "chartered accountant",
+   "auditing",
+   "reconciliation",
+   "audit",
+   "ifrs",
+   "variance analysis",
+   "~finance",
+   "finance and accounts"
+  ]
+ },
+ {
+  "id": "compliance",
+  "name": "Risk & Compliance",
+  "category": "Business & Management",
+  "synonyms": [
+   "compliance",
+   "risk management",
+   "regulatory compliance",
+   "=KYC",
+   "anti money laundering",
+   "=AML",
+   "data governance",
+   "risk assessment"
+  ]
+ },
+ {
+  "id": "marketing",
+  "name": "Marketing & Market Research",
+  "category": "Business & Management",
+  "synonyms": [
+   "~marketing",
+   "market research",
+   "brand management",
+   "marketing strategy",
+   "product marketing",
+   "go-to-market",
+   "market analysis",
+   "market intelligence"
+  ]
+ },
+ {
+  "id": "hr",
+  "name": "Recruitment & HR",
+  "category": "Business & Management",
+  "synonyms": [
+   "recruitment",
+   "talent acquisition",
+   "human resources",
+   "hr operations",
+   "payroll",
+   "employee relations",
+   "onboarding",
+   "performance management"
+  ]
+ },
+ {
+  "id": "product_mgmt",
+  "name": "Product Management",
+  "category": "Business & Management",
+  "synonyms": [
+   "product management",
+   "product roadmap",
+   "product strategy",
+   "product lifecycle management",
+   "a/b testing"
+  ]
+ },
+ {
+  "id": "work_habits",
+  "name": "Organisation & Time Management",
+  "category": "Core & Soft Skills",
+  "synonyms": [
+   "time management",
+   "organizational skill",
+   "organisational skill",
+   "attention to detail",
+   "multitasking",
+   "prioritization",
+   "prioritisation"
+  ]
+ },
+ {
+  "id": "itsm",
+  "name": "IT Service Management",
+  "category": "Software & IT",
+  "synonyms": [
+   "servicenow",
+   "=ITIL",
+   "~itil",
+   "incident management",
+   "it service management",
+   "service desk"
+  ]
+ }
 ]

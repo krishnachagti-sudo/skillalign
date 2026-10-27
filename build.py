@@ -22,6 +22,7 @@ DIST = os.path.join(ROOT, "dist")
 SITE_FILES = ["index.html", "app.js", "style.css"]
 ENGINE_FILES = ["__init__.py", "taxonomy.py", "dataset.py", "demand.py", "alignment.py", "learner.py", "api.py"]
 DATA_FILES = ["skills.json", "programs.json", "job_postings.csv"]
+LAZY_DATA = {"real": "real_postings_india_2026.csv"}   # fetched only when the user picks that dataset
 PYODIDE_FILES = ["pyodide.js", "pyodide.asm.js", "pyodide.asm.wasm", "python_stdlib.zip", "pyodide-lock.json", "NOTICE.md"]
 
 
@@ -36,7 +37,7 @@ def main():
 
     sources = [os.path.join(ROOT, "site", f) for f in SITE_FILES] + \
               [os.path.join(ROOT, "engine", f) for f in ENGINE_FILES] + \
-              [os.path.join(ROOT, "data", f) for f in DATA_FILES]
+              [os.path.join(ROOT, "data", f) for f in DATA_FILES + list(LAZY_DATA.values())]
     digest = hashlib.sha1()
     for path in sources:
         with open(path, "rb") as f:
@@ -46,14 +47,15 @@ def main():
     for f in SITE_FILES:
         copy(os.path.join(ROOT, "site", f), os.path.join(DIST, f))
     py_files = [f"engine/{f}" for f in ENGINE_FILES] + [f"data/{f}" for f in DATA_FILES]
-    for rel in py_files:
+    lazy = {name: f"data/{f}" for name, f in LAZY_DATA.items()}
+    for rel in py_files + list(lazy.values()):
         copy(os.path.join(ROOT, rel), os.path.join(DIST, "py", rel))
     for f in PYODIDE_FILES:
         copy(os.path.join(ROOT, "vendor", "pyodide", f), os.path.join(DIST, "vendor", "pyodide", f))
     copy(os.path.join(ROOT, "data", "job_postings.csv"), os.path.join(DIST, "sample_postings.csv"))
 
     with open(os.path.join(DIST, "py", "manifest.json"), "w") as f:
-        json.dump({"version": version, "files": py_files}, f, indent=1)
+        json.dump({"version": version, "files": py_files, "lazy": lazy}, f, indent=1)
 
     # a content hash in every URL, so browsers never mix old and new files
     index = os.path.join(DIST, "index.html")
@@ -67,7 +69,7 @@ def main():
         f.write(html)
 
     precache = ["./", f"style.css?v={version}", f"app.js?v={version}", f"py/manifest.json?v={version}"] + \
-               [f"py/{rel}?v={version}" for rel in py_files] + \
+               [f"py/{rel}?v={version}" for rel in py_files + list(lazy.values())] + \
                [f"vendor/pyodide/{f}" for f in PYODIDE_FILES if f != "NOTICE.md"]
     with open(os.path.join(DIST, "sw.js"), "w") as f:
         f.write(SERVICE_WORKER.replace("__VERSION__", version).replace("__PRECACHE__", json.dumps(precache, indent=1)))

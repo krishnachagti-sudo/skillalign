@@ -178,8 +178,7 @@ def assess_program(program, postings, skills, window=4):
         warnings.append(f"{pct(unmatched / total_hours)} of training hours ({len(missed)} module"
                         f"{'s' if len(missed) != 1 else ''}) matched no skill SkillAlign knows, so the "
                         f"score cannot see them: {', '.join(missed[:4])}{'…' if len(missed) > 4 else ''}.")
-    if table and not next(iter(table.values()))["forecast_ok"]:
-        warnings.append("Fewer than six quarters of postings, so there is no forecast; next year's score equals today's.")
+    forecast_ok = bool(table) and next(iter(table.values()))["forecast_ok"]
 
     all_skills = set(core) | set(future_core) | taught
     return {
@@ -191,7 +190,8 @@ def assess_program(program, postings, skills, window=4):
         "score": round(score, 1),
         "score_low": round(interval[0], 1) if interval else None,
         "score_high": round(interval[1], 1) if interval else None,
-        "future_score": round(future_score, 1),
+        "future_score": round(future_score, 1) if forecast_ok else None,
+        "forecast_ok": forecast_ok,
         "grade": grade(score) if relevant else "Unscored",
         "low_data": 0 < len(relevant) < MIN_POSTINGS,
         "hours_total": total_hours,

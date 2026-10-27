@@ -123,7 +123,8 @@ def generate(seed=SEED, flat=False):
     rng = random.Random(seed)
     with open(os.path.join(DATA_DIR, "skills.json"), encoding="utf-8") as f:
         # case-sensitive synonyms are written with a leading "=" in the taxonomy
-        synonyms = {row["id"]: [s.lstrip("=") for s in row["synonyms"]] for row in json.load(f)}
+        # "=" marks case-sensitive synonyms; "~" ones only count in skills lists, so never in a description
+        synonyms = {row["id"]: [s.lstrip("=") for s in row["synonyms"] if not s.startswith("~")] for row in json.load(f)}
     names, weights = list(DISTRICTS), list(DISTRICTS.values())
 
     rows = []

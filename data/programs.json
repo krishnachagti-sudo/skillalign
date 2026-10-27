@@ -7,7 +7,12 @@
     "duration": "3 months",
     "target_roles": [
       "data entry operator",
-      "accounts assistant"
+      "data entry",
+      "back office executive",
+      "accounts assistant",
+      "accountant",
+      "accounts executive",
+      "mis executive"
     ],
     "modules": [
       {
@@ -45,7 +50,16 @@
     "sector": "IT & Software",
     "duration": "6 months",
     "target_roles": [
-      "software developer"
+      "software developer",
+      "software engineer",
+      "full stack developer",
+      "frontend developer",
+      "front end developer",
+      "backend developer",
+      "web developer",
+      "java developer",
+      "python developer",
+      ".net developer"
     ],
     "modules": [
       {
@@ -88,7 +102,10 @@
     "sector": "IT & Software",
     "duration": "4 months",
     "target_roles": [
-      "data analyst"
+      "data analyst",
+      "business analyst",
+      "mis analyst",
+      "reporting analyst"
     ],
     "modules": [
       {
@@ -132,7 +149,9 @@
     "duration": "2 years",
     "target_roles": [
       "electrician",
-      "maintenance technician"
+      "maintenance technician",
+      "electrical technician",
+      "electrical maintenance"
     ],
     "modules": [
       {
@@ -170,7 +189,10 @@
     "sector": "Green Energy & EV",
     "duration": "3 months",
     "target_roles": [
-      "solar pv technician"
+      "solar pv technician",
+      "solar technician",
+      "solar installer",
+      "solar engineer"
     ],
     "modules": [
       {
@@ -202,7 +224,10 @@
     "sector": "Healthcare",
     "duration": "4 months",
     "target_roles": [
-      "general duty assistant"
+      "general duty assistant",
+      "nursing assistant",
+      "patient care assistant",
+      "ward attendant"
     ],
     "modules": [
       {
@@ -240,7 +265,13 @@
     "sector": "Retail & Logistics",
     "duration": "2 months",
     "target_roles": [
-      "retail sales associate"
+      "retail sales associate",
+      "sales associate",
+      "store executive",
+      "retail executive",
+      "cashier",
+      "customer service representative",
+      "customer support executive"
     ],
     "modules": [
       {
@@ -272,7 +303,12 @@
     "sector": "Media & Marketing",
     "duration": "3 months",
     "target_roles": [
-      "digital marketing"
+      "digital marketing",
+      "social media executive",
+      "social media manager",
+      "seo executive",
+      "seo specialist",
+      "performance marketing"
     ],
     "modules": [
       {
@@ -311,7 +347,11 @@
     "duration": "2 years",
     "target_roles": [
       "automotive service technician",
-      "ev service technician"
+      "ev service technician",
+      "automobile technician",
+      "service technician",
+      "vehicle technician",
+      "mechanic"
     ],
     "modules": [
       {
@@ -349,7 +389,11 @@
     "duration": "5 months",
     "target_roles": [
       "cloud devops engineer",
-      "cybersecurity analyst"
+      "devops engineer",
+      "cloud engineer",
+      "site reliability engineer",
+      "cybersecurity analyst",
+      "security analyst"
     ],
     "modules": [
       {

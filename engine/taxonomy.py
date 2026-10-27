@@ -20,7 +20,11 @@ Synonym rules (in skills.json):
 - a plural "s" / "es" on the last word is accepted ("test case(s)");
 - Marathi words may carry a case ending ("सेवांचा" still finds "सेवा");
 - a skill right after "no", "not", "without", "except", "excluding" or
-  "nor" (up to two words later, same clause) is not counted.
+  "nor" (up to two words later, same clause) is not counted;
+- synonyms written with a leading "~" only count inside a skills LIST
+  (a "Python|SQL|C" column from a job board), where a bare "C" or "R" can
+  only mean the language. In a list, "=" synonyms also ignore case,
+  because "excel" in a list of skills can only mean Excel.
 """
 
 import json
@@ -81,25 +85,28 @@ class SkillExtractor:
 
     def __init__(self, skills):
         self.skills = skills
-        self.lookup = {}   # tuple of folded words -> (skill id, exact forms or None)
+        self.lookup = {}   # tuple of folded words -> (skill id, exact forms or None, list only?)
         self.longest = 1
         for skill in skills.values():
             for synonym in skill.synonyms:
+                list_only = synonym.startswith("~")
                 exact = synonym.startswith("=")
-                parts = [w for w, _, _ in words_of(clean_text(synonym.lstrip("=")))]
+                parts = [w for w, _, _ in words_of(clean_text(synonym.lstrip("=~")))]
                 key = tuple(fold(w) for w in parts)
                 owner = self.lookup.get(key)
                 if owner and owner[0] != skill.id:
                     raise ValueError(f"synonym '{synonym}' used by {owner[0]} and {skill.id}")
+                if owner and not owner[2] and list_only:
+                    continue  # the same words already count everywhere
                 if exact:
                     forms = {" ".join(parts), " ".join(parts).upper()}
                     if owner and owner[1] is None:
                         continue  # a case-insensitive synonym for the same words already exists
                     if owner:
                         forms |= owner[1]
-                    self.lookup[key] = (skill.id, forms)
+                    self.lookup[key] = (skill.id, forms, False)
                 else:
-                    self.lookup[key] = (skill.id, None)
+                    self.lookup[key] = (skill.id, None, list_only)
                 self.longest = max(self.longest, len(key))
 
     def _candidates(self, folded_last):
@@ -114,7 +121,7 @@ class SkillExtractor:
             for cut in range(len(folded_last) - 1, 1, -1):
                 yield folded_last[:cut]
 
-    def _match_at(self, words, i):
+    def _match_at(self, words, i, as_list=False):
         """Longest synonym starting at word i: (skill id, words used) or None."""
         for n in range(min(self.longest, len(words) - i), 0, -1):
             run = words[i:i + n]
@@ -123,8 +130,10 @@ class SkillExtractor:
                 entry = self.lookup.get(head + (last,))
                 if not entry:
                     continue
-                skill_id, forms = entry
-                if forms is not None:
+                skill_id, forms, list_only = entry
+                if list_only and not as_list:
+                    continue
+                if forms is not None and not as_list:
                     written = " ".join(w for w, _, _ in run)
                     stem = written[:len(written) - (len(fold(run[-1][0])) - len(last))]
                     if written not in forms and stem not in forms:
@@ -138,23 +147,24 @@ class SkillExtractor:
                 return True
         return False
 
-    def _matches(self, text):
+    def _matches(self, text, as_list=False):
         text = clean_text(text)
         words = words_of(text)
         i = 0
         while i < len(words):
-            found = self._match_at(words, i)
+            found = self._match_at(words, i, as_list)
             if not found:
                 i += 1
                 continue
             skill_id, n = found
-            if not self._negated(text, words, i):
+            if as_list or not self._negated(text, words, i):
                 yield skill_id, text[words[i][1]:words[i + n - 1][2]]
             i += n
 
-    def extract(self, text):
-        """Return the set of skill ids mentioned in text."""
-        return {skill_id for skill_id, _ in self._matches(text)}
+    def extract(self, text, as_list=False):
+        """Return the set of skill ids mentioned in text. as_list=True for a
+        job board's skills list ("python|sql|excel"): see the module docstring."""
+        return {skill_id for skill_id, _ in self._matches(text, as_list)}
 
     def extract_with_evidence(self, text):
         """Return {skill_id: [the exact phrases that matched]}."""
