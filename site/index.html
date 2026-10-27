@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillAlign</title>
+<meta name="description" content="Check whether a skill development program teaches what job postings actually ask for. Paste a syllabus, see the gaps, get add / reduce recommendations. Runs entirely in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="./"><span class="mark" aria-hidden="true"></span>SkillAlign</a>
+    <p class="source" id="source">Loading…</p>
+  </div>
+  <nav class="wrap tabs" role="tablist" aria-label="Sections">
+    <button role="tab" data-tab="pulse" aria-selected="true">Market pulse</button>
+    <button role="tab" data-tab="programs">Programs</button>
+    <button role="tab" data-tab="matrix">Gap matrix</button>
+    <button role="tab" data-tab="syllabus">Check a syllabus</button>
+    <button role="tab" data-tab="learner">For learners</button>
+    <button role="tab" data-tab="data">Your data</button>
+    <button role="tab" data-tab="method">How it works</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div id="boot" class="boot">
+    <div class="spinner" aria-hidden="true"></div>
+    <p><strong>Starting the Python engine in your browser.</strong></p>
+    <p class="mute" id="boot-step">Downloading Python (first visit only, about 10 seconds)…</p>
+  </div>
+
+  <!-- MARKET PULSE -->
+  <section id="tab-pulse" class="tab" hidden>
+    <div class="intro">
+      <h1>Are skill programs teaching what jobs ask for?</h1>
+      <p class="lede">SkillAlign reads job postings, works out which skills employers want and which are rising, then scores each training program against that demand.</p>
+    </div>
+    <div class="filters">
+      <label>Sector <select id="f-sector"><option value="">All sectors</option></select></label>
+      <label>City <select id="f-city"><option value="">All cities</option></select></label>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <article class="card">
+        <h2>Most demanded skills</h2>
+        <p class="mute small">Share of postings in the latest four quarters that mention the skill. Click one for its trend.</p>
+        <ol class="bars" id="top-skills"></ol>
+      </article>
+      <div class="stack">
+        <article class="card">
+          <h2>Emerging</h2>
+          <p class="mute small">In at least 5% of postings and up 30% or more on the year before.</p>
+          <ul class="movers" id="emerging"></ul>
+        </article>
+        <article class="card">
+          <h2>Declining</h2>
+          <p class="mute small">Down 20% or more on the year before.</p>
+          <ul class="movers" id="declining"></ul>
+        </article>
+      </div>
+    </div>
+    <article class="card" id="trend-card" hidden>
+      <div class="card-head"><h2 id="trend-title">Trend</h2><button class="link" id="trend-close">Close</button></div>
+      <div id="trend-chart" class="chart"></div>
+      <p class="mute small" id="trend-note"></p>
+    </article>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section id="tab-programs" class="tab" hidden>
+    <div class="intro">
+      <h1>Training programs, scored against the jobs they train for</h1>
+      <p class="lede">Each program is compared only with postings for its own target roles. The score is the demand-weighted share of core skills it teaches; the future score uses next year's forecast.</p>
+    </div>
+    <div id="program-list" class="program-list"></div>
+    <div id="program-detail"></div>
+  </section>
+
+  <!-- MATRIX -->
+  <section id="tab-matrix" class="tab" hidden>
+    <div class="intro">
+      <h1>Gap matrix</h1>
+      <p class="lede">Rows are programs, columns are the most demanded skills. The darker a cell, the more that program's target jobs ask for the skill. A tick means it is taught. Dark cells without a tick are the gaps that matter most.</p>
+    </div>
+    <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+    <div class="legend"><span><i class="sw" style="--a:.1"></i>rarely asked</span><span><i class="sw" style="--a:.9"></i>asked in most postings</span><span><b class="tick">✓</b> taught</span></div>
+  </section>
+
+  <!-- SYLLABUS -->
+  <section id="tab-syllabus" class="tab" hidden>
+    <div class="intro">
+      <h1>Check a syllabus</h1>
+      <p class="lede">Paste any course outline, one module per line, with hours if you have them. SkillAlign finds the skills it teaches and scores it against the jobs you name.</p>
+    </div>
+    <form class="card form" id="syllabus-form">
+      <label>Program name <input id="s-name" value="My course"></label>
+      <label>Target roles <span class="mute small">comma separated, as they appear in job titles</span>
+        <input id="s-roles" list="role-list" value="data analyst"></label>
+      <datalist id="role-list"></datalist>
+      <label>Syllabus <span class="mute small">one module per line, e.g. "Advanced Excel (40 hrs)"</span>
+        <textarea id="s-text" rows="9">Spreadsheets: advanced Excel and pivot tables (40 hrs)
+SQL for reporting (30 hrs)
+Typing and data entry practice (40 hrs)
+Business communication (20 hrs)</textarea></label>
+      <div class="row"><button class="btn" type="submit">Score this syllabus</button><button class="btn ghost" type="button" id="s-example">Load an example</button></div>
+      <p class="error" id="s-error" hidden></p>
+    </form>
+    <div id="syllabus-detected"></div>
+    <div id="syllabus-result"></div>
+  </section>
+
+  <!-- LEARNER -->
+  <section id="tab-learner" class="tab" hidden>
+    <div class="intro">
+      <h1>How ready am I for a job?</h1>
+      <p class="lede">Pick the job you want and tell SkillAlign what you can do. It shows what employers ask for, what you're missing, and which program closes the most gaps.</p>
+    </div>
+    <form class="card form" id="learner-form">
+      <label>Job I want <select id="l-role"></select></label>
+      <label>What I can do <span class="mute small">paste your resume or just list skills</span>
+        <textarea id="l-text" rows="4">I know Excel and basic SQL. Good communication skills.</textarea></label>
+      <button class="btn" type="submit">Check my readiness</button>
+    </form>
+    <div id="learner-result"></div>
+  </section>
+
+  <!-- DATA -->
+  <section id="tab-data" class="tab" hidden>
+    <div class="intro">
+      <h1>Use your own job postings</h1>
+      <p class="lede">The built-in postings are a synthetic sample made to show how the tool works. Upload real postings and every score on the site is recomputed from them. Nothing leaves your browser.</p>
+    </div>
+    <article class="card">
+      <h2>CSV format</h2>
+      <p>Required columns: <code>title</code>, <code>description</code>, <code>date</code> (YYYY-MM-DD). Optional: <code>sector</code>, <code>city</code>. Postings from at least eight quarters give the best trend estimates.</p>
+      <div class="row">
+        <label class="btn file">Upload CSV<input type="file" id="upload" accept=".csv,text/csv" hidden></label>
+        <a class="btn ghost" href="sample_postings.csv" download>Download the sample CSV</a>
+        <button class="btn ghost" id="reset-sample" type="button">Go back to sample data</button>
+      </div>
+      <p id="upload-status" class="small"></p>
+    </article>
+    <article class="card">
+      <h2>Try the skill reader</h2>
+      <p class="mute small">Type any text to see which skills SkillAlign recognises and the exact words it matched.</p>
+      <textarea id="x-text" rows="3">Hiring EV service technician. Must know lithium-ion batteries, EV diagnostics and workplace safety. Spoken English a plus.</textarea>
+      <div id="x-out" class="chips"></div>
+    </article>
+  </section>
+
+  <!-- METHOD -->
+  <section id="tab-method" class="tab prose" hidden>
+    <h1>How it works</h1>
+    <p class="lede">Every number on this site is computed by a small Python program that runs in your browser. There is no AI model and no server: the same data always gives the same answer.</p>
+    <h2>1. Reading skills out of text</h2>
+    <p>A taxonomy lists <span id="m-skills">60</span> skills, each with the different ways people write it ("AWS", "Azure" and "cloud platforms" all mean Cloud Computing). All the phrases are joined into one regular expression, longest first, so "cloud security" is counted as Cloud Security and not also as Cloud Computing. The same reader is used on job postings, syllabi and resumes.</p>
+    <h2>2. Measuring demand</h2>
+    <p>A skill's <b>share</b> is the fraction of postings that mention it. We compare the latest four quarters with the four before them to get <b>growth</b>, and fit a straight line through the quarterly shares (least squares) to <b>forecast</b> the share four quarters ahead.</p>
+    <h2>3. Scoring a program</h2>
+    <p>Only postings for the program's own target roles count. Skills in at least 15% of those postings are <b>core</b>. The <b>alignment score</b> is the share-weighted part of core demand the program teaches, so missing a skill that 60% of jobs want costs far more than missing one that 16% want. The <b>future score</b> repeats this with forecast shares. <b>Hours on demand</b> is the share of training hours spent on core skills.</p>
+    <h2>4. Recommendations</h2>
+    <ul class="dots">
+      <li><b>Add</b>: a core skill the program does not teach, ranked by share boosted by growth.</li>
+      <li><b>Expand</b>: taught, and asked for in 40% or more of postings, but given under 5% of the training hours.</li>
+      <li><b>Prepare</b>: not core yet, but forecast to cross 15% within a year.</li>
+      <li><b>Reduce</b>: taught, but asked for in under 5% of postings.</li>
+      <li><b>Review</b>: taught and still asked for, but down 20% or more year on year.</li>
+    </ul>
+    <h2>Limits</h2>
+    <p>Postings say what employers advertise, not everything a job needs. Skill names outside the taxonomy are not detected. With fewer than 30 matching postings a score is only a rough signal, and the page says so. The built-in data is synthetic; upload real postings for real conclusions.</p>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>SkillAlign is a student prototype for the Smart India Hackathon problem "Challenges in aligning skill development programs with industry requirements and emerging job market demands". Built in Python, run in the browser with Pyodide.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.28.3/full/pyodide.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
