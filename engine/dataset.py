@@ -7,9 +7,10 @@ city), state. Commas, semicolons,
 tabs and pipes all work as separators. Dates may be YYYY-MM-DD or the
 Indian DD-MM-YYYY / DD/MM/YYYY.
 
-Skills are read from the description only, never the title: a title
-like "Solar PV Technician" would otherwise count as every posting
-asking for solar skills.
+Skills are read from the description and/or skills list, never the
+title: a title like "Solar PV Technician" would otherwise count as every
+posting asking for solar skills. When an `employer` column is present,
+exact reposts (same employer, title, text and quarter) are counted once.
 
 Training programs come from JSON: each program has modules, and each
 module has hours and an outline. A pasted syllabus becomes a program
@@ -24,6 +25,8 @@ import re
 from dataclasses import dataclass, field
 from datetime import date
 
+from .demand import role_family
+
 REQUIRED_COLUMNS = ("title", "date")
 TEXT_COLUMNS = ("description", "skills")
 COLUMN_ALIASES = {"city": "district", "location": "district", "joblocation_address": "district",
@@ -31,7 +34,8 @@ COLUMN_ALIASES = {"city": "district", "location": "district", "joblocation_addre
                   "post_date": "date", "createddate": "date", "job_title": "title", "jobtitle": "title",
                   "job_description": "description", "jobdescription": "description", "job-desc": "description",
                   "key_skills": "skills", "key skills": "skills", "tagsandskills": "skills", "job_skills": "skills",
-                  "industry": "sector", "category": "sector", "region": "state", "inferred_state": "state"}
+                  "industry": "sector", "category": "sector", "region": "state", "inferred_state": "state",
+                  "company": "employer", "company_name": "employer"}
 MIN_YEAR, MAX_YEAR = 1990, 2100
 MAX_HOURS = 10000
 csv.field_size_limit(10_000_000)
@@ -46,6 +50,8 @@ class Posting:
     sector: str = ""
     district: str = ""
     state: str = ""
+    employer: str = ""
+    family: str = ""
     skills: set = field(default_factory=set)
 
 
@@ -69,6 +75,7 @@ class Program:
     modules: list
     nsqf_level: str = ""
     qp_code: str = ""
+    entry_level: bool = True   # an entry-level course is compared with entry-level jobs only
 
     def skills(self):
         taught = set()
@@ -77,12 +84,8 @@ class Program:
         return taught
 
     def mandatory_skills(self):
-        """Skills taught ONLY in compulsory modules: never advised to cut."""
-        optional = set()
-        for m in self.modules:
-            if not m.mandatory:
-                optional |= m.skills
-        return {s for m in self.modules if m.mandatory for s in m.skills} - optional
+        """Skills taught in any compulsory module: never advised to cut."""
+        return {s for m in self.modules if m.mandatory for s in m.skills}
 
     def total_hours(self):
         return sum(m.hours for m in self.modules)
@@ -159,7 +162,7 @@ def parse_postings(csv_text, extractor):
         raise ValueError("CSV is missing column(s): " + ", ".join(missing)
                          + f". Found: {', '.join(columns) or 'none'}")
 
-    postings, problems = [], []
+    postings, problems, seen = [], [], set()
     try:
         for line_no, raw in enumerate(rows, start=2):
             row = {columns[i]: (v or "").strip() for i, v in enumerate(raw) if i < len(columns)}
@@ -174,9 +177,17 @@ def parse_postings(csv_text, extractor):
             except ValueError as err:
                 problems.append(f"line {line_no}: {err}")
                 continue
+            employer = row.get("employer", "")
+            if employer:
+                key = (employer.lower(), row["title"].lower(), text.lower(), quarter)
+                if key in seen:
+                    problems.append(f"line {line_no}: repeat of an earlier posting by the same employer, counted once")
+                    continue
+                seen.add(key)
             postings.append(Posting(
                 title=row["title"], description=text, date=row["date"], quarter=quarter,
                 sector=row.get("sector", ""), district=row.get("district", ""), state=row.get("state", ""),
+                employer=employer, family=role_family(row["title"]),
                 skills=extractor.extract(row.get("description", "")) | extractor.extract(row.get("skills", ""), as_list=True),
             ))
     except csv.Error as err:
@@ -209,6 +220,7 @@ def build_program(raw, extractor):
         id=raw["id"], name=raw["name"], provider=raw.get("provider", ""), sector=raw.get("sector", ""),
         duration=raw.get("duration", ""), target_roles=[r.lower() for r in raw["target_roles"]],
         modules=modules, nsqf_level=str(raw.get("nsqf_level", "")), qp_code=raw.get("qp_code", ""),
+        entry_level=bool(raw.get("entry_level", True)),
     )
 
 

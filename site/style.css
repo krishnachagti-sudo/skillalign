@@ -1,5 +1,6 @@
 /* SkillAlign — built on Conyso Labs "Datasheet White" tokens. */
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; }
 h1, h2, h3, p, ul, ol { margin: 0; }
@@ -231,3 +232,9 @@ body.busy, body.busy * { cursor: progress !important; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .demo-banner.real { background: var(--signal-tint); border-color: #BFE3CB; }
 .demo-banner.real a { color: var(--signal-dp); }
+.notice.soft { background: var(--paper-alt); color: var(--ink-soft); border: 1px solid var(--hair); }
+.grade.Unscored { white-space: nowrap; }
+@media (max-width: 700px) {
+  .top { position: static; }
+  .top-row { padding-top: .6rem; }
+}

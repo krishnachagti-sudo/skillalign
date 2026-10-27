@@ -22,9 +22,13 @@ Synonym rules (in skills.json):
 - a skill right after "no", "not", "without", "except", "excluding" or
   "nor" (up to two words later, same clause) is not counted;
 - synonyms written with a leading "~" only count inside a skills LIST
-  (a "Python|SQL|C" column from a job board), where a bare "C" or "R" can
-  only mean the language. In a list, "=" synonyms also ignore case,
-  because "excel" in a list of skills can only mean Excel.
+  (a "Python|SQL|C" column from a job board), and only when a list item is
+  exactly that word: the item "c" is the C language, but "c-suite",
+  "objective c" or "sap cs" are not. In a list, "=" synonyms also ignore
+  case, because the item "excel" can only mean Excel. A list is read item
+  by item, so a phrase never spans two items;
+- a few phrases are explicitly NOT skills (STOP_PHRASES), e.g. "canvas",
+  which would otherwise be read as a plural of the design tool Canva.
 """
 
 import json
@@ -37,6 +41,8 @@ WORD = re.compile(r"[^\s\-–—,;:()\[\]{}\"'!?/|•<>=*]+")
 NEGATORS = {"no", "not", "without", "except", "excluding", "nor"}
 CLAUSE_BREAK = re.compile(r"[.;:!?\n]")
 DEVANAGARI = re.compile(r"[ऀ-ॿ]")
+LIST_SPLIT = re.compile(r"[|;\n,]+")
+STOP_PHRASES = ("canvas", "word of mouth", "go live", "go-live", "c-suite", "r&d", "r & d")
 
 
 @dataclass(frozen=True)
@@ -85,37 +91,46 @@ class SkillExtractor:
 
     def __init__(self, skills):
         self.skills = skills
-        self.lookup = {}   # tuple of folded words -> (skill id, exact forms or None, list only?)
+        self.lookup = {}      # tuple of folded words -> (skill id or None, exact forms or None)
+        self.list_exact = {}  # a whole skills-list item (folded) -> skill id, from "~" synonyms
         self.longest = 1
+        for phrase in STOP_PHRASES:
+            key = tuple(fold(w) for w, _, _ in words_of(phrase))
+            self.lookup[key] = (None, None)
+            self.longest = max(self.longest, len(key))
         for skill in skills.values():
             for synonym in skill.synonyms:
-                list_only = synonym.startswith("~")
+                if synonym.startswith("~"):
+                    item = " ".join(fold(w) for w, _, _ in words_of(clean_text(synonym[1:])))
+                    if self.list_exact.get(item, skill.id) != skill.id:
+                        raise ValueError(f"list synonym '{synonym}' used by {self.list_exact[item]} and {skill.id}")
+                    self.list_exact[item] = skill.id
+                    continue
                 exact = synonym.startswith("=")
-                parts = [w for w, _, _ in words_of(clean_text(synonym.lstrip("=~")))]
+                parts = [w for w, _, _ in words_of(clean_text(synonym.lstrip("=")))]
                 key = tuple(fold(w) for w in parts)
                 owner = self.lookup.get(key)
                 if owner and owner[0] != skill.id:
                     raise ValueError(f"synonym '{synonym}' used by {owner[0]} and {skill.id}")
-                if owner and not owner[2] and list_only:
-                    continue  # the same words already count everywhere
                 if exact:
                     forms = {" ".join(parts), " ".join(parts).upper()}
                     if owner and owner[1] is None:
                         continue  # a case-insensitive synonym for the same words already exists
                     if owner:
                         forms |= owner[1]
-                    self.lookup[key] = (skill.id, forms, False)
+                    self.lookup[key] = (skill.id, forms)
                 else:
-                    self.lookup[key] = (skill.id, None, list_only)
+                    self.lookup[key] = (skill.id, None)
                 self.longest = max(self.longest, len(key))
 
     def _candidates(self, folded_last):
         """Spellings of the last word to try: as written, without a plural,
         and for Marathi without a case ending."""
         yield folded_last
-        if folded_last.endswith("es"):
+        # plural forms, but never down to one or two letters ("cs" is not the plural of C)
+        if folded_last.endswith("es") and len(folded_last) > 4:
             yield folded_last[:-2]
-        if folded_last.endswith("s"):
+        if folded_last.endswith("s") and len(folded_last) > 3:
             yield folded_last[:-1]
         if DEVANAGARI.search(folded_last):
             for cut in range(len(folded_last) - 1, 1, -1):
@@ -130,9 +145,7 @@ class SkillExtractor:
                 entry = self.lookup.get(head + (last,))
                 if not entry:
                     continue
-                skill_id, forms, list_only = entry
-                if list_only and not as_list:
-                    continue
+                skill_id, forms = entry
                 if forms is not None and not as_list:
                     written = " ".join(w for w, _, _ in run)
                     stem = written[:len(written) - (len(fold(run[-1][0])) - len(last))]
@@ -157,14 +170,25 @@ class SkillExtractor:
                 i += 1
                 continue
             skill_id, n = found
-            if as_list or not self._negated(text, words, i):
+            if skill_id is not None and (as_list or not self._negated(text, words, i)):
                 yield skill_id, text[words[i][1]:words[i + n - 1][2]]
             i += n
+
+    def _list_matches(self, text):
+        """A skills list, read item by item."""
+        for item in LIST_SPLIT.split(clean_text(text)):
+            item = item.strip()
+            whole = " ".join(fold(w) for w, _, _ in words_of(item))
+            if whole in self.list_exact:
+                yield self.list_exact[whole], item
+            else:
+                yield from self._matches(item, as_list=True)
 
     def extract(self, text, as_list=False):
         """Return the set of skill ids mentioned in text. as_list=True for a
         job board's skills list ("python|sql|excel"): see the module docstring."""
-        return {skill_id for skill_id, _ in self._matches(text, as_list)}
+        found = self._list_matches(text) if as_list else self._matches(text)
+        return {skill_id for skill_id, _ in found}
 
     def extract_with_evidence(self, text):
         """Return {skill_id: [the exact phrases that matched]}."""

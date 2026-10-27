@@ -139,7 +139,7 @@ function setupStatic() {
   if (META.source === "sample") {
     banner.innerHTML = '<b>Demo data.</b> These job postings are synthetic, generated to show how the method works, so the numbers are not facts about real jobs. Switch the data menu to <b>Real postings</b>, or <a href="#data">upload your own</a>.';
   } else if (META.source === "real") {
-    banner.innerHTML = `<b>Real postings.</b> ${fmt(META.postings)} Indian job ads, ${esc(q[0])} to ${esc(q[q.length - 1])}, from Fliar Research (<a href="https://huggingface.co/datasets/fliarbi/job-postings-2026">CC BY-NC 4.0</a>). Two quarters only, so shares and scores but no trends or forecasts. Online job boards list few vocational jobs, so trade courses may have no matching postings.`;
+    banner.innerHTML = `<b>Real postings.</b> ${fmt(META.postings)} Indian job ads, ${esc(q[0])} to ${esc(q[q.length - 1])}, from Fliar Research under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>, cleaned by SkillAlign (<a href="https://github.com/krishnachagti-sudo/skillalign/blob/main/docs/DATA-SOURCES.md">what changed</a>). A 6% sample of companies, collected unevenly, so it describes this sample rather than the whole market. Two quarters only: shares and scores, no trends. It holds very few vocational jobs, so trade courses cannot be scored from it.`;
   } else {
     banner.innerHTML = q.length < 6 ? `<b>Your data.</b> ${q.length} quarter${q.length === 1 ? "" : "s"} of postings: shares and scores, but at least six quarters are needed for forecasts and eight for year-on-year trends.` : "<b>Your data.</b> Every number on the site is computed from your file.";
   }
@@ -147,10 +147,11 @@ function setupStatic() {
   fillSelect($("#f-sector"), META.sectors, "All sectors");
   fillSelect($("#f-state"), META.states, "All states");
   $("#f-state-wrap").hidden = META.states.length < 2;
+  if (META.states.length < 2) $("#f-state").value = "";
   fillSelect($("#f-district"), META.districts, "All districts");
   $("#role-list").innerHTML = META.roles.map(([r]) => `<option value="${esc(r)}">`).join("");
-  $("#l-role").innerHTML = META.roles.map(([r, n]) => `<option value="${esc(r)}">${esc(titleCase(r))} (${n} postings)</option>`).join("");
-  if (META.roles.some(([r]) => r === "data analyst")) $("#l-role").value = "data analyst";
+  $("#l-roles").innerHTML = META.roles.map(([r, n]) => `<option value="${esc(r)}">${n} postings</option>`).join("");
+  if (!META.roles.some(([r]) => r === $("#l-role").value)) $("#l-role").value = META.roles.some(([r]) => r === "data analyst") ? "data analyst" : (META.roles[0]?.[0] || "");
   $("#m-skills").textContent = META.skills.length;
   $("#m-syn").textContent = META.synonyms;
 }
@@ -159,6 +160,13 @@ function fillSelect(sel, values, allLabel) {
   const keep = sel.value;
   sel.innerHTML = `<option value="">${allLabel}</option>` + values.map((v) => `<option>${esc(v)}</option>`).join("");
   sel.value = values.includes(keep) ? keep : "";
+}
+
+const filters = () => [$("#f-sector").value, $("#f-district").value, $("#f-state").value];
+function filterNote() {
+  const [sector, district, state] = filters();
+  const parts = [state && `state ${state}`, district && `district ${district}`, sector && `sector ${sector}`].filter(Boolean);
+  return parts.length ? `<p class="notice soft">Scored only on postings in ${parts.map(esc).join(", ")}. Change the filters on <a href="#pulse">Market pulse</a>.</p>` : "";
 }
 
 function busy(on) {
@@ -194,7 +202,7 @@ function lineChart(row) {
     <text x="${fx}" y="${y(row.forecast) - 9}" text-anchor="end" style="fill:var(--ink-soft)">forecast ${pct(row.forecast)}</text>` : "";
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Share of postings mentioning ${esc(row.name)} by quarter">
     ${grid}${labels}
-    <polyline points="${pts}" fill="none" stroke="var(--signal)" stroke-width="2.4"/>
+    ${n >= 3 ? `<polyline points="${pts}" fill="none" stroke="var(--signal)" stroke-width="2.4"/>` : ""}
     ${series.map((p, i) => `<circle cx="${x(i)}" cy="${y(p[1])}" r="3" fill="var(--signal)"><title>${esc(p[0])}: ${pct(p[1])}</title></circle>`).join("")}
     ${forecast}
   </svg>`;
@@ -212,6 +220,7 @@ function ring(value) {
 // ---- market pulse ------------------------------------------------------------
 let PULSE = null;
 function renderPulse() {
+  $("#trend-card").hidden = true;
   PULSE = call("overview", $("#f-sector").value, $("#f-district").value, $("#f-state").value);
   const o = PULSE;
   $("#kpis").innerHTML = [
@@ -242,46 +251,57 @@ $("#tab-pulse").addEventListener("click", (e) => {
   if (!row) return;
   $("#trend-title").textContent = `${row.name}: share of postings by quarter`;
   $("#trend-chart").innerHTML = lineChart(row);
-  $("#trend-note").textContent = `${pct(row.share)} of the latest four quarters' postings (95% range ${range(row.low, row.high)}, ${fmt(row.postings)} of ${fmt(row.n)}). ` +
+  const k = Math.min(4, row.series.length);
+  $("#trend-note").textContent = `${pct(row.share)} of postings in the latest ${k} quarter${k === 1 ? "" : "s"} (95% range ${range(row.low, row.high)}, ${fmt(row.postings)} of ${fmt(row.n)}). ` +
+    (row.series.length < 3 ? "Too few quarters to draw a line: the points are shown on their own. " : "") +
     (row.is_new ? "New this year. " : row.growth == null ? "" : `${growthText(row)} on the year before. `) +
-    (row.forecast_ok ? "The dashed line is a straight-line forecast four quarters ahead." : "Fewer than six quarters of data, so no forecast is drawn.");
+    (row.forecast_ok ? `The dashed line is a straight-line forecast four quarters ahead: ${pct(row.forecast)}, 95% range ${range(row.forecast_low, row.forecast_high)}.` : "Fewer than six quarters of data, so no forecast is drawn.");
   $("#trend-card").hidden = false;
   $("#trend-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 $("#trend-close").addEventListener("click", () => ($("#trend-card").hidden = true));
-$("#f-sector").addEventListener("change", renderPulse);
-$("#f-district").addEventListener("change", renderPulse);
-$("#f-state").addEventListener("change", renderPulse);
+function onFilter() {
+  rendered.delete("programs");
+  rendered.delete("matrix");
+  $("#program-detail").innerHTML = "";
+  renderPulse();
+}
+for (const id of ["#f-sector", "#f-district", "#f-state"]) $(id).addEventListener("change", onFilter);
+
+function lockData(on) {
+  for (const id of ["#dataset", "#upload", "#reset-sample"]) $(id).disabled = on;
+  busy(on);
+}
 
 $("#dataset").addEventListener("change", async (e) => {
-  if (!api || e.target.value === META.source || e.target.value === "uploaded") return;
-  e.target.disabled = true;
+  const want = e.target.value; // read once: other code may change the select while we wait
+  if (!api || want === META.source || want === "uploaded") return;
+  lockData(true);
   $("#source").textContent = "Loading postings…";
-  busy(true);
   await new Promise((r) => setTimeout(r, 30)); // let the message paint before Python runs
   try {
-    const lazy = MANIFEST.lazy?.[e.target.value];
+    const lazy = MANIFEST.lazy?.[want];
     if (lazy && !PY.FS.analyzePath(`/app/${lazy}`).exists) {
       $("#source").textContent = "Downloading postings…";
       PY.FS.writeFile(`/app/${lazy}`, await fetchText(`py/${lazy}?v=${MANIFEST.version}`));
       $("#source").textContent = "Reading postings…";
       await new Promise((r) => setTimeout(r, 30));
     }
-    META = call("use_dataset", e.target.value);
+    META = call("use_dataset", want);
     for (const id of ["#f-sector", "#f-state", "#f-district"]) $(id).value = "";
     dataChanged();
   } catch (ex) {
-    $("#source").textContent = `Could not load: ${ex.message}`;
-    e.target.value = META.source;
+    setupStatic(); // put the header back for the data still loaded
+    const banner = $("#demo-banner");
+    banner.innerHTML = `<b>Could not load that dataset</b> (${esc(ex.message)}). Still showing the previous data. ` + banner.innerHTML;
   } finally {
-    e.target.disabled = false;
-    busy(false);
+    lockData(false);
   }
 });
 
 // ---- programs -----------------------------------------------------------------
 function scoreCell(r) {
-  if (!r.scored) return '<span class="grade Unscored">Unscored</span>';
+  if (!r.scored) return `<span class="grade Unscored">${esc(r.grade)}</span>`;
   const tags = [`<span class="grade ${r.grade}">${r.grade}</span>`];
   if (borderline(r)) tags.push('<span class="grade Borderline" title="the score range crosses a grade line">borderline</span>');
   if (r.low_data) tags.push('<span class="grade Borderline">low data</span>');
@@ -289,7 +309,8 @@ function scoreCell(r) {
 }
 
 function renderPrograms() {
-  const rows = call("programs_summary");
+  const rows = call("programs_summary", ...filters());
+  $("#program-filter-note").innerHTML = filterNote();
   $("#program-list").innerHTML = `<div class="prow head"><span>Program</span><span class="col-meter">Alignment</span><span>Score and range</span><span>Next year</span><span class="col-hours">Hours on demand</span></div>` +
     rows.map((r) => `<button type="button" class="prow" data-program="${esc(r.id)}">
       <span class="pname">${esc(r.name)}<span class="psub">${esc(r.provider)} · ${esc(r.duration)} · ${fmt(r.postings)} matching postings${r.warning ? ` · <span class="warn-text">${esc(r.warning)}</span>` : ""}</span></span>
@@ -304,7 +325,7 @@ $("#program-list").addEventListener("click", (e) => {
   if (!b) return;
   document.querySelectorAll(".prow.active").forEach((x) => x.classList.remove("active"));
   b.classList.add("active");
-  $("#program-detail").innerHTML = reportHTML(call("program_report", b.dataset.program));
+  $("#program-detail").innerHTML = reportHTML(call("program_report", b.dataset.program, ...filters()));
   $("#program-detail").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
@@ -344,7 +365,7 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-download]");
   if (!b) return;
   const id = b.dataset.download;
-  const r = id === "custom" ? LAST_REPORTS.custom : call("program_report", id);
+  const r = id === "custom" ? LAST_REPORTS.custom : call("program_report", id, ...filters());
   if (r) downloadReport(r);
 });
 
@@ -371,7 +392,8 @@ function downloadReport(r) {
 
 // ---- matrix -------------------------------------------------------------------
 function renderMatrix() {
-  const m = call("matrix");
+  const m = call("matrix", ...filters());
+  $("#matrix-filter-note").innerHTML = filterNote();
   const head = `<thead><tr><th></th>${m.skills.map((s) => `<th scope="col"><span>${esc(s.name)}</span></th>`).join("")}</tr></thead>`;
   const body = m.rows.map((row) => `<tr><th scope="row">${esc(row.name)}</th>${row.cells.map((c, i) => {
     const a = Math.min(0.95, c.share * 1.1);
@@ -426,10 +448,11 @@ $("#learner-form").addEventListener("submit", (e) => {
   if (!api) return;
   const err = $("#l-error");
   err.hidden = true;
-  const role = $("#l-role").value;
+  const role = $("#l-role").value.trim();
   let r;
   try {
     r = call("learner", role, "[]", $("#l-text").value);
+    if (!r.postings) throw new Error(`no postings for "${role}" in this data. Pick a job from the list as you type.`);
   } catch (ex) {
     err.textContent = ex.message;
     err.hidden = false;

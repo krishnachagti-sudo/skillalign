@@ -8,7 +8,7 @@ reports are cached per filter until the data changes.
 import json
 import os
 
-from .alignment import assess_program
+from .alignment import CORE_SHARE, assess_program
 from .dataset import load_postings, load_programs, parse_postings, program_from_syllabus
 from .demand import (declining_skills, emerging_skills, filter_postings, role_family, sort_quarters, split_windows,
                      trend_table)
@@ -73,7 +73,7 @@ def _meta_dict(postings, problems, source):
     quarters = sort_quarters(p.quarter for p in postings)
     families = {}
     for p in postings:
-        fam = role_family(p.title)
+        fam = p.family or role_family(p.title)
         if len(fam) >= 3:
             families[fam] = families.get(fam, 0) + 1
     return {
@@ -85,7 +85,8 @@ def _meta_dict(postings, problems, source):
         "sectors": sorted({p.sector for p in postings if p.sector}),
         "districts": sorted({p.district for p in postings if p.district}),
         "states": sorted({p.state for p in postings if p.state}),
-        "roles": sorted(((f, n) for f, n in families.items() if n >= 3), key=lambda r: -r[1]),
+        # jobs a learner can pick: families with enough postings to say anything, largest first
+        "roles": sorted(((f, n) for f, n in families.items() if n >= 5), key=lambda r: -r[1])[:400],
         "skills": [{"id": s.id, "name": s.name, "category": s.category} for s in State.skills.values()],
         "synonyms": sum(len(s.synonyms) for s in State.skills.values()),
         "programs": [{"id": p.id, "name": p.name} for p in State.programs],
@@ -141,27 +142,27 @@ SUMMARY_KEYS = ("id", "name", "provider", "sector", "duration", "postings", "sco
                 "core_count", "covered_count", "warning")
 
 
-def programs_summary(sector="", district=""):
-    rows = [{k: r[k] for k in SUMMARY_KEYS} for r in _reports(sector, district).values()]
+def programs_summary(sector="", district="", state=""):
+    rows = [{k: r[k] for k in SUMMARY_KEYS} for r in _reports(sector, district, state).values()]
     rows.sort(key=lambda r: (not r["scored"], r["score"]))  # weakest first, unscored last
     return _json(rows)
 
 
-def program_report(program_id, sector="", district=""):
-    reports = _reports(sector, district)
+def program_report(program_id, sector="", district="", state=""):
+    reports = _reports(sector, district, state)
     if program_id not in reports:
         raise KeyError(f"no program with id '{program_id}'")
     return _json(reports[program_id])
 
 
-def matrix(per_program=3, limit=24):
+def matrix(sector="", district="", state="", per_program=3, limit=24):
     """Programs x skills that matter to them: each program contributes its
     own most-demanded core skills, so a healthcare course is judged on
     healthcare skills, not on whatever IT jobs ask for most."""
-    reports = _reports()
+    reports = _reports(sector, district, state)
     columns = []
     for r in reports.values():
-        for s in [x for x in r["skills"] if x["share"] >= 0.15][:per_program]:
+        for s in [x for x in r["skills"] if x["share"] >= CORE_SHARE][:per_program]:
             if s["id"] not in columns:
                 columns.append(s["id"])
     columns = columns[:limit]
@@ -169,7 +170,7 @@ def matrix(per_program=3, limit=24):
     for p in State.programs:
         shares = {x["id"]: x["share"] for x in reports[p.id]["skills"]}
         taught = p.skills()
-        rows.append({"id": p.id, "name": p.name, "cells": [
+        rows.append({"id": p.id, "name": p.name, "scored": reports[p.id]["scored"], "cells": [
             {"taught": s in taught, "share": shares.get(s, 0.0)} for s in columns]})
     return _json({"skills": [{"id": s, "name": State.skills[s].name} for s in columns], "rows": rows})
 
@@ -189,7 +190,10 @@ def learner(role, skill_ids_json="[]", free_text=""):
     except json.JSONDecodeError:
         ids = []
     have = {s for s in ids if s in State.skills} | State.extractor.extract(free_text)
-    report = assess_learner(have, [role.lower()], State.postings, State.programs, State.skills)
+    role = " ".join(role.lower().split())
+    known = any(p.family == role for p in State.postings)
+    report = assess_learner(have, [] if known else [role], State.postings, State.programs, State.skills,
+                            family=role if known else None)
     report["have"] = sorted(State.skills[s].name for s in have)
     report["unrecognised"] = State.extractor.unrecognised(free_text)[:30]
     return _json(report)

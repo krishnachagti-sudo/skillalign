@@ -5,18 +5,20 @@ mention it, with a 95% Wilson interval because a share measured from 50
 postings is much less certain than one from 5,000.
 
 Change is measured between two calendar windows: the latest four
-quarters and the four before them. A change only counts as a trend when
-a two-proportion z-test says it is unlikely to be chance, and when it
-also holds WITHIN job roles, so a skill does not look like it is
-"declining" just because the roles that use it hire less.
+quarters and the four before them. The test is a Mantel-Haenszel test
+stratified by job role: it compares each skill's share inside the same
+role in both windows, so a change in WHICH roles are hiring is never read
+as a change in the skill. Roles seen in only one window cannot be compared;
+if they hold most of the recent postings, no trend is called at all.
 
-Because dozens of skills are tested at once, a plain 5% test would flag
-a few skills by luck every time. The z threshold is therefore Bonferroni
-corrected: with m skills tested, |z| must pass the 1 - 0.05/(2m) normal
-quantile (about 3.3 for 60 skills instead of 1.96).
+Because many skills are tested at once, a plain 5% test would flag a few
+by luck every time. The threshold is Bonferroni corrected over the skills
+that could be reported (in at least 5% of postings in either window):
+with m such skills, |z| must pass the 1 - 0.05/(2m) normal quantile.
 
-A straight line fitted through the quarterly shares (least squares)
-gives a short forecast, only when there are at least six quarters.
+A weighted least-squares line through the quarterly shares (weights =
+postings per quarter) gives a forecast with a 95% prediction range, only
+when there are at least six quarters.
 """
 
 import math
@@ -75,16 +77,35 @@ def role_patterns(roles):
     return patterns
 
 
+ABOVE_ENTRY = re.compile(r"\b(?:senior|sr|lead|principal|staff|head|chief|director|vp|vice president|manager|"
+                         r"architect|ii|iii|iv)\b", re.IGNORECASE)
+
+
+def family_of(posting):
+    family = getattr(posting, "family", None)
+    return family if family else role_family(posting.title)
+
+
 def matches_role(posting, patterns):
-    title = posting.title.lower()
-    return any(p.search(title) for p in patterns)
+    """A role phrase matches as whole words in the title or in its cleaned family."""
+    title, family = posting.title.lower(), family_of(posting)
+    return any(p.search(title) or p.search(family) for p in patterns)
 
 
-def filter_postings(postings, roles=None, sector=None, district=None, quarters=None, state=None):
+def is_entry_level(posting):
+    return not ABOVE_ENTRY.search(posting.title)
+
+
+def filter_postings(postings, roles=None, sector=None, district=None, quarters=None, state=None,
+                    family=None, entry_only=False):
     patterns = role_patterns(roles) if roles else None
     selected = []
     for p in postings:
+        if family is not None and family_of(p) != family:
+            continue
         if patterns and not matches_role(p, patterns):
+            continue
+        if entry_only and not is_entry_level(p):
             continue
         if sector and p.sector != sector:
             continue
@@ -152,6 +173,38 @@ def bonferroni_z(tests, alpha=0.05):
     return normal_quantile(1 - alpha / (2 * max(1, tests)))
 
 
+def mantel_haenszel_z(strata):
+    """Stratified test that a share changed, from (k_now, n_now, k_before, n_before)
+    per stratum (here: per job role). Positive z = higher now."""
+    num = var = 0.0
+    for k1, n1, k0, n0 in strata:
+        total, k = n1 + n0, k1 + k0
+        if total < 2 or n1 == 0 or n0 == 0:
+            continue
+        num += k1 - n1 * k / total
+        var += n1 * n0 * k * (total - k) / (total * total * (total - 1))
+    return 0.0 if var <= 0 else num / math.sqrt(var)
+
+
+def fit_line_weighted(xs, ys, ws):
+    """Weighted least squares. Returns (slope, intercept, prediction_se_function)."""
+    total = sum(ws)
+    mean_x = sum(w * x for w, x in zip(ws, xs)) / total
+    mean_y = sum(w * y for w, y in zip(ws, ys)) / total
+    sxx = sum(w * (x - mean_x) ** 2 for w, x in zip(ws, xs))
+    slope = 0.0 if sxx == 0 else sum(w * (x - mean_x) * (y - mean_y) for w, x, y in zip(ws, xs, ys)) / sxx
+    intercept = mean_y - slope * mean_x
+    resid = sum(w * (y - intercept - slope * x) ** 2 for w, x, y in zip(ws, xs, ys))
+    dof = max(1, len(xs) - 2)
+    sigma2 = resid / dof                        # variance of a quarter with average weight 1
+
+    def prediction_se(x0):
+        if sxx == 0:
+            return math.sqrt(sigma2)
+        return math.sqrt(sigma2 * (1 + 1 / total + (x0 - mean_x) ** 2 / sxx))
+    return slope, intercept, prediction_se
+
+
 def fit_line(xs, ys):
     """Least-squares straight line. Returns (slope, intercept).
 
@@ -177,7 +230,7 @@ def within_role_growth(recent, previous):
     def by_role(postings):
         groups = {}
         for p in postings:
-            groups.setdefault(role_family(p.title), []).append(p)
+            groups.setdefault(family_of(p), []).append(p)
         return groups
 
     now, before = by_role(recent), by_role(previous)
@@ -209,10 +262,13 @@ def trend_table(postings, window=4, horizon=4):
         previous         - share in the previous window (None if no previous data)
         growth           - relative change recent vs previous (None if undefined)
         is_new           - absent in the previous window, present now
-        z, significant   - two-proportion z-test; significant = |z| passes the
-                           Bonferroni threshold for all skills tested
+        z, significant   - role-stratified (Mantel-Haenszel) z; significant = |z| passes
+                           the Bonferroni threshold AND most recent postings are in
+                           roles seen in both windows
         within_growth    - the same change measured inside job roles (or None)
+        common_share     - share of recent postings in roles seen in both windows
         slope, forecast  - fitted change per quarter; share `horizon` quarters ahead
+        forecast_low/high - 95% prediction range of the forecast
         forecast_ok      - False when fewer than 6 quarters (forecast = share)
         series           - [(quarter, share), ...] for charting
     }}
@@ -224,16 +280,31 @@ def trend_table(postings, window=4, horizon=4):
     count_now, count_before = skill_counts(recent), skill_counts(previous)
     within = within_role_growth(recent, previous) if previous else {}
 
+    # per-role counts for the stratified test
+    roles_now, roles_before = {}, {}
+    for p in recent:
+        roles_now.setdefault(family_of(p), []).append(p)
+    for p in previous:
+        roles_before.setdefault(family_of(p), []).append(p)
+    common = [r for r in roles_now if r in roles_before]
+    strata = [(len(roles_now[r]), skill_counts(roles_now[r]), len(roles_before[r]), skill_counts(roles_before[r]))
+              for r in common]
+    common_share = sum(len(roles_now[r]) for r in common) / n_now if n_now else 0.0
+
     grouped = {}
     for p in postings:
         grouped.setdefault(p.quarter, []).append(p)
     quarters = sort_quarters(grouped)
     by_quarter = {q: skill_shares(grouped[q]) for q in quarters}
     xs = [quarter_index(q) for q in quarters]
+    sizes = [len(grouped[q]) for q in quarters]
+    weights = [n / (sum(sizes) / len(sizes)) for n in sizes] if sizes else []
     forecast_ok = len(quarters) >= 6
 
     tested = set(count_now) | set(count_before)
-    z_crit = bonferroni_z(len(tested))
+    eligible = [s for s in tested if max(count_now.get(s, 0) / n_now if n_now else 0,
+                                         count_before.get(s, 0) / n_before if n_before else 0) >= 0.05]
+    z_crit = bonferroni_z(len(eligible))
     table = {}
     for skill_id in tested:
         k1, k0 = count_now.get(skill_id, 0), count_before.get(skill_id, 0)
@@ -245,18 +316,27 @@ def trend_table(postings, window=4, horizon=4):
             growth, is_new = None, now > 0
         else:
             growth, is_new = (now - before) / before, False
-        z = z_two_proportions(k1, n_now, k0, n_before) if n_before else 0.0
+        z = mantel_haenszel_z([(c1.get(skill_id, 0), m1, c0.get(skill_id, 0), m0)
+                               for m1, c1, m0, c0 in strata]) if n_before else 0.0
         series = [(q, by_quarter[q].get(skill_id, 0.0)) for q in quarters]
-        slope, intercept = fit_line(xs, [s for _, s in series])
-        forecast = intercept + slope * (xs[-1] + horizon) if forecast_ok and xs else now
+        if forecast_ok:
+            slope, intercept, se = fit_line_weighted(xs, [s for _, s in series], weights)
+            x_new = xs[-1] + horizon
+            forecast = intercept + slope * x_new
+            spread = Z95 * se(x_new)
+        else:
+            slope, forecast, spread = 0.0, now, 0.0
         low, high = wilson(k1, n_now)
         table[skill_id] = {
             "share": now, "low": low, "high": high, "count": k1, "n": n_now,
             "previous": before, "growth": growth, "is_new": is_new,
-            "z": z, "z_crit": z_crit, "significant": abs(z) >= z_crit,
-            "within_growth": within.get(skill_id),
-            "slope": slope if forecast_ok else 0.0,
-            "forecast": max(0.0, min(1.0, forecast)), "forecast_ok": forecast_ok,
+            "z": z, "z_crit": z_crit, "significant": abs(z) >= z_crit and common_share >= 0.5,
+            "within_growth": within.get(skill_id), "common_share": common_share,
+            "slope": slope,
+            "forecast": max(0.0, min(1.0, forecast)),
+            "forecast_low": max(0.0, min(1.0, forecast - spread)),
+            "forecast_high": max(0.0, min(1.0, forecast + spread)),
+            "forecast_ok": forecast_ok,
             "series": series,
         }
     return table
@@ -267,13 +347,14 @@ def is_rising(t, min_growth=0.3):
         return False
     if not (t["is_new"] or (t["growth"] is not None and t["growth"] >= min_growth)):
         return False
-    return t["within_growth"] is None or t["within_growth"] >= min_growth / 2
+    # the within-role change must be measurable and point the same way
+    return t["within_growth"] is not None and t["within_growth"] >= min_growth / 2
 
 
 def is_falling(t, max_growth=-0.2):
     if not t["significant"] or t["z"] >= 0 or t["growth"] is None or t["growth"] > max_growth:
         return False
-    return t["within_growth"] is None or t["within_growth"] <= max_growth / 2
+    return t["within_growth"] is not None and t["within_growth"] <= max_growth / 2
 
 
 def emerging_skills(table, min_share=0.05, min_postings=5):

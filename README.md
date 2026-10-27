@@ -9,14 +9,15 @@ The engine is plain Python (standard library only). The website runs that same P
 | Path | What it is |
 |---|---|
 | `engine/` | The Python engine: taxonomy, dataset, demand, alignment, learner, api |
-| `data/skills.json` | 100 skills, 718 phrases (incl. ITI trades, business skills and Marathi words) |
+| `data/skills.json` | 101 skills, 820 phrases (incl. ITI trades, business skills and Marathi words) |
 | `data/programs.json` | 10 illustrative training programs |
-| `data/job_postings.csv` | 2,214 SYNTHETIC postings across 12 Maharashtra districts (made by `tools/generate_sample_data.py`) |
-| `data/real_postings_india_2026.csv` | 19,390 REAL Indian postings, Jan-Jun 2026, from Fliar Research (CC BY-NC 4.0), made by `tools/import_fliar.py`; see `docs/DATA-SOURCES.md` |
-| `tools/validate.py` | Runs the method on trend-free and trended synthetic data; writes `docs/validation.md` |
+| `data/job_postings.csv` | 2,216 SYNTHETIC postings across 12 Maharashtra districts (made by `tools/generate_sample_data.py`) |
+| `data/real_postings_india_2026.csv` | 19,216 REAL Indian postings, Jan-Jun 2026, from Fliar Research (CC BY-NC 4.0), cleaned by `tools/import_fliar.py`; see `docs/DATA-SOURCES.md` |
+| `tools/real_findings.py` | Computes every real-data figure quoted in the report, with definitions in code; writes `docs/real_findings.md` |
+| `tools/validate.py` | Scores the method against the generator's known truth: false alarms, precision/recall, range coverage, forecast backtest; writes `docs/validation.md` |
 | `vendor/pyodide/` | Self-hosted Pyodide 0.28.3 core (MPL-2.0), so the site needs no CDN |
 | `site/` | The web page (HTML, CSS, JS) |
-| `tests/` | 51 pytest tests |
+| `tests/` | 58 pytest tests |
 | `build.py` | Builds the publishable `dist/` folder |
 | `docs/sources.md` | Verified facts and links used in the report |
 
@@ -24,7 +25,7 @@ The engine is plain Python (standard library only). The website runs that same P
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install pytest
-.venv/bin/python -m pytest -q          # 51 tests
+.venv/bin/python -m pytest -q          # 58 tests
 .venv/bin/python tools/validate.py      # fake-trend and stability checks
 python3 build.py                        # writes dist/
 python3 -m http.server 3025 --directory dist
@@ -36,7 +37,7 @@ Regenerate the sample postings: `python3 tools/generate_sample_data.py`. Re-impo
 
 ## Publish on a Conyso subdomain
 
-For now the site is on GitHub Pages: commit, then run `./publish.sh` (it refuses to publish uncommitted changes). `dist/` is the whole site. To serve it at, say, `skillalign.conyso.com` with GitHub Pages:
+For now the site is on GitHub Pages: commit, then run `./publish.sh` (it refuses to publish uncommitted changes). `dist/` is the whole site. Note: the real dataset is CC BY-NC 4.0 (non-commercial); before serving it from a company domain, get the source's permission or drop that file from the build. To serve it at, say, `skillalign.conyso.com` with GitHub Pages:
 
 1. Create a new GitHub repo and push the contents of `dist/` to it.
 2. Add a file named `CNAME` containing `skillalign.conyso.com`.

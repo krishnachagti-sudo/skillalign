@@ -117,14 +117,24 @@ def lerp(a, b, t):
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data")
 
 
-def generate(seed=SEED, flat=False):
-    """Return the posting rows. flat=True holds every probability and every
-    role's volume at its average, so the data contains no trend at all."""
+def generate(seed=SEED, flat=False, flat_skills=False, reposts=0.0):
+    """Return the posting rows.
+
+    flat=True        every skill probability AND every role's volume held at its
+                     average: the data contains no trend at all;
+    flat_skills=True skill probabilities held flat but role volumes still shift
+                     (e.g. fewer data-entry jobs): only the MIX of roles changes;
+    reposts=r        each posting is reposted by its employer, identically and in
+                     the same quarter, with probability r (1-3 extra copies).
+    Every posting gets an employer code from a pool of 40 per sector.
+    """
     rng = random.Random(seed)
     with open(os.path.join(DATA_DIR, "skills.json"), encoding="utf-8") as f:
         # case-sensitive synonyms are written with a leading "=" in the taxonomy
         # "=" marks case-sensitive synonyms; "~" ones only count in skills lists, so never in a description
-        synonyms = {row["id"]: [s.lstrip("=") for s in row["synonyms"] if not s.startswith("~")] for row in json.load(f)}
+        # the first three phrases of each skill, which read naturally in a job ad
+        synonyms = {row["id"]: [s.lstrip("=") for s in row["synonyms"] if not s.startswith("~")][:3]
+                    for row in json.load(f)}
     names, weights = list(DISTRICTS), list(DISTRICTS.values())
 
     rows = []
@@ -132,10 +142,11 @@ def generate(seed=SEED, flat=False):
         t = qi / (len(QUARTERS) - 1)
         year, q = int(quarter[:4]), int(quarter[-1])
         for role, (sector, volume, profile) in ROLES.items():
-            tt = 0.5 if flat else t
-            count = round(lerp(volume[0], volume[1], tt) * rng.uniform(0.85, 1.15))
+            tv = 0.5 if flat else t                     # time for role volumes
+            ts = 0.5 if (flat or flat_skills) else t    # time for skill probabilities
+            count = round(lerp(volume[0], volume[1], tv) * rng.uniform(0.85, 1.15))
             for _ in range(count):
-                skills = [s for s, (p0, p1) in profile.items() if rng.random() < lerp(p0, p1, tt)]
+                skills = [s for s, (p0, p1) in profile.items() if rng.random() < lerp(p0, p1, ts)]
                 if not skills:
                     skills = [max(profile, key=lambda s: profile[s][1])]
                 rng.shuffle(skills)
@@ -148,20 +159,27 @@ def generate(seed=SEED, flat=False):
                     text += f" Good to have: {', '.join(nice)}."
                 text += " " + rng.choice(EXPERIENCE)
                 month = (q - 1) * 3 + rng.randint(1, 3)
-                rows.append({
+                row = {
                     "title": rng.choice(PREFIXES) + role + rng.choice(SUFFIXES),
                     "description": text,
                     "date": f"{year}-{month:02d}-{rng.randint(1, 28):02d}",
                     "sector": sector,
                     "district": district,
                     "state": "Maharashtra",
-                })
+                    "employer": f"{''.join(c for c in sector if c.isalpha())[:3].upper()}{rng.randint(1, 40):02d}",
+                }
+                rows.append(row)
+                if reposts and rng.random() < reposts:
+                    for _ in range(rng.randint(1, 3)):
+                        copy = dict(row)
+                        copy["date"] = f"{year}-{month:02d}-{rng.randint(1, 28):02d}"
+                        rows.append(copy)
     rows.sort(key=lambda r: r["date"])
     return rows
 
 
 def write_csv(rows, out):
-    writer = csv.DictWriter(out, fieldnames=["title", "description", "date", "sector", "district", "state"])
+    writer = csv.DictWriter(out, fieldnames=["title", "description", "date", "sector", "district", "state", "employer"])
     writer.writeheader()
     writer.writerows(rows)
 

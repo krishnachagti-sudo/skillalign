@@ -82,6 +82,7 @@
       <h1>Training programs, scored against the jobs they train for</h1>
       <p class="lede">Each program is compared only with postings for its own target roles. The score weights each in-demand skill by how often jobs ask for it and by whether the program gives it enough hours. The range shows how much the score could move with a different sample of postings.</p>
     </div>
+    <div id="program-filter-note"></div>
     <div id="program-list" class="program-list"></div>
     <div id="program-detail"></div>
   </section>
@@ -92,6 +93,7 @@
       <h1>Gap matrix</h1>
       <p class="lede">Rows are programs; columns are the skills each program's own target jobs ask for most. The darker a cell, the more that program's jobs ask for the skill. A tick means it is taught; a red outline marks a skill in 15% or more of its jobs that the program does not teach.</p>
     </div>
+    <div id="matrix-filter-note"></div>
     <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
     <div class="legend"><span><i class="sw" style="--a:.1"></i>rarely asked</span><span><i class="sw" style="--a:.9"></i>asked in most postings</span><span><b class="tick">✓</b> taught</span><span><i class="sw gap-sw"></i>gap: in demand, not taught</span></div>
   </section>
@@ -130,7 +132,9 @@ Business communication (20 hrs) [mandatory]</textarea></label>
       <p class="lede">Pick the job you want and tell SkillAlign what you can do. It shows what employers ask for, what you're missing, which words it couldn't read, and which program closes the most gaps.</p>
     </div>
     <form class="card form" id="learner-form">
-      <label>Job I want <select id="l-role"></select></label>
+      <label>Job I want <span class="mute small">start typing to search the jobs in this data</span>
+        <input id="l-role" list="l-roles" autocomplete="off" value="data analyst"></label>
+      <datalist id="l-roles"></datalist>
       <label>What I can do <span class="mute small">paste your resume or list skills, separated by commas</span>
         <textarea id="l-text" rows="4">I know Excel and basic SQL. Good communication skills.</textarea></label>
       <button class="btn" type="submit">Check my readiness</button>
@@ -143,11 +147,11 @@ Business communication (20 hrs) [mandatory]</textarea></label>
   <section id="tab-data" class="tab" role="tabpanel" aria-labelledby="t-data" hidden>
     <div class="intro">
       <h1>Use your own job postings</h1>
-      <p class="lede">The built-in postings are synthetic. Upload real postings and every score on the site is recomputed from them. Nothing leaves your browser.</p>
+      <p class="lede">SkillAlign ships two datasets: synthetic demo postings and 19,194 real Indian postings. Upload your own and every score on the site is recomputed from them. Nothing leaves your browser.</p>
     </div>
     <article class="card">
       <h2>CSV format</h2>
-      <p>Required columns: <code>title</code>, <code>date</code>, and a <code>description</code> and/or a <code>skills</code> column (like "Python|SQL|Excel", common in job-board exports). Optional: <code>sector</code>, <code>district</code> (or <code>city</code>), <code>state</code>. Common export names such as <code>posted_date</code> and <code>key_skills</code> are understood. Commas, semicolons, tabs or pipes as separators. Dates as 2025-08-14 or 14/08/2025. Skills are read from the description, never the title. At least eight quarters give trends; fewer still give shares and scores.</p>
+      <p>Required columns: <code>title</code>, <code>date</code>, and a <code>description</code> and/or a <code>skills</code> column (like "Python|SQL|Excel", common in job-board exports). Optional: <code>sector</code>, <code>district</code> (or <code>city</code>), <code>state</code>. Common export names such as <code>posted_date</code> and <code>key_skills</code> are understood. With an <code>employer</code> column, identical reposts are counted once and score ranges account for each company's postings moving together. Commas, semicolons, tabs or pipes as separators. Dates as 2025-08-14 or 14/08/2025. Skills are read from the description, never the title. At least eight quarters give trends; fewer still give shares and scores.</p>
       <div class="row">
         <label class="btn file">Upload CSV<input type="file" id="upload" accept=".csv,.tsv,.txt,text/csv" hidden></label>
         <a class="btn ghost" href="sample_postings.csv" download>Download the sample CSV</a>
@@ -168,25 +172,26 @@ Business communication (20 hrs) [mandatory]</textarea></label>
     <h1>How it works</h1>
     <p class="lede">Every number on this site is computed by a small Python program that runs in your browser. There is no AI model and no server: the same data always gives the same answer, and every rule below can be checked by hand.</p>
     <h2>1. Reading skills out of text</h2>
-    <p>A taxonomy lists <span id="m-skills">100</span> skills with <span id="m-syn">718</span> ways of writing them, including ITI trades, business skills and Marathi words. In a job board's skills list (like "python|sql|excel") lowercase names and one-letter languages such as C and R count too, because there they can only mean the skill. The text is split into words, and at each word the longest known phrase (up to four words) is looked up in a dictionary. Short ambiguous words only count in their proper form ("Excel", not "excel at"), plurals and hyphens are tolerated, and a skill right after "no", "not" or "without" is skipped. Skills come from the posting description only, never the job title.</p>
+    <p>A taxonomy lists <span id="m-skills">101</span> skills with <span id="m-syn">820</span> ways of writing them, including ITI trades, business skills and Marathi words. In running text the longest known phrase of up to four words is looked up at each word; short ambiguous words count only in their proper form ("Excel", not "excel at"), and a skill right after "no", "not" or "without" is skipped. A job board's skills list ("python|sql|excel") is read item by item, and one-letter names like C or R count only when they are a whole item. Skills never come from the job title. Words it cannot read are listed for you.</p>
     <h2>2. Measuring demand, honestly</h2>
-    <p>A skill's <b>share</b> is the fraction of postings that mention it, shown with a 95% range. Change compares the latest four calendar quarters with the four before. A change is only called <b>emerging</b> or <b>declining</b> when a two-proportion z-test says it is beyond chance, corrected for testing dozens of skills at once (Bonferroni), and when the same change shows up within job roles, so a shift in which roles are hiring is not mistaken for a skill trend. A straight-line forecast is drawn only with six or more quarters.</p>
+    <p>A skill's <b>share</b> is the fraction of postings that mention it, shown with a 95% range. Change compares the latest four calendar quarters with the four before, using a test <b>stratified by job role</b> (Mantel-Haenszel): the same role is compared with itself, so a change in which roles are hiring is never read as a skill trend. The threshold is corrected for testing many skills at once (Bonferroni, over skills in at least 5% of postings), and if most recent postings are in roles absent a year earlier, no trend is called. A forecast with a 95% range is drawn only with six or more quarters.</p>
     <h2>3. Scoring a program</h2>
-    <p>Only postings for the program's own target roles count. Skills in at least 15% of them are <b>core</b>. Each core skill earns credit for being taught, scaled by hours: full credit needs at least half the hours its share of demand would justify, so a one-hour "Introduction to X" earns almost nothing. The <b>alignment score</b> is the demand-weighted average credit. Its range comes from resampling the postings 150 times. A score whose range crosses 50 or 75 is marked borderline.</p>
+    <p>Only postings for the program's own target roles count, and an entry-level course is compared with entry-level jobs only. With fewer than 30 matching postings the program is not scored and gets no advice. Skills in at least 15% of the postings are <b>core</b>. Each core skill earns credit for being taught, scaled by hours: full credit needs half of what a 200-hour reference course would give it in proportion to its demand, and never less than 5 hours. So shrinking a course lowers its score, padding it with unrelated hours changes nothing, and adding hours to a core skill can only help. The <b>alignment score</b> is the demand-weighted average credit. Its 90% range comes from resampling employers 400 times, re-picking the core skills each time, because one company's postings move together.</p>
     <h2>4. Recommendations</h2>
     <ul class="dots">
       <li><b>Add</b>: a core skill the program does not teach.</li>
-      <li><b>Expand</b>: taught, but earning under 75% credit because it gets too few hours.</li>
+      <li><b>Expand</b>: taught, but with fewer hours than full credit needs.</li>
       <li><b>Prepare</b>: not core yet, but rising beyond chance and forecast to reach 15% within a year.</li>
-      <li><b>Reduce</b>: taught, yet confidently under 5% of postings. Never applied to mandatory modules.</li>
-      <li><b>Review</b>: still asked for, but falling beyond chance within the same roles. Never applied to mandatory modules.</li>
+      <li><b>Reduce</b>: taught, yet under 5% of postings and confidently under 15%.</li>
+      <li><b>Review</b>: still asked for, but falling beyond chance within the same roles.</li>
     </ul>
-    <h2>Checked against fake trends</h2>
-    <p>On sample data generated with no trends at all, across 20 random samples, this method reports no emerging or declining skills; the first version reported about one per sample. On trended samples, every trend it reported (33 of 33) was really in the data. It is deliberately cautious, so small changes go unreported. Scores move by a few points between samples, which is what the ranges show.</p>
+    <p>Nothing taught in a compulsory module, and no basic skill (communication, English, teamwork, problem solving, computer use), is ever advised to cut: job ads under-report basics.</p>
+    <h2>Checked against the truth</h2>
+    <p>On synthetic data the true trends are known, so the method can be scored (<a href="https://github.com/krishnachagti-sudo/skillalign/blob/main/docs/validation.md">full results</a>). On trend-free data it reports almost no trends, even when the mix of job roles shifts or employers repost ads, where the first version reported nearly five per sample. It finds every large change and few modest ones; what it reports points the right way 98% of the time. The 90% score ranges contained the true score 85 to 100% of the time, and forecasts were within their 95% range 91% of the time in a backtest.</p>
     <h2>Real data</h2>
-    <p>Switch the data menu at the top to <b>Real postings</b> for 19,390 Indian job ads from January to June 2026, published by Fliar Research under CC BY-NC 4.0 (<a href="https://huggingface.co/datasets/fliarbi/job-postings-2026">source</a>). They come with a skills list per posting; SkillAlign recognises 54% of the skill mentions in them, and at least one skill in 92% of postings. Two quarters is too short for trends, so this view shows real demand and scores without forecasts. It also shows a gap no synthetic sample could: only 292 of the 19,390 postings (1.5%) ask for a hands-on trade skill such as wiring, welding, plumbing or EV work, and 42 (0.2%) for bedside patient care, so courses such as Solar PV Installer and General Duty Assistant have no matching postings at all. Online job boards are not where vocational demand shows up.</p>
+    <p>Switch the data menu to <b>Real postings</b> for 19,194 Indian job ads from January to June 2026, published by Fliar Research under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> (<a href="https://huggingface.co/datasets/fliarbi/job-postings-2026">source</a>), cleaned as described in the project's <a href="https://github.com/krishnachagti-sudo/skillalign/blob/main/docs/DATA-SOURCES.md">data notes</a>. The source is a 6% sample that keeps every posting of a hash-chosen set of companies, collected unevenly over time, so its numbers describe that sample, not the whole job market. Two quarters is too short for trends. The skill list was grown from these postings, so it recognises 50% of their skill items; on held-out United States postings it never saw, it recognises 32%. In this sample only 41 postings (0.2%) are for hands-on trade jobs such as electrician, welder or fitter, and 19 (0.1%) for nursing or ward care, so most vocational courses cannot be scored from it.</p>
     <h2>Limits</h2>
-    <p>Postings say what employers advertise, mostly in the formal sector, not everything a job needs. A skill outside the taxonomy is invisible, so the page lists what it could not read. The built-in data is synthetic; upload real postings for real conclusions.</p>
+    <p>Postings say what employers advertise, mostly in the formal sector, not everything a job needs. A skill outside the taxonomy is invisible, so the page lists what it could not read. Thresholds (15% core, 30 postings, 200-hour reference) are judgement calls, stated openly. Nothing yet shows that higher scores lead to more placements.</p>
   </section>
 </main>
 

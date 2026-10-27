@@ -1,18 +1,21 @@
 """A learner's view: how ready am I for a role, and which program closes my gaps."""
 
-from .alignment import CORE_SHARE, priority
+from .alignment import CORE_SHARE, NEVER_CUT, priority
 from .demand import filter_postings, role_patterns, trend_table
 
-REQUIRED_SHARE = CORE_SHARE  # the same 15% line the program scores use
+STRONG_GAP = 0.25   # a course not built for the job is suggested only if it covers a gap this common
 
 
-def assess_learner(have, roles, postings, programs, skills, top_programs=3):
+def assess_learner(have, roles, postings, programs, skills, top_programs=3, family=None):
+    """Readiness for a job. `family` (an exact job family from the site's list) is
+    matched exactly; otherwise `roles` are matched as whole words in titles."""
     roles = [r for r in roles if r.strip()]
-    if not roles:
+    if not roles and family is None:
         raise ValueError("choose a job first")
-    relevant = filter_postings(postings, roles=roles)
+    relevant = filter_postings(postings, family=family) if family is not None else \
+        filter_postings(postings, roles=roles)
     table = trend_table(relevant)
-    required = {s: t for s, t in table.items() if t["share"] >= REQUIRED_SHARE}
+    required = {s: t for s, t in table.items() if t["share"] >= CORE_SHARE}
 
     total = sum(t["share"] for t in required.values())
     matched = sum(t["share"] for s, t in required.items() if s in have)
@@ -27,15 +30,19 @@ def assess_learner(have, roles, postings, programs, skills, top_programs=3):
                 "growth": t["growth"], "is_new": t["is_new"], "significant": t["significant"],
                 "have": skill_id in have}
 
-    patterns = role_patterns(roles)
+    job_words = roles or [family]
+    patterns = role_patterns([w for w in job_words if len(w) >= 3])
     ranked = []
     for program in programs:
         covers = [s for s in missing if s in program.skills()]
         if not covers:
             continue
-        # a program built for this job comes before one that merely overlaps
         for_this_job = any(p.search(target) for target in program.target_roles for p in patterns) or \
-            any(role in target for target in program.target_roles for role in roles)
+            any(w in target or target in w for target in program.target_roles for w in job_words)
+        # an unrelated course must cover a specific, common gap - not just "problem solving"
+        strong = [s for s in covers if required[s]["share"] >= STRONG_GAP and skills[s].category != NEVER_CUT]
+        if not for_this_job and not strong:
+            continue
         ranked.append({
             "id": program.id,
             "name": program.name,

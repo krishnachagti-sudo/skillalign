@@ -53,6 +53,8 @@ def main():
     for f in PYODIDE_FILES:
         copy(os.path.join(ROOT, "vendor", "pyodide", f), os.path.join(DIST, "vendor", "pyodide", f))
     copy(os.path.join(ROOT, "data", "job_postings.csv"), os.path.join(DIST, "sample_postings.csv"))
+    # the licence and the list of changes travel with the real data file
+    copy(os.path.join(ROOT, "docs", "DATA-SOURCES.md"), os.path.join(DIST, "py", "data", "DATA-SOURCES.md"))
 
     with open(os.path.join(DIST, "py", "manifest.json"), "w") as f:
         json.dump({"version": version, "files": py_files, "lazy": lazy}, f, indent=1)
@@ -69,7 +71,7 @@ def main():
         f.write(html)
 
     precache = ["./", f"style.css?v={version}", f"app.js?v={version}", f"py/manifest.json?v={version}"] + \
-               [f"py/{rel}?v={version}" for rel in py_files + list(lazy.values())] + \
+               [f"py/{rel}?v={version}" for rel in py_files] + \
                [f"vendor/pyodide/{f}" for f in PYODIDE_FILES if f != "NOTICE.md"]
     with open(os.path.join(DIST, "sw.js"), "w") as f:
         f.write(SERVICE_WORKER.replace("__VERSION__", version).replace("__PRECACHE__", json.dumps(precache, indent=1)))
@@ -82,7 +84,10 @@ const CACHE = "skillalign-__VERSION__";
 const PRECACHE = __PRECACHE__;
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+  // cache: "reload" skips the browser's HTTP cache, so a fresh publish is never mixed with old files
+  event.waitUntil(caches.open(CACHE)
+    .then((c) => c.addAll(PRECACHE.map((u) => new Request(u, { cache: "reload" }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (event) => {
@@ -94,14 +99,24 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method !== "GET" || url.origin !== location.origin) return;
+  const scope = new URL(self.registration.scope);
   if (event.request.mode === "navigate") {
-    // the page itself: network first so a new version is picked up, cache when offline
+    // the page itself: network first so a new version is picked up, cache when offline.
+    // Only a successful load of the app's own page is cached, never an error page.
+    const isApp = url.pathname === scope.pathname || url.pathname === scope.pathname + "index.html";
     event.respondWith(fetch(event.request)
-      .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put("./", copy)); return res; })
+      .then((res) => {
+        if (res.ok && isApp) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put("./", copy)); }
+        return res;
+      })
       .catch(() => caches.match("./")));
     return;
   }
-  event.respondWith(caches.match(event.request).then((hit) => hit || fetch(event.request)));
+  // everything else: cache first; large optional files (the real dataset) are cached the first time they are used
+  event.respondWith(caches.match(event.request).then((hit) => hit || fetch(event.request).then((res) => {
+    if (res.ok && url.pathname.includes("/py/data/")) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(event.request, copy)); }
+    return res;
+  })));
 });
 """
 

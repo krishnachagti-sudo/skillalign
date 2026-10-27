@@ -9,10 +9,9 @@
       "data entry operator",
       "data entry",
       "back office executive",
-      "accounts assistant",
-      "accountant",
-      "accounts executive",
-      "mis executive"
+      "back office assistant",
+      "mis executive",
+      "computer operator"
     ],
     "modules": [
       {
@@ -23,7 +22,7 @@
       {
         "title": "Typing Practice",
         "hours": 80,
-        "outline": "Touch typing drills in English and Hindi, building typing speed to 35 wpm."
+        "outline": "Touch typing drills, building typing speed to 35 wpm."
       },
       {
         "title": "Office Documents",
@@ -41,7 +40,8 @@
         "outline": "Basic English, communication skills in the office.",
         "mandatory": true
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "junior-dev",
@@ -93,7 +93,8 @@
         "outline": "Communication skills, being a team player.",
         "mandatory": true
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "data-analytics",
@@ -103,9 +104,9 @@
     "duration": "4 months",
     "target_roles": [
       "data analyst",
-      "business analyst",
       "mis analyst",
-      "reporting analyst"
+      "reporting analyst",
+      "business data analyst"
     ],
     "modules": [
       {
@@ -139,7 +140,8 @@
         "outline": "Communication skills for presenting findings.",
         "mandatory": true
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "electrician",
@@ -149,9 +151,9 @@
     "duration": "2 years",
     "target_roles": [
       "electrician",
-      "maintenance technician",
       "electrical technician",
-      "electrical maintenance"
+      "electrical maintenance technician",
+      "wireman"
     ],
     "modules": [
       {
@@ -180,7 +182,8 @@
         "outline": "Communication skills, basic English.",
         "mandatory": true
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "solar-pv",
@@ -215,7 +218,8 @@
         "hours": 20,
         "outline": "Energy audit of a home."
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "gda",
@@ -256,7 +260,8 @@
         "outline": "Communication skills with patients and families.",
         "mandatory": true
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "retail",
@@ -266,12 +271,11 @@
     "duration": "2 months",
     "target_roles": [
       "retail sales associate",
-      "sales associate",
+      "store sales associate",
+      "retail associate",
       "store executive",
       "retail executive",
-      "cashier",
-      "customer service representative",
-      "customer support executive"
+      "cashier"
     ],
     "modules": [
       {
@@ -294,7 +298,8 @@
         "hours": 20,
         "outline": "Personal grooming and store etiquette."
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "digital-marketing",
@@ -337,7 +342,8 @@
         "outline": "Communication skills with clients.",
         "mandatory": true
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "automotive",
@@ -349,9 +355,11 @@
       "automotive service technician",
       "ev service technician",
       "automobile technician",
-      "service technician",
-      "vehicle technician",
-      "mechanic"
+      "vehicle service technician",
+      "two wheeler technician",
+      "auto mechanic",
+      "motor mechanic",
+      "automobile mechanic"
     ],
     "modules": [
       {
@@ -379,7 +387,8 @@
         "hours": 60,
         "outline": "Troubleshooting faults step by step."
       }
-    ]
+    ],
+    "entry_level": true
   },
   {
     "id": "cloud",
@@ -421,6 +430,7 @@
         "hours": 60,
         "outline": "Cloud security, IAM policies, network security."
       }
-    ]
+    ],
+    "entry_level": true
   }
 ]

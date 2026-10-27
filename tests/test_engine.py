@@ -85,6 +85,13 @@ def test_trades_and_marathi(extractor):
     assert extractor.extract("MS-CIT certificate") == {"digital_literacy"}
 
 
+def test_list_items_are_read_whole(extractor):
+    # short names count only as a whole list item; phrases never cross items
+    assert extractor.extract("sap cs|objective c|c-suite|r & d|cloud|security|transformers", as_list=True) == \
+        {"erp", "mobile_dev", "cloud", "cybersecurity", "ml"}
+    assert extractor.extract("canvas|documentation|oracle fusion", as_list=True) == {"erp"}
+
+
 def test_skills_list_mode(extractor):
     # in a job board's skills list, lowercase and one-letter names can only mean the skill
     assert extractor.extract("aws|excel|react|c|r|go|sales", as_list=True) == \
@@ -205,6 +212,21 @@ def test_role_mix_is_not_a_trend():
     assert within_role_growth(after, before)["tally"] == pytest.approx(0.0)
 
 
+def test_role_mix_is_not_significant():
+    # tally stays at 70% of accountant postings while accountants shrink from half to a tenth of hiring:
+    # a plain market-wide test would call tally "declining"; the role-stratified test must not
+    def window(q, accountants, developers):
+        return [posting("Accountant", q, ["tally"] if k < 0.7 * accountants else []) for k in range(accountants)] + \
+               [posting("Developer", q, []) for _ in range(developers)]
+    postings = []
+    for q in QUARTERS[:4]:
+        postings += window(q, 100, 100)
+    for q in QUARTERS[4:]:
+        postings += window(q, 20, 180)
+    t = trend_table(postings)["tally"]
+    assert t["growth"] < -0.5 and not t["significant"]
+
+
 def test_role_family():
     assert role_family("Sr. Data Analyst (Fresher)") == "data analyst"
     assert role_family("Team Lead - Retail Sales Associate") == "retail sales associate"
@@ -218,8 +240,9 @@ def test_alignment_is_share_and_hours_weighted(extractor, skills):
     postings += [posting("Data Analyst", "2026-Q1", ["sql"]) for _ in range(40)]
     program = program_from_syllabus("P", ["data analyst"], "SQL (30 hrs)\nTyping speed (30 hrs)", extractor)
     report = assess_program(program, postings, skills)
-    # core: sql 100%, excel 60%. SQL's fair hours = 60 x 1.0/1.6 = 37.5; 30 h >= half of that -> full credit
-    assert report["score"] == pytest.approx(62.5)
+    # core: sql 100%, excel 60%. SQL needs 0.5 x 200 x 1.0/1.6 = 62.5 h for full credit; 30 h -> 0.48
+    # score = 100 x (1.0 x 0.48) / 1.6 = 30
+    assert report["score"] == pytest.approx(30.0)
     actions = {(r["action"], r["id"]) for r in report["recommendations"]}
     assert ("Add", "excel") in actions and ("Reduce", "typing") in actions
     assert report["score_low"] <= report["score"] <= report["score_high"]
@@ -235,6 +258,40 @@ def test_intro_modules_cannot_game_the_score(extractor, skills):
     gamed_report = assess_program(gamed, postings, skills)
     assert gamed_report["score"] < 5
     assert {r["action"] for r in gamed_report["recommendations"]} >= {"Expand"}
+
+
+def test_hours_can_only_help_and_shrinking_hurts(extractor, skills):
+    postings = [posting("Data Analyst", "2026-Q1", ["sql", "excel"]) for _ in range(50)]
+    base = "SQL (40 hrs)\nExcel (20 hrs)\nYoga (100 hrs)"
+    score = lambda text: assess_program(program_from_syllabus("P", ["data analyst"], text, extractor), postings, skills)["score"]
+    assert score("SQL (200 hrs)\nExcel (20 hrs)\nYoga (100 hrs)") >= score(base)       # more hours on a core skill
+    assert score("SQL (40 hrs)\nExcel (20 hrs)") == score(base)                          # padding is neutral
+    assert score("SQL (0.4 hrs)\nExcel (0.2 hrs)\nYoga (1 hrs)") < score(base) / 10     # a 100x smaller course
+
+
+def test_too_few_postings_get_no_score_or_advice(extractor, skills):
+    postings = [posting("EV Service Technician", "2026-Q1", ["ev_maint"]) for _ in range(5)]
+    program = program_from_syllabus("P", ["ev service technician"], "Engine overhaul: petrol engine (300 hrs)", extractor)
+    report = assess_program(program, postings, skills)
+    assert not report["scored"] and report["recommendations"] == [] and report["grade"] == "Too few postings"
+
+
+def test_absent_skill_uses_real_upper_bound(extractor, skills):
+    # 40 postings never mention engines: 0 of 40 has an upper bound near 9%, so "Reduce" is justified;
+    # but basics like communication are never advised to cut
+    postings = [posting("EV Service Technician", "2026-Q1", ["ev_maint"]) for _ in range(40)]
+    program = program_from_syllabus("P", ["ev service technician"],
+                                    "EV servicing (100 hrs)\nPetrol engine (50 hrs)\nCommunication skills (20 hrs)", extractor)
+    cuts = {r["id"] for r in assess_program(program, postings, skills)["recommendations"] if r["action"] == "Reduce"}
+    assert cuts == {"ic_engine"}
+
+
+def test_entry_level_course_ignores_senior_jobs(extractor, skills):
+    postings = [posting("Senior Software Engineer", "2026-Q1", ["cloud"]) for _ in range(40)]
+    postings += [posting("Software Engineer", "2026-Q1", ["python"]) for _ in range(40)]
+    program = program_from_syllabus("P", ["software engineer"], "Python (100 hrs)", extractor)
+    report = assess_program(program, postings, skills)
+    assert report["postings"] == 40 and report["score"] == 100
 
 
 def test_mandatory_modules_are_never_cut(extractor, skills):
@@ -266,6 +323,12 @@ def test_short_roles_rejected(extractor, skills):
 
 
 # --- learner ----------------------------------------------------------------
+
+def test_learner_skips_unrelated_courses(extractor, skills):
+    postings = [posting("Data Analyst", "2026-Q1", ["sql", "problem_solving"]) for _ in range(10)]
+    programs = [program_from_syllabus("Mechanic", ["automotive service technician"], "Troubleshooting (40 hrs)", extractor)]
+    assert assess_learner({"sql"}, ["data analyst"], postings, programs, skills)["programs"] == []
+
 
 def test_learner_readiness_and_program_pick(extractor, skills):
     postings = [posting("Data Analyst", "2026-Q1", ["sql", "excel", "python"]) for _ in range(10)]
