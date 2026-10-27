@@ -9,11 +9,13 @@ The engine is plain Python (standard library only). The website runs that same P
 | Path | What it is |
 |---|---|
 | `engine/` | The Python engine: taxonomy, dataset, demand, alignment, learner, api |
-| `data/skills.json` | 57 skills, 248 phrases |
+| `data/skills.json` | 79 skills, 393 phrases (incl. ITI trades and Marathi words) |
 | `data/programs.json` | 10 illustrative training programs |
-| `data/job_postings.csv` | 1,946 SYNTHETIC postings (made by `tools/generate_sample_data.py`) |
+| `data/job_postings.csv` | 2,236 SYNTHETIC postings across 12 Maharashtra districts (made by `tools/generate_sample_data.py`) |
+| `tools/validate.py` | Runs the method on trend-free and trended synthetic data; writes `docs/validation.md` |
+| `vendor/pyodide/` | Self-hosted Pyodide 0.28.3 core (MPL-2.0), so the site needs no CDN |
 | `site/` | The web page (HTML, CSS, JS) |
-| `tests/` | 20 pytest tests |
+| `tests/` | 49 pytest tests |
 | `build.py` | Builds the publishable `dist/` folder |
 | `docs/sources.md` | Verified facts and links used in the report |
 
@@ -21,18 +23,19 @@ The engine is plain Python (standard library only). The website runs that same P
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install pytest
-.venv/bin/python -m pytest -q          # 20 tests
+.venv/bin/python -m pytest -q          # 49 tests
+.venv/bin/python tools/validate.py      # fake-trend and stability checks
 python3 build.py                        # writes dist/
 python3 -m http.server 3025 --directory dist
 ```
 
-Open http://localhost:3025. The first load downloads Python (about 10 seconds), then everything is instant.
+Open http://localhost:3025. The first load fetches Python (about 12 MB); after that the site is cached and works offline.
 
 Regenerate the sample postings: `python3 tools/generate_sample_data.py`.
 
 ## Publish on a Conyso subdomain
 
-`dist/` is the whole site. To serve it at, say, `skillalign.conyso.com` with GitHub Pages:
+For now the site is on GitHub Pages: commit, then run `./publish.sh` (it refuses to publish uncommitted changes). `dist/` is the whole site. To serve it at, say, `skillalign.conyso.com` with GitHub Pages:
 
 1. Create a new GitHub repo and push the contents of `dist/` to it.
 2. Add a file named `CNAME` containing `skillalign.conyso.com`.
@@ -43,4 +46,4 @@ Run `python3 build.py` again after any change; every file URL carries a content 
 
 ## Upload format
 
-CSV with `title`, `description`, `date` (YYYY-MM-DD), and optionally `sector`, `city`. Bad rows are skipped and listed.
+CSV with `title`, `date` (2025-08-14, 14/08/2025 or an ISO timestamp), and `description` and/or `skills`; optionally `sector`, `district` (or `city`), `state`. Comma, semicolon, tab or pipe separated. Bad rows are skipped and listed; a file with no usable rows changes nothing.

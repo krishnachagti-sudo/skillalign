@@ -1,10 +1,14 @@
 """Build the static website into dist/.
 
-dist/ is self-contained: the page, its CSS/JS, the Python engine and
-the data files. Upload the whole folder to any static host.
+dist/ is self-contained: the page, its CSS/JS, the Python engine, the
+data files, a self-hosted copy of Pyodide, and a service worker that
+caches all of it so the site works offline after the first visit.
+
+Only the files listed below are shipped, so a stray file in site/ or
+data/ is never published by accident.
 
 Run:  python build.py
-Then: python -m http.server 8040 --directory dist
+Then: python -m http.server 3025 --directory dist
 """
 
 import hashlib
@@ -15,41 +19,89 @@ import shutil
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
 
+SITE_FILES = ["index.html", "app.js", "style.css"]
+ENGINE_FILES = ["__init__.py", "taxonomy.py", "dataset.py", "demand.py", "alignment.py", "learner.py", "api.py"]
+DATA_FILES = ["skills.json", "programs.json", "job_postings.csv"]
+PYODIDE_FILES = ["pyodide.js", "pyodide.asm.js", "pyodide.asm.wasm", "python_stdlib.zip", "pyodide-lock.json", "NOTICE.md"]
+
+
+def copy(src, dst):
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    shutil.copy(src, dst)
+
 
 def main():
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
-    shutil.copytree(os.path.join(ROOT, "site"), DIST)
 
-    files = []
-    for folder, pattern in (("engine", ".py"), ("data", "")):
-        os.makedirs(os.path.join(DIST, "py", folder), exist_ok=True)
-        for name in sorted(os.listdir(os.path.join(ROOT, folder))):
-            if name.startswith((".", "__")) and name != "__init__.py":
-                continue
-            if pattern and not name.endswith(pattern):
-                continue
-            if name.endswith((".pyc",)):
-                continue
-            shutil.copy(os.path.join(ROOT, folder, name), os.path.join(DIST, "py", folder, name))
-            files.append(f"{folder}/{name}")
+    sources = [os.path.join(ROOT, "site", f) for f in SITE_FILES] + \
+              [os.path.join(ROOT, "engine", f) for f in ENGINE_FILES] + \
+              [os.path.join(ROOT, "data", f) for f in DATA_FILES]
+    digest = hashlib.sha1()
+    for path in sources:
+        with open(path, "rb") as f:
+            digest.update(f.read())
+    version = digest.hexdigest()[:10]
+
+    for f in SITE_FILES:
+        copy(os.path.join(ROOT, "site", f), os.path.join(DIST, f))
+    py_files = [f"engine/{f}" for f in ENGINE_FILES] + [f"data/{f}" for f in DATA_FILES]
+    for rel in py_files:
+        copy(os.path.join(ROOT, rel), os.path.join(DIST, "py", rel))
+    for f in PYODIDE_FILES:
+        copy(os.path.join(ROOT, "vendor", "pyodide", f), os.path.join(DIST, "vendor", "pyodide", f))
+    copy(os.path.join(ROOT, "data", "job_postings.csv"), os.path.join(DIST, "sample_postings.csv"))
+
+    with open(os.path.join(DIST, "py", "manifest.json"), "w") as f:
+        json.dump({"version": version, "files": py_files}, f, indent=1)
 
     # a content hash in every URL, so browsers never mix old and new files
-    digest = hashlib.sha1()
-    for folder in ("site", "engine", "data"):
-        for name in sorted(os.listdir(os.path.join(ROOT, folder))):
-            path = os.path.join(ROOT, folder, name)
-            if os.path.isfile(path) and not name.endswith(".pyc"):
-                digest.update(open(path, "rb").read())
-    version = digest.hexdigest()[:10]
-    with open(os.path.join(DIST, "py", "manifest.json"), "w") as f:
-        json.dump({"version": version, "files": files}, f, indent=1)
     index = os.path.join(DIST, "index.html")
-    html = open(index, encoding="utf-8").read()
-    html = html.replace('href="style.css"', f'href="style.css?v={version}"').replace('src="app.js"', f'src="app.js?v={version}"')
-    open(index, "w", encoding="utf-8").write(html)
-    shutil.copy(os.path.join(ROOT, "data", "job_postings.csv"), os.path.join(DIST, "sample_postings.csv"))
-    print(f"built {DIST} with {len(files)} engine/data files")
+    with open(index, encoding="utf-8") as f:
+        html = f.read()
+    html = html.replace('href="style.css"', f'href="style.css?v={version}"')
+    html = html.replace('<script src="app.js"></script>',
+                        f'<script>window.SKILLALIGN_VERSION = "{version}";</script>\n'
+                        f'<script src="app.js?v={version}"></script>')
+    with open(index, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    precache = ["./", f"style.css?v={version}", f"app.js?v={version}", f"py/manifest.json?v={version}"] + \
+               [f"py/{rel}?v={version}" for rel in py_files] + \
+               [f"vendor/pyodide/{f}" for f in PYODIDE_FILES if f != "NOTICE.md"]
+    with open(os.path.join(DIST, "sw.js"), "w") as f:
+        f.write(SERVICE_WORKER.replace("__VERSION__", version).replace("__PRECACHE__", json.dumps(precache, indent=1)))
+    print(f"built {DIST} (version {version}, {len(py_files)} engine/data files)")
+
+
+SERVICE_WORKER = """// Generated by build.py. Caches the whole site so it works offline after
+// the first visit (useful when venue Wi-Fi fails during a demo).
+const CACHE = "skillalign-__VERSION__";
+const PRECACHE = __PRECACHE__;
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(caches.keys()
+    .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+    .then(() => self.clients.claim()));
+});
+
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  if (event.request.method !== "GET" || url.origin !== location.origin) return;
+  if (event.request.mode === "navigate") {
+    // the page itself: network first so a new version is picked up, cache when offline
+    event.respondWith(fetch(event.request)
+      .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put("./", copy)); return res; })
+      .catch(() => caches.match("./")));
+    return;
+  }
+  event.respondWith(caches.match(event.request).then((hit) => hit || fetch(event.request)));
+});
+"""
 
 
 if __name__ == "__main__":

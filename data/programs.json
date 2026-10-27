@@ -5,13 +5,37 @@
     "provider": "Short-term skilling course (illustrative)",
     "sector": "Office & BFSI",
     "duration": "3 months",
-    "target_roles": ["data entry operator", "accounts assistant"],
+    "target_roles": [
+      "data entry operator",
+      "accounts assistant"
+    ],
     "modules": [
-      {"title": "Computer Fundamentals", "hours": 40, "outline": "Computer basics, keyboard and mouse, file management, using the internet safely."},
-      {"title": "Typing Practice", "hours": 80, "outline": "Touch typing drills in English and Hindi, building typing speed to 35 wpm."},
-      {"title": "Office Documents", "hours": 60, "outline": "MS Word letters and reports, MS PowerPoint slides."},
-      {"title": "Data Entry Practice", "hours": 80, "outline": "Data entry from paper forms, record keeping and form filling accuracy."},
-      {"title": "Workplace Skills", "hours": 40, "outline": "Basic English, communication skills in the office."}
+      {
+        "title": "Computer Fundamentals",
+        "hours": 40,
+        "outline": "Computer basics, keyboard and mouse, file management, using the internet safely."
+      },
+      {
+        "title": "Typing Practice",
+        "hours": 80,
+        "outline": "Touch typing drills in English and Hindi, building typing speed to 35 wpm."
+      },
+      {
+        "title": "Office Documents",
+        "hours": 60,
+        "outline": "MS Word letters and reports, MS PowerPoint slides."
+      },
+      {
+        "title": "Data Entry Practice",
+        "hours": 80,
+        "outline": "Data entry from paper forms, record keeping and form filling accuracy."
+      },
+      {
+        "title": "Workplace Skills",
+        "hours": 40,
+        "outline": "Basic English, communication skills in the office.",
+        "mandatory": true
+      }
     ]
   },
   {
@@ -20,14 +44,41 @@
     "provider": "Private training institute (illustrative)",
     "sector": "IT & Software",
     "duration": "6 months",
-    "target_roles": ["software developer"],
+    "target_roles": [
+      "software developer"
+    ],
     "modules": [
-      {"title": "Web Page Design", "hours": 80, "outline": "HTML and CSS, forms, page layouts."},
-      {"title": "JavaScript Programming", "hours": 100, "outline": "JavaScript basics, the DOM, events."},
-      {"title": "Core Java", "hours": 120, "outline": "Core Java, object-oriented programming, collections."},
-      {"title": "Databases", "hours": 60, "outline": "SQL with MySQL, joins and indexes."},
-      {"title": "Version Control", "hours": 20, "outline": "Git and GitHub workflows."},
-      {"title": "Soft Skills", "hours": 20, "outline": "Communication skills, being a team player."}
+      {
+        "title": "Web Page Design",
+        "hours": 80,
+        "outline": "HTML and CSS, forms, page layouts."
+      },
+      {
+        "title": "JavaScript Programming",
+        "hours": 100,
+        "outline": "JavaScript basics, the DOM, events."
+      },
+      {
+        "title": "Core Java",
+        "hours": 120,
+        "outline": "Core Java, object-oriented programming, collections."
+      },
+      {
+        "title": "Databases",
+        "hours": 60,
+        "outline": "SQL with MySQL, joins and indexes."
+      },
+      {
+        "title": "Version Control",
+        "hours": 20,
+        "outline": "Git and GitHub workflows."
+      },
+      {
+        "title": "Soft Skills",
+        "hours": 20,
+        "outline": "Communication skills, being a team player.",
+        "mandatory": true
+      }
     ]
   },
   {
@@ -36,29 +87,80 @@
     "provider": "University certificate (illustrative)",
     "sector": "IT & Software",
     "duration": "4 months",
-    "target_roles": ["data analyst"],
+    "target_roles": [
+      "data analyst"
+    ],
     "modules": [
-      {"title": "Spreadsheets for Analysis", "hours": 60, "outline": "Advanced Excel, pivot tables, lookups."},
-      {"title": "Querying Data", "hours": 60, "outline": "SQL for analysis: grouping, joins, window functions."},
-      {"title": "Python for Data", "hours": 80, "outline": "Python with pandas for data analysis."},
-      {"title": "Statistics", "hours": 40, "outline": "Descriptive statistics and hypothesis testing."},
-      {"title": "Dashboards", "hours": 40, "outline": "Power BI dashboards and data visualisation."},
-      {"title": "Presenting Insights", "hours": 20, "outline": "Communication skills for presenting findings."}
+      {
+        "title": "Spreadsheets for Analysis",
+        "hours": 60,
+        "outline": "Advanced Excel, pivot tables, lookups."
+      },
+      {
+        "title": "Querying Data",
+        "hours": 60,
+        "outline": "SQL for analysis: grouping, joins, window functions."
+      },
+      {
+        "title": "Python for Data",
+        "hours": 80,
+        "outline": "Python with pandas for data analysis."
+      },
+      {
+        "title": "Statistics",
+        "hours": 40,
+        "outline": "Descriptive statistics and hypothesis testing."
+      },
+      {
+        "title": "Dashboards",
+        "hours": 40,
+        "outline": "Power BI dashboards and data visualisation."
+      },
+      {
+        "title": "Presenting Insights",
+        "hours": 20,
+        "outline": "Communication skills for presenting findings.",
+        "mandatory": true
+      }
     ]
   },
   {
     "id": "electrician",
-    "name": "Electrician (Domestic)",
+    "name": "Electrician (ITI trade)",
     "provider": "ITI-style trade course (illustrative)",
     "sector": "Manufacturing",
-    "duration": "1 year",
-    "target_roles": ["electrician", "maintenance technician"],
+    "duration": "2 years",
+    "target_roles": [
+      "electrician",
+      "maintenance technician"
+    ],
     "modules": [
-      {"title": "Trade Theory and Safety", "hours": 120, "outline": "Industrial safety, PPE, lockout tagout."},
-      {"title": "House Wiring", "hours": 300, "outline": "House wiring, electrical installation, earthing."},
-      {"title": "Motors and Transformers", "hours": 200, "outline": "DC motors, transformers, rewinding."},
-      {"title": "First Aid", "hours": 20, "outline": "First aid and CPR."},
-      {"title": "Employability Skills", "hours": 60, "outline": "Communication skills, basic English."}
+      {
+        "title": "Trade Theory and Safety",
+        "hours": 120,
+        "outline": "Industrial safety, PPE, lockout tagout."
+      },
+      {
+        "title": "House Wiring",
+        "hours": 300,
+        "outline": "House wiring, electrical installation, earthing."
+      },
+      {
+        "title": "Motors and Transformers",
+        "hours": 200,
+        "outline": "DC motors, transformers, rewinding."
+      },
+      {
+        "title": "First Aid",
+        "hours": 20,
+        "outline": "First aid and CPR."
+      },
+      {
+        "title": "Employability Skills",
+        "hours": 60,
+        "outline": "Communication skills, basic English.",
+        "mandatory": true
+      }
     ]
   },
   {
@@ -67,12 +169,30 @@
     "provider": "Sector skill course (illustrative)",
     "sector": "Green Energy & EV",
     "duration": "3 months",
-    "target_roles": ["solar pv technician"],
+    "target_roles": [
+      "solar pv technician"
+    ],
     "modules": [
-      {"title": "Solar Basics", "hours": 40, "outline": "Solar PV systems and rooftop solar."},
-      {"title": "Installation", "hours": 120, "outline": "Solar panel installation, solar inverter, electrical wiring."},
-      {"title": "Site Safety", "hours": 30, "outline": "Industrial safety and PPE on rooftops."},
-      {"title": "Energy Efficiency", "hours": 20, "outline": "Energy audit of a home."}
+      {
+        "title": "Solar Basics",
+        "hours": 40,
+        "outline": "Solar PV systems and rooftop solar."
+      },
+      {
+        "title": "Installation",
+        "hours": 120,
+        "outline": "Solar panel installation, solar inverter, electrical wiring."
+      },
+      {
+        "title": "Site Safety",
+        "hours": 30,
+        "outline": "Industrial safety and PPE on rooftops."
+      },
+      {
+        "title": "Energy Efficiency",
+        "hours": 20,
+        "outline": "Energy audit of a home."
+      }
     ]
   },
   {
@@ -81,13 +201,36 @@
     "provider": "Healthcare skilling course (illustrative)",
     "sector": "Healthcare",
     "duration": "4 months",
-    "target_roles": ["general duty assistant"],
+    "target_roles": [
+      "general duty assistant"
+    ],
     "modules": [
-      {"title": "Patient Care", "hours": 150, "outline": "Bedside care, patient handling, elderly care."},
-      {"title": "Vital Signs", "hours": 60, "outline": "Vital signs, blood pressure measurement, pulse oximetry."},
-      {"title": "Infection Control", "hours": 60, "outline": "Infection control, biomedical waste, hand hygiene."},
-      {"title": "Emergency Response", "hours": 40, "outline": "First aid and basic life support."},
-      {"title": "Working with Patients", "hours": 30, "outline": "Communication skills with patients and families."}
+      {
+        "title": "Patient Care",
+        "hours": 150,
+        "outline": "Bedside care, patient handling, elderly care."
+      },
+      {
+        "title": "Vital Signs",
+        "hours": 60,
+        "outline": "Vital signs, blood pressure measurement, pulse oximetry."
+      },
+      {
+        "title": "Infection Control",
+        "hours": 60,
+        "outline": "Infection control, biomedical waste, hand hygiene."
+      },
+      {
+        "title": "Emergency Response",
+        "hours": 40,
+        "outline": "First aid and basic life support."
+      },
+      {
+        "title": "Working with Patients",
+        "hours": 30,
+        "outline": "Communication skills with patients and families.",
+        "mandatory": true
+      }
     ]
   },
   {
@@ -96,12 +239,30 @@
     "provider": "Short-term skilling course (illustrative)",
     "sector": "Retail & Logistics",
     "duration": "2 months",
-    "target_roles": ["retail sales associate"],
+    "target_roles": [
+      "retail sales associate"
+    ],
     "modules": [
-      {"title": "Serving Customers", "hours": 60, "outline": "Customer service and handling complaints."},
-      {"title": "Billing", "hours": 40, "outline": "POS billing, cash handling, UPI payments."},
-      {"title": "Spoken English", "hours": 40, "outline": "Spoken English for the shop floor."},
-      {"title": "Grooming", "hours": 20, "outline": "Personal grooming and store etiquette."}
+      {
+        "title": "Serving Customers",
+        "hours": 60,
+        "outline": "Customer service and handling complaints."
+      },
+      {
+        "title": "Billing",
+        "hours": 40,
+        "outline": "POS billing, cash handling, UPI payments."
+      },
+      {
+        "title": "Spoken English",
+        "hours": 40,
+        "outline": "Spoken English for the shop floor."
+      },
+      {
+        "title": "Grooming",
+        "hours": 20,
+        "outline": "Personal grooming and store etiquette."
+      }
     ]
   },
   {
@@ -110,28 +271,74 @@
     "provider": "Private training institute (illustrative)",
     "sector": "Media & Marketing",
     "duration": "3 months",
-    "target_roles": ["digital marketing"],
+    "target_roles": [
+      "digital marketing"
+    ],
     "modules": [
-      {"title": "Marketing Fundamentals", "hours": 40, "outline": "Online marketing and Google Ads."},
-      {"title": "Search", "hours": 50, "outline": "Search engine optimisation, keyword research."},
-      {"title": "Social Media", "hours": 50, "outline": "Social media marketing and a content calendar."},
-      {"title": "Email Campaigns", "hours": 20, "outline": "Newsletters and mailing lists."},
-      {"title": "Client Communication", "hours": 20, "outline": "Communication skills with clients."}
+      {
+        "title": "Marketing Fundamentals",
+        "hours": 40,
+        "outline": "Online marketing and Google Ads."
+      },
+      {
+        "title": "Search",
+        "hours": 50,
+        "outline": "Search engine optimisation, keyword research."
+      },
+      {
+        "title": "Social Media",
+        "hours": 50,
+        "outline": "Social media marketing and a content calendar."
+      },
+      {
+        "title": "Email Campaigns",
+        "hours": 20,
+        "outline": "Newsletters and mailing lists."
+      },
+      {
+        "title": "Client Communication",
+        "hours": 20,
+        "outline": "Communication skills with clients.",
+        "mandatory": true
+      }
     ]
   },
   {
     "id": "automotive",
-    "name": "Automotive Service Technician",
+    "name": "Automotive Service Technician (ITI trade)",
     "provider": "ITI-style trade course (illustrative)",
     "sector": "Automotive",
-    "duration": "1 year",
-    "target_roles": ["automotive service technician", "ev service technician"],
+    "duration": "2 years",
+    "target_roles": [
+      "automotive service technician",
+      "ev service technician"
+    ],
     "modules": [
-      {"title": "Engine Systems", "hours": 300, "outline": "Petrol engine and diesel engine servicing, engine overhaul."},
-      {"title": "Transmission and Brakes", "hours": 200, "outline": "Clutch, gearbox, brake systems."},
-      {"title": "Workshop Safety", "hours": 40, "outline": "Workplace safety in the garage."},
-      {"title": "Customer Handling", "hours": 30, "outline": "Customer service at the service desk."},
-      {"title": "Diagnostics", "hours": 60, "outline": "Troubleshooting faults step by step."}
+      {
+        "title": "Engine Systems",
+        "hours": 300,
+        "outline": "Petrol engine and diesel engine servicing, engine overhaul."
+      },
+      {
+        "title": "Transmission and Brakes",
+        "hours": 200,
+        "outline": "Clutch, gearbox, brake systems."
+      },
+      {
+        "title": "Workshop Safety",
+        "hours": 40,
+        "outline": "Workplace safety in the garage."
+      },
+      {
+        "title": "Customer Handling",
+        "hours": 30,
+        "outline": "Customer service at the service desk."
+      },
+      {
+        "title": "Diagnostics",
+        "hours": 60,
+        "outline": "Troubleshooting faults step by step."
+      }
     ]
   },
   {
@@ -140,13 +347,36 @@
     "provider": "University certificate (illustrative)",
     "sector": "IT & Software",
     "duration": "5 months",
-    "target_roles": ["cloud devops engineer", "cybersecurity analyst"],
+    "target_roles": [
+      "cloud devops engineer",
+      "cybersecurity analyst"
+    ],
     "modules": [
-      {"title": "Cloud Platforms", "hours": 80, "outline": "AWS and Azure core services."},
-      {"title": "Containers", "hours": 60, "outline": "Docker, Kubernetes and CI/CD pipelines."},
-      {"title": "Scripting", "hours": 40, "outline": "Python scripting for automation."},
-      {"title": "Version Control", "hours": 20, "outline": "Git workflows."},
-      {"title": "Securing the Cloud", "hours": 60, "outline": "Cloud security, IAM policies, network security."}
+      {
+        "title": "Cloud Platforms",
+        "hours": 80,
+        "outline": "AWS and Azure core services."
+      },
+      {
+        "title": "Containers",
+        "hours": 60,
+        "outline": "Docker, Kubernetes and CI/CD pipelines."
+      },
+      {
+        "title": "Scripting",
+        "hours": 40,
+        "outline": "Python scripting for automation."
+      },
+      {
+        "title": "Version Control",
+        "hours": 20,
+        "outline": "Git workflows."
+      },
+      {
+        "title": "Securing the Cloud",
+        "hours": 60,
+        "outline": "Cloud security, IAM policies, network security."
+      }
     ]
   }
 ]

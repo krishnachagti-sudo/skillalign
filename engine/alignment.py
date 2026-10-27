@@ -3,27 +3,34 @@
 For one program we take only the postings for its target roles, then:
 
 - core skills: skills in at least CORE_SHARE of those postings
-- alignment score: the share-weighted part of core demand the program
-  teaches (teaching a skill half the postings want counts for more than
-  one a fifth want)
-- future score: the same, using forecast shares instead of today's
-- hours on demand: how much of the training time goes to core skills
-- gaps, rising gaps, low-demand and declining skills, turned into plain
-  add / expand / reduce recommendations
+- depth credit: a core skill counts fully only if the program gives it
+  at least half the hours its demand would justify. Its "fair" hours are
+  total hours x its share of all core demand. So a one-hour
+  "Introduction to X" earns almost nothing, and padding a course with
+  unrelated hours lowers every skill's credit.
+- alignment score = sum(share x credit) / sum(share) over core skills,
+  with a 90% bootstrap interval from resampling the postings
+- future score: the same, using forecast shares
+- recommendations (Add / Expand / Prepare / Reduce / Review), where the
+  trend-based ones need a statistically significant change and nothing
+  taught only in a compulsory module is ever advised to cut
 """
 
-from .demand import filter_postings, trend_table
+import random
 
-CORE_SHARE = 0.15    # in at least 15% of relevant postings
-LOW_SHARE = 0.05     # in under 5% of relevant postings
-FALLING = -0.2       # share down 20% or more year on year
-THIN_DEMAND = 0.4    # a skill in 40%+ of postings...
-THIN_HOURS = 0.05    # ...that gets under 5% of the training hours
+from .demand import filter_postings, is_falling, is_rising, split_windows, trend_table
+
+CORE_SHARE = 0.15     # in at least 15% of relevant postings
+LOW_SHARE = 0.05      # in under 5% of relevant postings
+DEPTH = 0.5           # full credit at half the demand-proportional hours
+EXPAND_BELOW = 0.75   # advise "Expand" only when a taught skill earns under 75% credit
+MIN_POSTINGS = 30     # below this a score is flagged as low-data
+BOOTSTRAP = 150       # resamples for the score interval
 
 
 def priority(row):
     """Demand weight for ranking gaps: share, boosted by growth."""
-    growth = row["growth"] if row["growth"] is not None else 0.0
+    growth = row["growth"] if row["growth"] is not None else (1.0 if row.get("is_new") else 0.0)
     return row["share"] * (1 + max(growth, 0.0))
 
 
@@ -35,116 +42,167 @@ def grade(score):
     return "Weak"
 
 
-def weighted_coverage(weights, taught):
+def depth_credits(weights, hours, total_hours):
+    """{skill: credit in [0, 1]} for the skills in `weights` (skill -> share)."""
+    demand = sum(weights.values())
+    credits = {}
+    for s, w in weights.items():
+        h = hours.get(s, 0.0)
+        if h <= 0:
+            credits[s] = 0.0
+        elif total_hours <= 0 or demand <= 0 or w <= 0:
+            credits[s] = 1.0
+        else:
+            fair = total_hours * w / demand
+            credits[s] = min(1.0, h / (DEPTH * fair))
+    return credits
+
+
+def weighted_score(weights, hours, total_hours):
     total = sum(weights.values())
     if total == 0:
         return 0.0
-    return 100 * sum(w for s, w in weights.items() if s in taught) / total
+    credits = depth_credits(weights, hours, total_hours)
+    return 100 * sum(w * credits[s] for s, w in weights.items()) / total
+
+
+def bootstrap_interval(relevant, core, hours, total_hours, seed=12345):
+    """90% interval for the score by resampling the recent-window postings
+    (the same postings the score itself is computed from) with replacement."""
+    if len(relevant) < 2 or not core:
+        return None
+    rng = random.Random(seed)
+    present = [[s for s in p.skills if s in core] for p in relevant]
+    n = len(present)
+    scores = []
+    for _ in range(BOOTSTRAP):
+        counts = dict.fromkeys(core, 0)
+        for _ in range(n):
+            for s in present[rng.randrange(n)]:
+                counts[s] += 1
+        weights = {s: c / n for s, c in counts.items()}
+        scores.append(weighted_score(weights, hours, total_hours))
+    scores.sort()
+    return scores[int(0.05 * (BOOTSTRAP - 1))], scores[int(0.95 * (BOOTSTRAP - 1))]
+
+
+def pct(x):
+    return f"{x:.0%}"
 
 
 def assess_program(program, postings, skills, window=4):
     relevant = filter_postings(postings, roles=program.target_roles)
     table = trend_table(relevant, window)
     taught = program.skills()
+    protected = program.mandatory_skills()
     hours = program.hours_by_skill()
     total_hours = program.total_hours()
 
     core = {s: t["share"] for s, t in table.items() if t["share"] >= CORE_SHARE}
     future_core = {s: t["forecast"] for s, t in table.items() if t["forecast"] >= CORE_SHARE}
+    credits = depth_credits(core, hours, total_hours)
+    demand = sum(core.values())
 
-    score = weighted_coverage(core, taught)
-    future_score = weighted_coverage(future_core, taught)
+    score = weighted_score(core, hours, total_hours)
+    future_score = weighted_score(future_core, hours, total_hours)
+    recent_q, _ = split_windows(relevant, window)
+    interval = bootstrap_interval([p for p in relevant if p.quarter in recent_q], set(core), hours, total_hours)
     hours_on_core = sum(h for s, h in hours.items() if s in core)
     hours_pct = 100 * hours_on_core / total_hours if total_hours else 0.0
+    unmatched = program.unmatched_hours()
 
-    def row_for(skill_id):
-        t = table.get(skill_id)
+    def name(s):
+        return skills[s].name if s in skills else s
+
+    def row_for(s):
+        t = table.get(s)
+        fair = total_hours * core[s] / demand if s in core and demand else 0.0
         return {
-            "id": skill_id,
-            "name": skills[skill_id].name if skill_id in skills else skill_id,
-            "category": skills[skill_id].category if skill_id in skills else "",
-            "share": t["share"] if t else 0.0,
-            "growth": t["growth"] if t else None,
+            "id": s, "name": name(s), "category": skills[s].category if s in skills else "",
+            "share": t["share"] if t else 0.0, "low": t["low"] if t else 0.0, "high": t["high"] if t else 0.0,
+            "growth": t["growth"] if t else None, "is_new": t["is_new"] if t else False,
+            "significant": t["significant"] if t else False,
             "forecast": t["forecast"] if t else 0.0,
-            "taught": skill_id in taught,
-            "hours": round(hours.get(skill_id, 0.0), 1),
+            "taught": s in taught, "mandatory": s in protected,
+            "hours": round(hours.get(s, 0.0), 1),
+            "credit": round(credits[s], 2) if s in credits else None,
+            "fair_hours": round(DEPTH * fair) if fair else None,
         }
 
-    gaps = sorted((s for s in core if s not in taught), key=lambda s: priority(table[s]), reverse=True)
-    rising = sorted((s for s in future_core if s not in core and s not in taught),
-                    key=lambda s: table[s]["forecast"], reverse=True)
-    low_value = sorted((s for s in taught if table.get(s, {"share": 0})["share"] < LOW_SHARE),
-                       key=lambda s: hours.get(s, 0), reverse=True)
-    declining = sorted((s for s in taught if s in table and table[s]["growth"] is not None
-                        and table[s]["growth"] <= FALLING and s not in low_value),
-                       key=lambda s: table[s]["growth"])
-    # taught, but only touched on: a big-demand skill given a sliver of the hours
-    thin = sorted((s for s in taught if s in core and core[s] >= THIN_DEMAND and total_hours
-                   and hours.get(s, 0) / total_hours < THIN_HOURS and s not in declining),
-                  key=lambda s: core[s], reverse=True)
+    def trend_words(t):
+        if t["is_new"]:
+            return ", new this year"
+        if t["growth"] is not None and t["significant"] and t["growth"] > 0:
+            return f", up {pct(t['growth'])} on last year"
+        return ""
 
     recommendations = []
-    for s in gaps:
-        r = row_for(s)
-        recommendations.append({
-            "action": "Add", "skill": r["name"], "id": s,
-            "reason": f"asked for in {r['share']:.0%} of postings for these roles"
-                      + (f", up {r['growth']:.0%} on last year" if r["growth"] and r["growth"] > 0 else ""),
-        })
-    for s in thin:
-        r = row_for(s)
-        recommendations.append({
-            "action": "Expand", "skill": r["name"], "id": s,
-            "reason": f"asked for in {r['share']:.0%} of postings but given only {r['hours']:g} of "
-                      f"{total_hours:g} hours ({r['hours'] / total_hours:.0%})",
-        })
-    for s in rising:
-        r = row_for(s)
-        recommendations.append({
-            "action": "Prepare", "skill": r["name"], "id": s,
-            "reason": f"now {r['share']:.0%} of postings, on track for about {r['forecast']:.0%} within a year",
-        })
-    for s in low_value:
-        r = row_for(s)
-        recommendations.append({
-            "action": "Reduce", "skill": r["name"], "id": s,
-            "reason": f"only {r['share']:.0%} of postings ask for it, yet it takes {r['hours']:g} training hours",
-        })
-    for s in declining:
-        r = row_for(s)
-        recommendations.append({
-            "action": "Review", "skill": r["name"], "id": s,
-            "reason": f"still {r['share']:.0%} of postings but down {-r['growth']:.0%} on last year",
-        })
+    if relevant:
+        for s in sorted((s for s in core if s not in taught), key=lambda s: priority(table[s]), reverse=True):
+            t = table[s]
+            recommendations.append({"action": "Add", "skill": name(s), "id": s, "reason":
+                f"asked for in {pct(t['share'])} of postings for these roles (95% range "
+                f"{pct(t['low'])}-{pct(t['high'])}){trend_words(t)}"})
+        for s in sorted((s for s in core if s in taught and credits[s] < EXPAND_BELOW), key=lambda s: credits[s]):
+            r = row_for(s)
+            recommendations.append({"action": "Expand", "skill": r["name"], "id": s, "reason":
+                f"asked for in {pct(r['share'])} of postings but given {r['hours']:g} h; about "
+                f"{round(r['fair_hours'])} h would earn full credit"})
+        for s in sorted((s for s in future_core if s not in core and s not in taught and is_rising(table[s])),
+                        key=lambda s: table[s]["forecast"], reverse=True):
+            t = table[s]
+            recommendations.append({"action": "Prepare", "skill": name(s), "id": s, "reason":
+                f"now {pct(t['share'])} of postings and rising beyond chance; forecast about "
+                f"{pct(t['forecast'])} within a year"})
+        for s in sorted((s for s in taught if s not in protected and hours.get(s, 0) > 0
+                         and table.get(s, {"high": 0})["high"] < CORE_SHARE
+                         and table.get(s, {"share": 0})["share"] < LOW_SHARE),
+                        key=lambda s: hours.get(s, 0), reverse=True):
+            r = row_for(s)
+            recommendations.append({"action": "Reduce", "skill": r["name"], "id": s, "reason":
+                f"only {pct(r['share'])} of postings ask for it, yet it takes {r['hours']:g} training hours"})
+        for s in sorted((s for s in taught if s in table and s not in protected and is_falling(table[s])),
+                        key=lambda s: table[s]["growth"]):
+            t = table[s]
+            recommendations.append({"action": "Review", "skill": name(s), "id": s, "reason":
+                f"still {pct(t['share'])} of postings but down {pct(-t['growth'])} on last year, "
+                f"beyond chance and within the same roles"})
+
+    warnings = []
+    if not relevant:
+        warnings.append("No job postings match this program's target roles, so it cannot be scored.")
+    elif len(relevant) < MIN_POSTINGS:
+        warnings.append(f"Only {len(relevant)} matching postings: treat the score as a rough signal.")
+    if total_hours and unmatched / total_hours >= 0.2:
+        missed = [m.title for m in program.modules if not m.skills]
+        warnings.append(f"{pct(unmatched / total_hours)} of training hours ({len(missed)} module"
+                        f"{'s' if len(missed) != 1 else ''}) matched no skill SkillAlign knows, so the "
+                        f"score cannot see them: {', '.join(missed[:4])}{'…' if len(missed) > 4 else ''}.")
+    if table and not next(iter(table.values()))["forecast_ok"]:
+        warnings.append("Fewer than six quarters of postings, so there is no forecast; next year's score equals today's.")
 
     all_skills = set(core) | set(future_core) | taught
-    table_rows = sorted((row_for(s) for s in all_skills), key=lambda r: r["share"], reverse=True)
-
-    warning = ""
-    if not relevant:
-        warning = "No job postings match this program's target roles, so it cannot be scored."
-    elif len(relevant) < 30:
-        warning = f"Only {len(relevant)} matching postings; treat the score as a rough signal."
-
     return {
-        "id": program.id,
-        "name": program.name,
-        "provider": program.provider,
-        "sector": program.sector,
-        "duration": program.duration,
-        "target_roles": program.target_roles,
+        "id": program.id, "name": program.name, "provider": program.provider, "sector": program.sector,
+        "duration": program.duration, "target_roles": program.target_roles,
+        "nsqf_level": program.nsqf_level, "qp_code": program.qp_code,
         "postings": len(relevant),
+        "scored": bool(relevant),
         "score": round(score, 1),
+        "score_low": round(interval[0], 1) if interval else None,
+        "score_high": round(interval[1], 1) if interval else None,
         "future_score": round(future_score, 1),
-        "grade": grade(score),
+        "grade": grade(score) if relevant else "Unscored",
+        "low_data": 0 < len(relevant) < MIN_POSTINGS,
         "hours_total": total_hours,
         "hours_on_demand_pct": round(hours_pct, 1),
+        "unmatched_pct": round(100 * unmatched / total_hours, 1) if total_hours else 0.0,
         "core_count": len(core),
         "covered_count": sum(1 for s in core if s in taught),
-        "skills": table_rows,
+        "skills": sorted((row_for(s) for s in all_skills), key=lambda r: r["share"], reverse=True),
         "recommendations": recommendations,
-        "modules": [{"title": m.title, "hours": m.hours,
-                     "skills": sorted(skills[s].name for s in m.skills if s in skills)}
-                    for m in program.modules],
-        "warning": warning,
+        "modules": [{"title": m.title, "hours": m.hours, "mandatory": m.mandatory,
+                     "skills": sorted(name(s) for s in m.skills)} for m in program.modules],
+        "warnings": warnings,
+        "warning": " ".join(warnings),
     }
