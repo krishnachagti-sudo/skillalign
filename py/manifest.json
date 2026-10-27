@@ -1,0 +1,18 @@
+{
+ "version": "0fa9766944",
+ "files": [
+  "engine/__init__.py",
+  "engine/taxonomy.py",
+  "engine/dataset.py",
+  "engine/demand.py",
+  "engine/alignment.py",
+  "engine/learner.py",
+  "engine/api.py",
+  "data/skills.json",
+  "data/programs.json",
+  "data/job_postings.csv"
+ ],
+ "lazy": {
+  "real": "data/real_postings_india_2026.csv"
+ }
+}
