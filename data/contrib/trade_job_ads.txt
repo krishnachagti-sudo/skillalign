@@ -1,0 +1,11 @@
+# Real job ads for hands-on trade jobs (electrician, welder, plumber, fitter, mechanic, AC technician...).
+# Copy each ad from a public job portal into a block like the example below, then a line of three dashes.
+# Date as YYYY-MM-DD. Put the whole ad text on the "Ad:" line (it can be long).
+# Delete the example block once you've added your first real ad.
+
+Title: Electrician (EXAMPLE, delete me)
+Date: 2026-11-10
+Place: Pune, Maharashtra
+Link: https://example.com/the-ad
+Ad: Need ITI electrician for factory maintenance. Must know house wiring, motor rewinding and safety. 2 years experience.
+---

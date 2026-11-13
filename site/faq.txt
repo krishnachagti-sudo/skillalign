@@ -1,0 +1,21 @@
+# Common questions, shown on the "How it works" page.
+# Write a short answer (1 or 2 sentences, plain words) after each "A:".
+# Keep the "Q:" lines as they are. Read the "How it works" page on the site first: every answer is in there.
+
+Q: Who is SkillAlign for?
+A:
+
+Q: Is anything I type sent to a server?
+A:
+
+Q: Are the job ads real?
+A:
+
+Q: What does a course score of 51 mean?
+A:
+
+Q: Why does a course say "too few job ads"?
+A:
+
+Q: Can I use it in Hindi or Marathi?
+A:

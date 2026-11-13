@@ -17,6 +17,7 @@ import os
 import shutil
 
 from engine.dataset import parse_example_syllabus
+from tools.contrib import read_faq, read_pairs
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
@@ -26,6 +27,10 @@ ENGINE_FILES = ["__init__.py", "taxonomy.py", "dataset.py", "demand.py", "alignm
 DATA_FILES = ["skills.json", "programs.json", "job_postings.csv"]
 LAZY_DATA = {"real": "real_postings_india_2026.csv"}   # fetched only when the user picks that dataset
 PYODIDE_FILES = ["pyodide.js", "pyodide.asm.js", "pyodide.asm.wasm", "python_stdlib.zip", "pyodide-lock.json", "NOTICE.md"]
+
+
+def LANGS():
+    return sorted(f[:-4] for f in os.listdir(os.path.join(ROOT, "site", "i18n")) if f.endswith(".txt"))
 
 
 def example_files():
@@ -53,6 +58,7 @@ def main():
         shutil.rmtree(DIST)
 
     extra = [os.path.join(ROOT, "site", "i18n", f) for f in sorted(os.listdir(os.path.join(ROOT, "site", "i18n")))] + \
+            [os.path.join(ROOT, "site", "faq.txt")] + \
             [os.path.join(ROOT, "data", "example_syllabi", f) for f in example_files()]
     sources = extra + [os.path.join(ROOT, "site", f) for f in SITE_FILES] + \
               [os.path.join(ROOT, "engine", f) for f in ENGINE_FILES] + \
@@ -73,9 +79,12 @@ def main():
         copy(os.path.join(ROOT, "vendor", "pyodide", f), os.path.join(DIST, "vendor", "pyodide", f))
     copy(os.path.join(ROOT, "data", "job_postings.csv"), os.path.join(DIST, "sample_postings.csv"))
     # translations (site/i18n/<lang>.json) and contributed example syllabi (data/example_syllabi/*.txt)
-    for f in sorted(os.listdir(os.path.join(ROOT, "site", "i18n"))):
-        if f.endswith(".json"):
-            copy(os.path.join(ROOT, "site", "i18n", f), os.path.join(DIST, "i18n", f))
+    os.makedirs(os.path.join(DIST, "i18n"), exist_ok=True)
+    for lang in LANGS():
+        with open(os.path.join(DIST, "i18n", f"{lang}.json"), "w", encoding="utf-8") as f:
+            json.dump(read_pairs(os.path.join(ROOT, "site", "i18n", f"{lang}.txt")), f, ensure_ascii=False)
+    with open(os.path.join(DIST, "faq.json"), "w", encoding="utf-8") as f:
+        json.dump([x for x in read_faq(os.path.join(ROOT, "site", "faq.txt")) if x["a"]], f, ensure_ascii=False)
     with open(os.path.join(DIST, "examples.json"), "w", encoding="utf-8") as f:
         json.dump(load_examples(), f, ensure_ascii=False, indent=1)
     # the licence and the list of changes travel with the real data file
@@ -97,7 +106,7 @@ def main():
 
     precache = ["./", f"style.css?v={version}", f"app.js?v={version}", f"py/manifest.json?v={version}",
                 f"examples.json?v={version}"] + \
-               [f"i18n/{f}?v={version}" for f in sorted(os.listdir(os.path.join(ROOT, "site", "i18n")))] + \
+               [f"i18n/{lang}.json?v={version}" for lang in LANGS()] + [f"faq.json?v={version}"] + \
                [f"py/{rel}?v={version}" for rel in py_files] + \
                [f"vendor/pyodide/{f}" for f in PYODIDE_FILES if f != "NOTICE.md"]
     with open(os.path.join(DIST, "sw.js"), "w") as f:

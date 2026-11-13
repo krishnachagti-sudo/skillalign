@@ -530,6 +530,13 @@ $("#s-example").addEventListener("click", () => {
   $("#s-text").value = "Petrol engine servicing and engine overhaul (120 hrs)\nBrakes, clutch and suspension system (60 hrs)\nWorkshop safety and PPE (20 hrs)\nTalking to customers: customer service at the service desk (15 hrs) [mandatory]\nIntroduction to electric vehicles (10 hrs)";
   if (api) renderCourse();
 });
+// common questions (site/faq.txt, bundled by build.py); shown once at least one is answered
+fetch(`faq.json?v=${VERSION}`).then((r) => (r.ok ? r.json() : [])).then((list) => {
+  if (!list.length) return;
+  $("#faq").innerHTML = `<h2>Common questions</h2>${list.map((x) => `<details class="card fold"><summary><h3>${esc(x.q)}</h3></summary><p>${esc(x.a)}</p></details>`).join("")}`;
+  $("#faq").hidden = false;
+}).catch(() => {});
+
 // real syllabi added by the team (data/example_syllabi/*.txt, bundled by build.py)
 let EXAMPLES = [];
 fetch(`examples.json?v=${VERSION}`).then((r) => (r.ok ? r.json() : [])).then((list) => {

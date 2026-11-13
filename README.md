@@ -17,8 +17,8 @@ The engine is plain Python (standard library only). The website runs that same P
 | `tools/validate.py` | Scores the method against the generator's known truth: false alarms, precision/recall, range coverage, forecast backtest; writes `docs/validation.md` |
 | `vendor/pyodide/` | Self-hosted Pyodide 0.28.3 core (MPL-2.0), so the site needs no CDN |
 | `site/` | The web page (HTML, CSS, JS) |
-| `tests/` | 65 pytest tests (4 check the files teammates contribute) |
-| `site/i18n/` | Hindi and Marathi translations; `tools/i18n_keys.py` keeps them in step with the page |
+| `tests/` | 66 pytest tests (5 check the plain-text files teammates fill in) |
+| `site/i18n/*.txt`, `site/faq.txt` | Translations (`English = translation`) and FAQ answers; `tools/i18n_keys.py` keeps the translation keys in step with the page |
 | `data/example_syllabi/` | Real course syllabi contributed by the team, shown as one-tap examples |
 | `TEAM.md` | Who builds which piece, with a direct GitHub link for each |
 | `reports/ux-personas/` | Simulated persona usability review (round 1 on the old site, round 2 on the redesign); `summary.md` first |
@@ -29,7 +29,7 @@ The engine is plain Python (standard library only). The website runs that same P
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install pytest
-.venv/bin/python -m pytest -q          # 65 tests
+.venv/bin/python -m pytest -q          # 66 tests
 .venv/bin/python tools/validate.py      # fake-trend and stability checks
 python3 build.py                        # writes dist/
 python3 -m http.server 3025 --directory dist

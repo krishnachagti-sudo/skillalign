@@ -1,4 +1,6 @@
-# Team plan: who builds what
+# Team plan: bigger pieces for later
+
+The current, small pieces (15-20 minutes each) are in `TEAM.md`. The pieces below are larger follow-ons for the final project; the owners listed are a first draft.
 
 The course asks for a GitHub repo with contributions from every team member, and a viva where each person explains their own code. So every member takes one real piece below, builds it on their own branch from their own GitHub account, and opens a pull request. The pieces touch different files, so nobody waits for anybody. Names were assigned alphabetically as a first draft: swap freely, then update the issue.
 

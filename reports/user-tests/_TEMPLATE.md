@@ -1,28 +1,20 @@
-# User test: <first name or "Participant 1"> (no surnames, ask consent first)
+# User test with: (first name only, ask them first if that's ok)
 
-- **Date:**
-- **Who:** e.g. "2nd-year ITI electrician trainee", "classmate, not on the team", "placement officer"
-- **Device:** phone or laptop, which browser
-- **Tested by:** your name
+Who: (e.g. "ITI student", "classmate not on the team")
+Phone or laptop:
 
-## Task 1: "Check this course"
-Give them: course "Retail sales (2 months)", jobs "retail sales associate", and 4 modules you read out.
-- Finished? yes / no / with help
-- Time taken:
-- Where they got stuck, in their words:
+Give them the phone, open the site, and ask them to do each task while saying what they think. Don't help. Write what happens.
 
-## Task 2: "Find what to learn next for the job you want"
-- Finished?
-- Time taken:
-- Where they got stuck, in their words:
+1. "Find out what you should learn next for a job you want."
+   Did it? (yes / no / with help):
+   Where did they get stuck, in their words:
 
-## Task 3: "Find the skill employers ask for most"
-- Finished?
-- Time taken:
-- Where they got stuck, in their words:
+2. "Check this course: Retail sales, 2 months, for retail sales associate jobs." (read out 3-4 modules)
+   Did it?:
+   Where did they get stuck:
 
-## What they said at the end
-"Would you use this again? Why or why not?" (write their answer word for word)
+3. "Which skill do employers ask for most?"
+   Did it?:
+   Where did they get stuck:
 
-## Compared with the simulated review
-Which problems in reports/ux-personas/summary.md did this person also hit? Which did they not hit? Anything new?
+At the end, ask "would you use this again?" and write their answer word for word:

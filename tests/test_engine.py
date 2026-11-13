@@ -419,25 +419,36 @@ import sys as _sys
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 
 
-def test_extraction_cases_from_the_team(extractor):
-    # tests/extraction_cases.csv: one row per case, expected skill ids separated by |
-    with open(os.path.join(ROOT, "tests", "extraction_cases.csv"), encoding="utf-8") as f:
-        rows = list(_csv.DictReader(f))
-    assert rows
-    for row in rows:
-        want = {s.strip() for s in row["expected_skills"].split("|") if s.strip()}
-        assert extractor.extract(row["text"]) == want, f'{row["added_by"]}: {row["text"]!r}'
+def test_skill_reader_cases_from_the_team(extractor, skills):
+    # tests/skill_reader_cases.txt: "sentence = Skill name, Skill name"
+    _sys.path.insert(0, ROOT)
+    from tools.contrib import read_pairs
+    by_name = {s.name.lower(): sid for sid, s in skills.items()}
+    cases = read_pairs(os.path.join(ROOT, "tests", "skill_reader_cases.txt"))
+    assert cases
+    for text, names in cases.items():
+        unknown = [n for n in names.split(",") if n.strip() and n.strip().lower() not in by_name]
+        assert not unknown, f"not a skill name on the site: {unknown} (line: {text!r})"
+        want = {by_name[n.strip().lower()] for n in names.split(",") if n.strip()}
+        assert extractor.extract(text) == want, f"the skill reader reads this differently: {text!r}"
 
 
 def test_translation_files_match_the_page():
-    _sys.path.insert(0, os.path.join(ROOT, "tools"))
-    from i18n_keys import LANGS, page_keys
+    _sys.path.insert(0, ROOT)
+    from tools.contrib import read_pairs
+    from tools.i18n_keys import LANGS, page_keys
     keys = set(page_keys())
     for lang in LANGS:
-        with open(os.path.join(ROOT, "site", "i18n", f"{lang}.json"), encoding="utf-8") as f:
-            data = json.load(f)
-        assert set(data) == keys, f"{lang}.json: run python3 tools/i18n_keys.py"
-        assert all(isinstance(v, str) for v in data.values())
+        data = read_pairs(os.path.join(ROOT, "site", "i18n", f"{lang}.txt"))
+        missing, extra = keys - set(data), set(data) - keys
+        assert not missing and not extra, f"{lang}.txt: keep the English on the left exactly as it was ({sorted(missing | extra)[:3]})"
+
+
+def test_faq_file_reads():
+    _sys.path.insert(0, ROOT)
+    from tools.contrib import read_faq
+    items = read_faq(os.path.join(ROOT, "site", "faq.txt"))
+    assert len(items) >= 6 and all(x["q"].endswith("?") for x in items)
 
 
 def test_example_syllabi_parse_and_score(extractor, skills):
@@ -456,9 +467,10 @@ def test_example_syllabi_parse_and_score(extractor, skills):
 
 
 def test_contributed_trade_ads_parse(extractor):
-    with open(os.path.join(ROOT, "data", "contrib", "trade_job_ads.csv"), encoding="utf-8") as f:
-        text = f.read()
-    if text.count("\n") <= 1:
-        return  # header only, nothing added yet
-    postings, problems = parse_postings(text, extractor)
-    assert postings and not problems, problems[:3]
+    _sys.path.insert(0, ROOT)
+    from tools.contrib import read_ads
+    csv_text, n = read_ads(os.path.join(ROOT, "data", "contrib", "trade_job_ads.txt"))
+    if not n:
+        return  # only the example so far
+    postings, problems = parse_postings(csv_text, extractor)
+    assert len(postings) == n and not problems, problems[:3]

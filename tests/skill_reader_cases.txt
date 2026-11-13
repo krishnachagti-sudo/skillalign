@@ -1,0 +1,8 @@
+# Skill reader test cases. One per line: a sentence from a job ad, then " = ", then the skills
+# SkillAlign should find, by the names the site shows, separated by commas.
+# Check each sentence first on the live site: Your data -> Try the skill reader. Add only ones you checked.
+# If it reads a sentence wrongly, put that sentence in your pull request description instead: that's a real bug found.
+
+Must know MS Excel and pivot tables = MS Excel
+No Python needed; SQL is a must = SQL & Databases
+DC motors, transformers, rewinding. = Electric Motors & Transformers
