@@ -1,0 +1,653 @@
+{
+ "settings": {},
+ "units": [
+  {
+   "id": "fac-hod-sceptic",
+   "segment": "faculty",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 2
+    }
+   ]
+  },
+  {
+   "id": "fac-ta-phd",
+   "segment": "faculty",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 5
+    }
+   ]
+  },
+  {
+   "id": "fac-external",
+   "segment": "faculty",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 4
+    }
+   ]
+  },
+  {
+   "id": "judge-sceptic-stat",
+   "segment": "judge",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 2
+    }
+   ]
+  },
+  {
+   "id": "judge-nsdc-pm",
+   "segment": "judge",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 3
+    }
+   ]
+  },
+  {
+   "id": "judge-sih-industry",
+   "segment": "judge",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 5
+    }
+   ]
+  },
+  {
+   "id": "learn-sceptic-switcher",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 2
+    }
+   ]
+  },
+  {
+   "id": "learn-btech-fresher",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 3
+    }
+   ]
+  },
+  {
+   "id": "learn-iti-trainee",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 3
+    }
+   ]
+  },
+  {
+   "id": "prov-sceptic-owner",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 1
+    }
+   ]
+  },
+  {
+   "id": "prov-private-head",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 5
+    }
+   ]
+  },
+  {
+   "id": "prov-placement-officer",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 4
+    }
+   ]
+  },
+  {
+   "id": "prov-ngo-coord",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 4
+    }
+   ]
+  },
+  {
+   "id": "fac-pl-prof",
+   "segment": "faculty",
+   "weight": 1,
+   "holdout": true,
+   "answers": [
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 3
+    }
+   ]
+  },
+  {
+   "id": "prov-iti-principal",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": true,
+   "answers": [
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 5
+    }
+   ]
+  },
+  {
+   "id": "learn-diploma-auto",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": true,
+   "answers": [
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 6
+    }
+   ]
+  },
+  {
+   "id": "learn-bcom-grad",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": true,
+   "answers": [
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 6
+    }
+   ]
+  },
+  {
+   "id": "judge-dvet-official",
+   "segment": "judge",
+   "weight": 1,
+   "holdout": true,
+   "answers": [
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v1",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "v2",
+     "framing": "neutral",
+     "juster": 3
+    }
+   ]
+  }
+ ]
+}

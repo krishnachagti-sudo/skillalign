@@ -1,0 +1,184 @@
+[
+  {"id": "fac-hod-sceptic", "segment": "faculty", "model": "opus", "version": "v2",
+   "q5_w1": 4, "q5_w2": 2,
+   "problems": [
+     {"type": "SLOW", "where": "Practice data pill", "quote": "Switch to real job ads", "what": "Pill does not say where the real ads come from; had to go to How it works"},
+     {"type": "STUCK", "where": "Footer / no team section", "quote": "SkillAlign is a student prototype for Smart India Hackathon problem SIH26134", "what": "No who-built-what section to answer 'what did YOU write'"}
+   ],
+   "distrust": [
+     {"quote": "On the practice data, 6 of 10 example courses miss skills that their own jobs ask for.", "why": "Headline finding is about made-up courses on made-up ads"},
+     {"quote": "about 43 next year, because the jobs are changing", "why": "Forecast from synthetic data is decoration"},
+     {"quote": "16 h would earn full credit", "why": "A hand-set rule shown as a fact"}
+   ],
+   "fixes": ["Open on real job ads with source and sample size next to the claim", "Add a who-built-what section by module", "Show the full-credit hours rule on the report itself"],
+   "hinglish_q5": null},
+
+  {"id": "fac-ta-phd", "segment": "faculty", "model": "opus", "version": "v2",
+   "q5_w1": 7, "q5_w2": 5,
+   "problems": [
+     {"type": "SLOW", "where": "Home fact strip", "quote": "Rising fastest: Battery Management Systems, up 213% on last year", "what": "Small grey text unreadable on a projector"},
+     {"type": "MISREAD", "where": "Example courses report", "quote": "If the course stays the same, about 34 next year", "what": "Assumed next-year number had the same range as the current score; it has none"},
+     {"type": "MISREAD", "where": "Gaps list vs course report", "quote": "It misses 13 of 20 skills", "what": "Gaps list shows 2 red chips for the same course; thought pages disagree, difference not labelled"},
+     {"type": "SLOW", "where": "How it works formula box", "quote": "score = 100 × Σ(share × credit) ÷ Σ share", "what": "Credit function not defined in the one-line box"}
+   ],
+   "distrust": [
+     {"quote": "95% range 57%-77%", "why": "Unclear if duplicate postings from one employer are handled"},
+     {"quote": "It misses 13 of 20 skills that 15% or more of these job ads ask for.", "why": "Doesn't match the Gaps list count for the same course"}
+   ],
+   "fixes": ["Make Gaps list and report count missing skills the same way, or label the difference", "Give next-year score a range or say it has none", "Bigger type for fact strip and table numbers on projector"],
+   "hinglish_q5": null},
+
+  {"id": "fac-external", "segment": "faculty", "model": "opus", "version": "v2",
+   "q5_w1": 6, "q5_w2": 4,
+   "problems": [
+     {"type": "MISREAD", "where": "Home subtitle while loading", "quote": "SkillAlign compares a course's syllabus with job postings and shows what to add, what to expand and what to cut.", "what": "Subtitle swaps after load; thought the page reloaded"},
+     {"type": "SLOW", "where": "Check my course on phone", "quote": "Paste your course outline, one module per line, with hours.", "what": "Won't type a syllabus on a phone; used the example instead"},
+     {"type": "SLOW", "where": "Course report verdict box", "quote": "that range crosses a grade line, so the grade is borderline", "what": "Academic language before the actionable list"},
+     {"type": "SLOW", "where": "Skills in demand rows", "quote": "steady", "what": "Unclear what 'steady' is compared to"}
+   ],
+   "distrust": [
+     {"quote": "Nothing you type leaves your phone or computer.", "why": "Reads as no save/share for an L&D team, a limitation"},
+     {"quote": "(95% range 57%-77%)", "why": "A training manager will skip it"}
+   ],
+   "fixes": ["Upload or paste a syllabus from a file", "Keep the add/expand/cut line as headline; fold ranges and grade-line wording", "Explain 'steady' in plain words on the row"],
+   "hinglish_q5": null},
+
+  {"id": "judge-sceptic-stat", "segment": "judge", "model": "opus", "version": "v2",
+   "q5_w1": 4, "q5_w2": 2,
+   "problems": [
+     {"type": "SLOW", "where": "Home fact strip", "quote": "up 213% on last year", "what": "No base count; had to find the Rising card"},
+     {"type": "SLOW", "where": "Practice data pill on real data", "quote": "Real job ads, India 2026", "what": "6% company sample and missing trade jobs not stated on the pill"}
+   ],
+   "distrust": [
+     {"quote": "up 213% on last year", "why": "Growth rate with no base"},
+     {"quote": "If the course stays the same, about 43 next year, because the jobs are changing.", "why": "Point forecast from made-up data stated as fact"},
+     {"quote": "16 h would earn full credit (its 30 h module \"SQL for reporting\" is shared with Data Analysis)", "why": "False precision from an even split of module hours"},
+     {"quote": "Dashed line: a straight-line forecast a year ahead, 26% (95% range 22–31%)", "why": "Naive linear model on eight synthetic quarters"}
+   ],
+   "fixes": ["Show base counts next to every growth rate", "Put real-data caveats on the pill when real data is chosen", "State forecasts as ranges and 'if the trend holds'"],
+   "hinglish_q5": null},
+
+  {"id": "judge-nsdc-pm", "segment": "judge", "model": "opus", "version": "v2",
+   "q5_w1": 5, "q5_w2": 3,
+   "problems": [
+     {"type": "MISREAD", "where": "Check my course QP fold", "quote": "Add NSQF level or QP code (optional)", "what": "Thought it aligned to QP/NOS; it only prints the code"},
+     {"type": "STUCK", "where": "Phone bottom bar", "quote": "Home · My course · Learn next · Market", "what": "No Your data on phone nav; found it only through the pill"},
+     {"type": "SLOW", "where": "Practice data pill", "quote": "or use your own file", "what": "Own-data upload hidden behind the pill on phone"}
+   ],
+   "distrust": [
+     {"quote": "SkillAlign does not look them up.", "why": "Disappointment: no QP/NOS mapping"},
+     {"quote": "6 of 10 example courses miss skills that their own jobs ask for", "why": "Wants to see which courses before trusting a ratio"}
+   ],
+   "fixes": ["Map courses to QP/NOS from the code for a few sectors", "Add Your data to the phone bottom bar", "Hindi for the course check"],
+   "hinglish_q5": null},
+
+  {"id": "judge-sih-industry", "segment": "judge", "model": "opus", "version": "v2",
+   "q5_w1": 7, "q5_w2": 5,
+   "problems": [
+     {"type": "SLOW", "where": "Home", "quote": "What do you want to do?", "what": "Crisp message but no wow visual on the first screen"},
+     {"type": "SLOW", "where": "Practice data pill", "quote": "Practice data", "what": "Made-up data docks feasibility in his scoring"}
+   ],
+   "distrust": [
+     {"quote": "Rising fastest: Battery Management Systems, up 213% on last year", "why": "Sounds made up and is practice data"}
+   ],
+   "fixes": ["One strong home visual, e.g. before/after course score", "Start the demo on real job ads", "A self-filling 20-second try-it path for judges"],
+   "hinglish_q5": null},
+
+  {"id": "learn-sceptic-switcher", "segment": "learner", "model": "opus", "version": "v2",
+   "q5_w1": 3, "q5_w2": 2,
+   "problems": [
+     {"type": "MISREAD", "where": "Home H1", "quote": "Do skill courses teach what jobs ask for?", "what": "Thought the site was for teachers, not job seekers"},
+     {"type": "SLOW", "where": "Learn next form", "quote": "or paste your resume", "what": "Has no current resume after a 6-year break"},
+     {"type": "MISREAD", "where": "Practice data pill", "quote": "Practice data", "what": "Thought 'practice mode', not that the job ads are made up"},
+     {"type": "QUIT", "where": "Learn next readiness ring", "quote": "37% ready for Data Analyst", "what": "A low % reads as a mark on herself; quits if low"}
+   ],
+   "distrust": [
+     {"quote": "37% ready for Data Analyst", "why": "Feels like being scored as a person despite the disclaimer"},
+     {"quote": "Practice data", "why": "Does not understand the ads are fake"}
+   ],
+   "fixes": ["Drop the % of me; just say what to learn and why", "Marathi", "Say plainly up front that the jobs are examples"],
+   "hinglish_q5": 3},
+
+  {"id": "learn-btech-fresher", "segment": "learner", "model": "opus", "version": "v2",
+   "q5_w1": 5, "q5_w2": 3,
+   "problems": [
+     {"type": "MISREAD", "where": "Practice data pill", "quote": "These 2,216 job ads are made up", "what": "Discovered after running that the default results were on fake ads"},
+     {"type": "SLOW", "where": "Switch to real job ads", "quote": "Switch to real job ads", "what": "Unsure if the form keeps values when data changes; had to re-run"},
+     {"type": "MISREAD", "where": "Courses that teach what you are missing", "quote": "[example course]", "what": "Read as real courses first; they are invented"}
+   ],
+   "distrust": [
+     {"quote": "Practice data", "why": "Default should be real ads for job seekers"},
+     {"quote": "[example course]", "why": "Can't enrol in a made-up course"}
+   ],
+   "fixes": ["Default to real job ads on the learner path", "Show skills pulled from my resume", "Link to real courses"],
+   "hinglish_q5": null},
+
+  {"id": "learn-iti-trainee", "segment": "learner", "model": "opus", "version": "v2",
+   "q5_w1": 2, "q5_w2": 3,
+   "problems": [
+     {"type": "SLOW", "where": "First load", "quote": "Loading the SkillAlign engine and job postings…", "what": "12 MB on prepaid data at month end; would quit if data is low"},
+     {"type": "SLOW", "where": "Whole UI", "quote": "What should I learn?", "what": "English only, reads slowly"},
+     {"type": "MISREAD", "where": "Practice data pill", "quote": "Practice data", "what": "Believes results are about real factory jobs"}
+   ],
+   "distrust": [
+     {"quote": "Practice data", "why": "Doesn't understand it means made-up ads"},
+     {"quote": "95% range", "why": "Can't read it, skips"}
+   ],
+   "fixes": ["Hindi", "Smaller download or warn about data use first", "Gulf/factory jobs and clear real-or-not label"],
+   "hinglish_q5": 2},
+
+  {"id": "prov-sceptic-owner", "segment": "provider", "model": "opus", "version": "v2",
+   "q5_w1": 1, "q5_w2": 1,
+   "problems": [
+     {"type": "SLOW", "where": "Check my course syllabus box", "quote": "Spreadsheets: advanced Excel and pivot tables (40 hrs)", "what": "Has to type a whole syllabus on a phone in English"},
+     {"type": "MISREAD", "where": "Jobs this course trains for", "quote": "comma separated, as they appear in job ads, e.g. \"data analyst, MIS executive\"", "what": "Typed a course name (Tally), not a job title"},
+     {"type": "QUIT", "where": "Check my course", "quote": "Check yours in a minute.", "what": "Left before getting a report"}
+   ],
+   "distrust": [
+     {"quote": "Check yours in a minute.", "why": "Not on a phone with the syllabus in a file"}
+   ],
+   "fixes": ["Pick my course from a list (CCC, Tally) instead of typing", "Hindi", "One line: does my course get students jobs"],
+   "hinglish_q5": null},
+
+  {"id": "prov-private-head", "segment": "provider", "model": "opus", "version": "v2",
+   "q5_w1": 6, "q5_w2": 5,
+   "problems": [
+     {"type": "SLOW", "where": "Practice data pill", "quote": "These 2,216 job ads are made up", "what": "Had to switch to real ads and re-run before he could use it"},
+     {"type": "SLOW", "where": "Course report top changes", "quote": "ADD Data Visualisation: asked for in 68% of job ads for these roles", "what": "Unsure whether Power BI module counted; opened Skill by skill to check"}
+   ],
+   "distrust": [
+     {"quote": "Generative AI Tools: 28% …, up 306% on last year", "why": "Would quote it but it is practice data"},
+     {"quote": "about 43 next year", "why": "Won't show the owner a forecast he can't explain"}
+   ],
+   "fixes": ["Show which tools counted toward which skill on the report", "Data source at the top of the PDF", "Save my syllabus to re-run later"],
+   "hinglish_q5": null},
+
+  {"id": "prov-placement-officer", "segment": "provider", "model": "opus", "version": "v2",
+   "q5_w1": 6, "q5_w2": 4,
+   "problems": [
+     {"type": "STUCK", "where": "Job market skills list export", "quote": "Print or save as PDF", "what": "Export exists only for course reports, not the skills list for HoD"},
+     {"type": "SLOW", "where": "Your data CSV", "quote": "A CSV file (in Excel: File → Save As → CSV)", "what": "His recruiter-wise sheet must be reshaped to the example format"},
+     {"type": "SLOW", "where": "Practice data pill", "quote": "Practice data", "what": "Realised late the ads are made up; switched to real"}
+   ],
+   "distrust": [
+     {"quote": "70 different skills asked for", "why": "Who decided what counts as a skill"},
+     {"quote": "↑ 201%", "why": "HoD will ask 201% of what"}
+   ],
+   "fixes": ["Download skills list as Word/Excel", "Accept or explain converting a recruiter-wise sheet", "Show counts beside percentages"],
+   "hinglish_q5": null},
+
+  {"id": "prov-ngo-coord", "segment": "provider", "model": "opus", "version": "v2",
+   "q5_w1": 4, "q5_w2": 4,
+   "problems": [
+     {"type": "STUCK", "where": "Skills trend chart / Practice data pill", "quote": "These 2,216 job ads are made up", "what": "Can't put the chart in a CSR funder report"},
+     {"type": "SLOW", "where": "Real job ads", "quote": "Real job ads, India 2026", "what": "Expects too few retail/data entry/GDA ads"},
+     {"type": "SLOW", "where": "Print or save as PDF on Android", "quote": "Print or save as PDF", "what": "Print dialog on phone; unsure where PDF goes, screenshots instead"},
+     {"type": "MISREAD", "where": "Trend note", "quote": "95% range 21–26%", "what": "Read as share of trainees placed"}
+   ],
+   "distrust": [
+     {"quote": "These 2,216 job ads are made up", "why": "Practice charts unusable for a funder"},
+     {"quote": "95% range 21–26%", "why": "Misread as placement range"}
+   ],
+   "fixes": ["Real Maharashtra data for retail, data entry, GDA", "Download chart as image", "Hindi"],
+   "hinglish_q5": 4}
+]

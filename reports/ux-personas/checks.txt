@@ -1,0 +1,13 @@
+Persona panel check: 13 units, 52 main answers, models: opus, sonnet
+[RED] Frozen holdout: 0/13 units are holdout (want ~30%)
+[ok ] Sceptic share: 38% of units average juster <=3 (seeded default-no types should land here; want >=15-25%)
+[ok ] Bands used: 3/4 Juster bands used (might, probably, unlikely)
+      panel juster mean 3.38, SD 1.95
+[ok ] Decoy plan: decoy/main mean ratio 0.28 (want <=0.5), 100% reject decoy (want >=70%)
+[RED] Ownership framing: need answers with framing 'mine' and 'rival'
+[ok ] Wording/shuffle: top-2-band share ranges 0%-8% across 2 wordings (red if >10 pts)
+[ok ] Models opus vs sonnet: rank agreement across units rho=0.71 (red <0.5), mean gap -0.38
+      segment means: faculty 3.33, judge 4.08, learner 2.25, provider 3.75  (gap 1.83; expect personas to inflate gaps 2-4x)
+[RED] No real answers: every number is a ranking, not a forecast. Get 10-20 real conversations per key group.
+
+3 red flag(s): Frozen holdout; Ownership framing; No real answers

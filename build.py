@@ -64,9 +64,9 @@ def main():
     with open(index, encoding="utf-8") as f:
         html = f.read()
     html = html.replace('href="style.css"', f'href="style.css?v={version}"')
-    html = html.replace('<script src="app.js"></script>',
+    html = html.replace('<script src="app.js" defer></script>',
                         f'<script>window.SKILLALIGN_VERSION = "{version}";</script>\n'
-                        f'<script src="app.js?v={version}"></script>')
+                        f'<script src="app.js?v={version}" defer></script>')
     with open(index, "w", encoding="utf-8") as f:
         f.write(html)
 

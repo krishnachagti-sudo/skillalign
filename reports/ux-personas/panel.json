@@ -1,0 +1,655 @@
+{
+ "settings": {},
+ "units": [
+  {
+   "id": "fac-hod-sceptic",
+   "segment": "faculty",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 2
+    }
+   ]
+  },
+  {
+   "id": "fac-ta-phd",
+   "segment": "faculty",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 2
+    }
+   ]
+  },
+  {
+   "id": "fac-external",
+   "segment": "faculty",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    }
+   ]
+  },
+  {
+   "id": "judge-sceptic-stat",
+   "segment": "judge",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    }
+   ]
+  },
+  {
+   "id": "judge-nsdc-pm",
+   "segment": "judge",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    }
+   ]
+  },
+  {
+   "id": "judge-sih-industry",
+   "segment": "judge",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    }
+   ]
+  },
+  {
+   "id": "learn-sceptic-switcher",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 0
+    }
+   ]
+  },
+  {
+   "id": "learn-btech-fresher",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 2
+    }
+   ]
+  },
+  {
+   "id": "learn-iti-trainee",
+   "segment": "learner",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 0
+    }
+   ]
+  },
+  {
+   "id": "prov-sceptic-owner",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 0
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 0
+    }
+   ]
+  },
+  {
+   "id": "prov-private-head",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 7
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 6
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 2
+    }
+   ]
+  },
+  {
+   "id": "prov-placement-officer",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    }
+   ]
+  },
+  {
+   "id": "prov-ngo-coord",
+   "segment": "provider",
+   "weight": 1,
+   "holdout": false,
+   "answers": [
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 3
+    },
+    {
+     "model": "opus",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 2
+    },
+    {
+     "model": "opus",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 5
+    },
+    {
+     "model": "sonnet",
+     "wording": 2,
+     "plan": "main",
+     "framing": "neutral",
+     "juster": 4
+    },
+    {
+     "model": "sonnet",
+     "wording": 1,
+     "plan": "decoy",
+     "framing": "neutral",
+     "juster": 1
+    }
+   ]
+  }
+ ]
+}

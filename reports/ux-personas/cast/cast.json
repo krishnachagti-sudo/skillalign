@@ -1,0 +1,67 @@
+[
+ {
+  "id": "fac-hod-sceptic",
+  "segment": "faculty",
+  "sceptic": true
+ },
+ {
+  "id": "fac-ta-phd",
+  "segment": "faculty",
+  "sceptic": false
+ },
+ {
+  "id": "fac-external",
+  "segment": "faculty",
+  "sceptic": false
+ },
+ {
+  "id": "judge-sceptic-stat",
+  "segment": "judge",
+  "sceptic": true
+ },
+ {
+  "id": "judge-nsdc-pm",
+  "segment": "judge",
+  "sceptic": false
+ },
+ {
+  "id": "judge-sih-industry",
+  "segment": "judge",
+  "sceptic": false
+ },
+ {
+  "id": "learn-sceptic-switcher",
+  "segment": "learner",
+  "sceptic": true
+ },
+ {
+  "id": "learn-btech-fresher",
+  "segment": "learner",
+  "sceptic": false
+ },
+ {
+  "id": "learn-iti-trainee",
+  "segment": "learner",
+  "sceptic": false
+ },
+ {
+  "id": "prov-sceptic-owner",
+  "segment": "provider",
+  "sceptic": true
+ },
+ {
+  "id": "prov-private-head",
+  "segment": "provider",
+  "sceptic": false
+ },
+ {
+  "id": "prov-placement-officer",
+  "segment": "provider",
+  "sceptic": false
+ },
+ {
+  "id": "prov-ngo-coord",
+  "segment": "provider",
+  "sceptic": false
+ }
+]

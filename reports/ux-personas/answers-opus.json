@@ -1,0 +1,234 @@
+[
+  {"id": "fac-hod-sceptic", "segment": "faculty", "model": "claude-opus-5-5",
+   "q5_w1": 4, "q5_w2": 1, "q6_decoy": 1,
+   "rank_w1": ["How it works", "Your data", "Programs", "Check a syllabus", "Market pulse", "Gap matrix", "For learners"],
+   "keep3_w2": ["How it works", "Your data", "Check a syllabus"],
+   "problems": [
+     {"type": "SLOW", "where": "First load", "quote": "Starting the Python engine in your browser. Loading Python (about 12 MB, first visit only; later visits work offline)", "what": "5-10 s of nothing before any content in a viva"},
+     {"type": "MISREAD", "where": "Market pulse tiles", "quote": "70.9 average program alignment here (out of 100)", "what": "Took it as a district measure; it is the average of the ten program scores"},
+     {"type": "MISREAD", "where": "Market pulse, Real postings mode", "quote": "Share of postings in the latest four quarters", "what": "Thought real data had four quarters; it has two"},
+     {"type": "SLOW", "where": "Programs row click", "quote": "Junior Software Developer", "what": "Report opens below the whole table; had to scroll to find it"},
+     {"type": "MISREAD", "where": "Program report tiles", "quote": "100% of 400 hours on core skills", "what": "Read as contradicting the Weak 43 score; thought it was a bug"}
+   ],
+   "distrust": [
+     {"quote": "Generative AI Tools +201%", "why": "A growth figure on synthetic data only reflects what the generator was told"},
+     {"quote": "The dashed line is a straight-line forecast four quarters ahead: 26%, 95% range .", "why": "Range is blank; small errors undermine large claims"}
+   ],
+   "fixes": ["Say on the first screen what is real and what is invented; open on real data", "Fix leftovers like 'latest four quarters' on two-quarter data and the blank range", "One-line explanation under each big number instead of a statistics-vocabulary page"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "fac-ta-phd", "segment": "faculty", "model": "claude-opus-5-5",
+   "q5_w1": 6, "q5_w2": 3, "q6_decoy": 1,
+   "rank_w1": ["Programs", "Check a syllabus", "Market pulse", "How it works", "For learners", "Gap matrix", "Your data"],
+   "keep3_w2": ["Programs", "Check a syllabus", "How it works"],
+   "problems": [
+     {"type": "SLOW", "where": "First load", "quote": "Loading Python (about 12 MB, first visit only", "what": "Lab machine waits; team should pre-load"},
+     {"type": "MISREAD", "where": "Most demanded skills, change column", "quote": "+6%", "what": "Assumed percentage points; unclear whether relative or points"},
+     {"type": "MISREAD", "where": "Most demanded skills, grey numbers", "quote": "+28%", "what": "On projector no hover, so grey read as 'small' not 'not significant'"},
+     {"type": "SLOW", "where": "Skill trend card", "quote": "Workplace Safety: share of postings by quarter", "what": "Card opens at bottom of page; must scroll"},
+     {"type": "SLOW", "where": "Skill by skill table", "quote": "Hours column: hours given / hours needed for full credit.", "what": "'20 / 9' took a second read"},
+     {"type": "STUCK", "where": "Gap matrix on projector", "quote": "Gap matrix", "what": "Rotated small column labels unreadable from the room"}
+   ],
+   "distrust": [
+     {"quote": "+6%", "why": "Relative vs percentage-point change not stated"},
+     {"quote": "95% range .", "why": "Blank forecast range"}
+   ],
+   "fixes": ["Show significance in text next to each change, not only on hover", "Open clicked reports/trend cards in view and fix the blank range", "Label changes as points or relative and say 90% vs 95% on each range"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "fac-external", "segment": "faculty", "model": "claude-opus-5-5",
+   "q5_w1": 4, "q5_w2": 2, "q6_decoy": 1,
+   "rank_w1": ["Programs", "Check a syllabus", "Market pulse", "Your data", "Gap matrix", "For learners", "How it works"],
+   "keep3_w2": ["Check a syllabus", "Programs", "Your data"],
+   "problems": [
+     {"type": "SLOW", "where": "First load on phone", "quote": "Loading Python (about 12 MB, first visit only", "what": "Long wait on cab 4G"},
+     {"type": "MISREAD", "where": "Phone tab row", "quote": "Chec", "what": "Thought there were four tabs; three more hidden with no cue"},
+     {"type": "SLOW", "where": "Market pulse tiles on phone", "quote": "6 of 10 programs below Strong here", "what": "The only so-what is the fourth tile, below the fold"},
+     {"type": "MISREAD", "where": "Programs NEXT YEAR", "quote": "34 ↓", "what": "Read as programs getting worse, not a projection if unchanged"},
+     {"type": "SLOW", "where": "Programs row tap", "quote": "Junior Software Developer", "what": "Report far below table on phone"},
+     {"type": "STUCK", "where": "Gap matrix on phone", "quote": "Gap matrix", "what": "Only two columns visible; nothing says to drag"}
+   ],
+   "distrust": [
+     {"quote": "34 ↓", "why": "Would repeat it as 'program is declining'"},
+     {"quote": "within the same job roles", "why": "Academic qualifier he can't interpret"}
+   ],
+   "fixes": ["One-sentence so-what at the top of the first screen", "Show all tabs on phone and hint that wide tables scroll", "Plain business words instead of 'beyond chance', 'within roles', 'borderline'; label arrow as 'if unchanged'"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "judge-sceptic-stat", "segment": "judge", "model": "claude-opus-5-5",
+   "q5_w1": 6, "q5_w2": 3, "q6_decoy": 1,
+   "rank_w1": ["How it works", "Check a syllabus", "Programs", "Your data", "Market pulse", "Gap matrix", "For learners"],
+   "keep3_w2": ["How it works", "Your data", "Check a syllabus"],
+   "problems": [
+     {"type": "SLOW", "where": "How it works", "quote": "200-hour reference course", "what": "Judgement calls listed in prose; could not see a formula to rebuild a score"},
+     {"type": "SLOW", "where": "Market pulse change column", "quote": "+201%", "what": "Significance only in hover tooltip"},
+     {"type": "MISREAD", "where": "Check a syllabus vs For learners", "quote": "compared with 150 postings for: data analyst", "what": "Learner tab says 173 postings for the same role; assumed bug, unexplained"},
+     {"type": "MISREAD", "where": "Check a syllabus result", "quote": "given 15 h; 16 h would earn full credit", "what": "Thought it misread the 30 hrs typed; module was split across two skills"}
+   ],
+   "distrust": [
+     {"quote": "70.9 average program alignment here (out of 100)", "why": "One decimal on illustrative programs and synthetic postings is false precision"},
+     {"quote": "up 306% on last year", "why": "Same skill shows +201% and +191% elsewhere; bases not reconciled"}
+   ],
+   "fixes": ["Show the score formula with this program's numbers on the report", "Reconcile or explain posting counts and growth figures across tabs", "Show how module hours were split across skills"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "judge-nsdc-pm", "segment": "judge", "model": "claude-opus-5-5",
+   "q5_w1": 6, "q5_w2": 4, "q6_decoy": 1,
+   "rank_w1": ["Check a syllabus", "Your data", "Programs", "Gap matrix", "Market pulse", "For learners", "How it works"],
+   "keep3_w2": ["Check a syllabus", "Your data", "Gap matrix"],
+   "problems": [
+     {"type": "SLOW", "where": "Phone tab row", "quote": "Chec", "what": "Had to swipe to find the other tabs; no cue"},
+     {"type": "MISREAD", "where": "Programs list", "quote": "Electrician (ITI trade)", "what": "Took it as the real NCVT trade being scored; it is illustrative"},
+     {"type": "MISREAD", "where": "Check a syllabus form", "quote": "Qualification pack code (optional)", "what": "Assumed it pulls the QP/NOS; screen does not say what it does"},
+     {"type": "SLOW", "where": "Check a syllabus on phone", "quote": "one module per line", "what": "Pasting a syllabus on phone is painful"},
+     {"type": "SLOW", "where": "Your data CSV format", "quote": "At least eight quarters give trends; fewer still give shares and scores.", "what": "Dense paragraph; a training partner won't have this CSV"}
+   ],
+   "distrust": [
+     {"quote": "Qualification pack code (optional)", "why": "Implies a QP link that may not exist"},
+     {"quote": "Electrician (ITI trade) 74 Partial borderline", "why": "Could be quoted as a rating of the real trade"}
+   ],
+   "fixes": ["Say what the QP code does and pull NOS from it", "Make all tabs visible on phone", "Accept a training partner's real sheet, with an example table instead of a paragraph"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "judge-sih-industry", "segment": "judge", "model": "claude-opus-5-5",
+   "q5_w1": 5, "q5_w2": 2, "q6_decoy": 1,
+   "rank_w1": ["For learners", "Check a syllabus", "Programs", "Gap matrix", "Market pulse", "Your data", "How it works"],
+   "keep3_w2": ["For learners", "Check a syllabus", "Programs"],
+   "problems": [
+     {"type": "SLOW", "where": "First load in live demo", "quote": "Starting the Python engine in your browser.", "what": "Dead air in a 7-minute slot"},
+     {"type": "SLOW", "where": "Landing above the fold", "quote": "the numbers are not facts about real jobs", "what": "Warning is the first thing; no crisp message or wow visual"},
+     {"type": "SLOW", "where": "Programs row click", "quote": "Junior Software Developer", "what": "Report below table; team has to scroll"},
+     {"type": "SLOW", "where": "Gap matrix", "quote": "Gap matrix", "what": "Mostly empty grid with rotated labels; not readable in 3 seconds"},
+     {"type": "MISREAD", "where": "For learners, programs that close gaps", "quote": "Electrician (ITI trade) covers Machine Learning.", "what": "Visible matching bug in the demo"}
+   ],
+   "distrust": [
+     {"quote": "Electrician (ITI trade) covers Machine Learning.", "why": "Obvious error makes everything else doubtful"},
+     {"quote": "+201%", "why": "Big green number on synthetic data is theatre"}
+   ],
+   "fixes": ["Landing screen with one sentence and one striking visual; shrink the demo notice", "Pre-load the engine or show content while it loads", "Fix program matching and make the gap matrix readable at a glance"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "learn-sceptic-switcher", "segment": "learner", "model": "claude-opus-5-5",
+   "q5_w1": 1, "q5_w2": 0, "q6_decoy": 0,
+   "rank_w1": ["For learners", "Programs", "Market pulse", "Check a syllabus", "Gap matrix", "Your data", "How it works"],
+   "keep3_w2": ["For learners", "Market pulse", "Programs"],
+   "problems": [
+     {"type": "MISREAD", "where": "First load", "quote": "Starting the Python engine in your browser.", "what": "Thought the site is only for programmers"},
+     {"type": "MISREAD", "where": "Demo banner", "quote": "These job postings are synthetic", "what": "Did not know 'synthetic'; took the whole site as fake"},
+     {"type": "STUCK", "where": "Phone tab row", "quote": "Chec", "what": "Never saw 'For learners'; nothing on screen was for her"},
+     {"type": "MISREAD", "where": "Programs list", "quote": "Data Entry Operator 74 Partial borderline", "what": "Thought her own data entry course was being rated bad and getting worse"},
+     {"type": "QUIT", "where": "Programs list", "quote": "54 ↓", "what": "Confirmed her fear of being judged; closed the site"}
+   ],
+   "distrust": [
+     {"quote": "the numbers are not facts about real jobs", "why": "If the site says it is not real, she believes nothing after"},
+     {"quote": "Data Entry Operator 74 Partial borderline", "why": "Read as a verdict on her course"}
+   ],
+   "fixes": ["A big 'I want a job: what should I learn?' button on the first screen, also in Marathi", "Explain demo data simply or show real jobs first", "Lead with skills she already has, not a score"],
+   "hinglish_q5": 1, "hinglish_changed": false},
+
+  {"id": "learn-btech-fresher", "segment": "learner", "model": "claude-opus-5-5",
+   "q5_w1": 3, "q5_w2": 3, "q6_decoy": 1,
+   "rank_w1": ["For learners", "Programs", "Market pulse", "Gap matrix", "Check a syllabus", "How it works", "Your data"],
+   "keep3_w2": ["For learners", "Market pulse", "Programs"],
+   "problems": [
+     {"type": "MISREAD", "where": "For learners result", "quote": "Learn next: Generative AI Tools, asked for in 29% of these postings and rising.", "what": "Expected the most-asked missing skill; it picks a rising one over 58-67% skills"},
+     {"type": "MISREAD", "where": "For learners, programs that close gaps", "quote": "Electrician (ITI trade) covers Machine Learning.", "what": "Obvious matching bug"},
+     {"type": "MISREAD", "where": "Program report What to change", "quote": "ADD Cloud Computing", "what": "Assumed list sorted by demand; Python 59% comes after Cloud 45%, order unexplained"}
+   ],
+   "distrust": [
+     {"quote": "Learn next: Generative AI Tools, asked for in 29% of these postings and rising.", "why": "Priority logic unclear when other gaps are asked twice as often"},
+     {"quote": "Electrician (ITI trade) covers Machine Learning.", "why": "Wrong match"}
+   ],
+   "fixes": ["Explain or let me sort 'Learn next' by demand vs growth", "Fix program matching", "Make real data the default for learners and show posting count for my role"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "learn-iti-trainee", "segment": "learner", "model": "claude-opus-5-5",
+   "q5_w1": 1, "q5_w2": 2, "q6_decoy": 0,
+   "rank_w1": ["For learners", "Programs", "Market pulse", "Gap matrix", "Check a syllabus", "Your data", "How it works"],
+   "keep3_w2": ["For learners", "Programs", "Market pulse"],
+   "problems": [
+     {"type": "SLOW", "where": "First load on budget phone", "quote": "Loading Python (about 12 MB, first visit only", "what": "12 MB on prepaid data at month end; would quit if data low"},
+     {"type": "MISREAD", "where": "Programs list", "quote": "Electrician (ITI trade) 74 Partial borderline", "what": "Thought his own ITI trade got 74 marks"},
+     {"type": "SLOW", "where": "Phone tab row", "quote": "Chec", "what": "Found 'For learners' only by accidentally swiping"},
+     {"type": "MISREAD", "where": "For learners result, real data", "quote": "7 postings for this job", "what": "Thought only 7 electrician jobs exist"},
+     {"type": "MISREAD", "where": "For learners, not recognised", "quote": "Not recognised, so not counted (if these are skills, readiness is understated): maine ITI kiya hai, safety", "what": "Thought safety is not needed"},
+     {"type": "STUCK", "where": "For learners, programs", "quote": "None of the listed programs teaches your missing skills.", "what": "No next step; closed the site"}
+   ],
+   "distrust": [
+     {"quote": "7 postings for this job", "why": "Reads as only 7 jobs in India"},
+     {"quote": "29% ready for Electrician.", "why": "Feels like being told two years of ITI is worth 29%"}
+   ],
+   "fixes": ["Hindi language", "Lighter page that opens fast on low data", "Recognise words like 'safety' and say where to learn PLC instead of 'none'"],
+   "hinglish_q5": 1, "hinglish_changed": false},
+
+  {"id": "prov-sceptic-owner", "segment": "provider", "model": "claude-opus-5-5",
+   "q5_w1": 0, "q5_w2": 0, "q6_decoy": 0,
+   "rank_w1": ["Programs", "Market pulse", "Check a syllabus", "For learners", "Gap matrix", "Your data", "How it works"],
+   "keep3_w2": ["Market pulse", "Programs", "Check a syllabus"],
+   "problems": [
+     {"type": "SLOW", "where": "First load on phone", "quote": "Loading Python (about 12 MB", "what": "Waiting for something about Python he doesn't teach"},
+     {"type": "MISREAD", "where": "Most demanded skills", "quote": "MS Excel 14%", "what": "No Tally or CCC in the list; concluded nobody asks for Tally"},
+     {"type": "MISREAD", "where": "Programs list", "quote": "Short-term skilling course (illustrative)", "what": "Did not know 'illustrative'; thought it was a government course rating"},
+     {"type": "STUCK", "where": "Phone tab row", "quote": "Chec", "what": "Did not tap a half word; no 'my course' entry point visible"},
+     {"type": "QUIT", "where": "Programs", "quote": "Data Entry Operator", "what": "None of the programs is his; no time"}
+   ],
+   "distrust": [
+     {"quote": "Data Entry Operator 74 Partial", "why": "Feels like someone grading courses like his"},
+     {"quote": "MS Excel 14%", "why": "Every office wants Excel; 14% looks wrong"}
+   ],
+   "fixes": ["One 'Check my course' button with ready choices like CCC, Tally, Excel", "Hindi", "One short screen with an answer he can screenshot for parents"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "prov-private-head", "segment": "provider", "model": "claude-opus-5-5",
+   "q5_w1": 7, "q5_w2": 6, "q6_decoy": 2,
+   "rank_w1": ["Check a syllabus", "Programs", "Market pulse", "Your data", "Gap matrix", "How it works", "For learners"],
+   "keep3_w2": ["Check a syllabus", "Your data", "Market pulse"],
+   "problems": [
+     {"type": "MISREAD", "where": "Market pulse, Real postings mode", "quote": "Share of postings in the latest four quarters", "what": "Briefly thought real data had four quarters"},
+     {"type": "SLOW", "where": "Check a syllabus result", "quote": "Score this syllabus", "what": "Result appears below the form; had to scroll"},
+     {"type": "MISREAD", "where": "Check a syllabus result", "quote": "SQL & Databases: asked for in 79% of postings but given 15 h", "what": "Thought it misread his 30 hrs; module was split across skills"},
+     {"type": "SLOW", "where": "Check a syllabus, Download report", "quote": "Download report", "what": "Format unknown; would have to test whether owner can open it"}
+   ],
+   "distrust": [
+     {"quote": "SQL & Databases: asked for in 79% of postings but given 15 h", "why": "Owner sees 30 h in the syllabus; makes him look careless"},
+     {"quote": "up 306% on last year", "why": "Front page says +201% for the same skill; which to quote"}
+   ],
+   "fixes": ["Growth trends on real postings", "Show how module hours were split", "One-page download with data source written on it"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "prov-placement-officer", "segment": "provider", "model": "claude-opus-5-5",
+   "q5_w1": 5, "q5_w2": 4, "q6_decoy": 1,
+   "rank_w1": ["Market pulse", "Your data", "Programs", "Check a syllabus", "Gap matrix", "For learners", "How it works"],
+   "keep3_w2": ["Your data", "Market pulse", "Check a syllabus"],
+   "problems": [
+     {"type": "SLOW", "where": "Market pulse district filter", "quote": "All districts", "what": "Unsure his district is among the 12"},
+     {"type": "STUCK", "where": "Market pulse", "quote": "Most demanded skills", "what": "No download for the skills list; only screenshot"},
+     {"type": "SLOW", "where": "Skill trend card", "quote": "Workplace Safety: share of postings by quarter", "what": "Opened at page bottom; had to scroll"},
+     {"type": "SLOW", "where": "Your data CSV format", "quote": "title, date, description and/or skills", "what": "His recruiter sheet has no date column"},
+     {"type": "MISREAD", "where": "Programs list", "quote": "ITI-style trade course (illustrative)", "what": "Thought it might stand for his polytechnic diploma"}
+   ],
+   "distrust": [
+     {"quote": "95% range .", "why": "Blank looks like an error; can't forward to HoD"},
+     {"quote": "Workplace Safety 23%", "why": "His recruiters never lead with safety; suspects synthetic data"}
+   ],
+   "fixes": ["Download (Word/Excel) of the Market pulse skills list with filters", "Allow upload without dates or say what is lost", "Fix blank range and open trend card where clicked"],
+   "hinglish_q5": null, "hinglish_changed": null},
+
+  {"id": "prov-ngo-coord", "segment": "provider", "model": "claude-opus-5-5",
+   "q5_w1": 3, "q5_w2": 2, "q6_decoy": 1,
+   "rank_w1": ["Programs", "Market pulse", "Gap matrix", "Check a syllabus", "For learners", "Your data", "How it works"],
+   "keep3_w2": ["Programs", "Market pulse", "Check a syllabus"],
+   "problems": [
+     {"type": "SLOW", "where": "First load on mobile data", "quote": "Loading Python (about 12 MB", "what": "Slow on Android mobile data"},
+     {"type": "MISREAD", "where": "Programs list", "quote": "Retail Sales Associate 54 51–59 Partial", "what": "Thought standard PMKVY courses like hers had been scored"},
+     {"type": "SLOW", "where": "Programs row tap on phone", "quote": "Retail Sales Associate", "what": "Report far below the table"},
+     {"type": "MISREAD", "where": "Programs NEXT YEAR", "quote": "49 ↓", "what": "Read as retail jobs declining; it is score if course unchanged"},
+     {"type": "STUCK", "where": "Programs, Real postings mode", "quote": "Too few postings", "what": "Two of her three courses unscored on real data; no funder chart"}
+   ],
+   "distrust": [
+     {"quote": "49 ↓", "why": "Would tell funder retail is declining"},
+     {"quote": "General Duty Assistant 0", "why": "Looks like no hospital jobs exist; really missing from the dataset"}
+   ],
+   "fixes": ["Real data for her courses and city, or a clear 'not yet' message", "Downloadable chart image on phone with source under it", "Hindi and plain words instead of 'borderline', 'illustrative', 'synthetic'"],
+   "hinglish_q5": 3, "hinglish_changed": false}
+]
