@@ -111,7 +111,8 @@ def _skill_row(skill_id, t):
     s = State.skills[skill_id]
     return {"id": skill_id, "name": s.name, "category": s.category, "share": t["share"], "low": t["low"],
             "high": t["high"], "growth": t["growth"], "is_new": t["is_new"], "significant": t["significant"],
-            "within_growth": t["within_growth"], "forecast": t["forecast"], "forecast_ok": t["forecast_ok"],
+            "within_growth": t["within_growth"], "forecast": t["forecast"], "forecast_low": t["forecast_low"],
+            "forecast_high": t["forecast_high"], "forecast_ok": t["forecast_ok"],
             "postings": t["count"], "n": t["n"], "series": t["series"]}
 
 

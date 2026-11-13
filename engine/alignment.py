@@ -37,9 +37,16 @@ NEVER_CUT = "Core & Soft Skills"
 
 
 def priority(row):
-    """Demand weight for ranking gaps: share, boosted by growth."""
-    growth = row["growth"] if row["growth"] is not None else (1.0 if row.get("is_new") else 0.0)
-    return row["share"] * (1 + max(growth, 0.0))
+    """Demand weight for ranking gaps: share, boosted by growth only when the
+    rise is beyond chance, and by at most double, so a small fast riser never
+    outranks a skill most postings ask for."""
+    if row.get("is_new"):
+        growth = 1.0
+    elif row["growth"] is not None and row.get("significant"):
+        growth = row["growth"]
+    else:
+        growth = 0.0
+    return row["share"] * (1 + min(max(growth, 0.0), 1.0))
 
 
 def grade(score):
@@ -177,8 +184,9 @@ def assess_program(program, postings, skills, window=4):
                         key=lambda s: hours.get(s, 0), reverse=True):
             r = row_for(s)
             recommendations.append({"action": "Reduce", "skill": r["name"], "id": s, "reason":
-                f"only {pct(r['share'])} of postings ask for it (at most {pct(r['high'])}), "
-                f"yet it takes {r['hours']:g} training hours"})
+                (f"almost no postings ask for it (under 1%, at most {pct(r['high'])}), " if r["share"] < 0.005 else
+                 f"only {pct(r['share'])} of postings ask for it (at most {pct(r['high'])}), ")
+                + f"yet it takes {r['hours']:g} training hours"})
         for s in sorted((s for s in taught if s in table and s not in protected and is_falling(table[s])),
                         key=lambda s: table[s]["growth"]):
             t = table[s]

@@ -1,6 +1,6 @@
 """A learner's view: how ready am I for a role, and which program closes my gaps."""
 
-from .alignment import CORE_SHARE, NEVER_CUT, priority
+from .alignment import CORE_SHARE, MIN_POSTINGS, NEVER_CUT, priority
 from .demand import filter_postings, role_patterns, trend_table
 
 STRONG_GAP = 0.25   # a course not built for the job is suggested only if it covers a gap this common
@@ -30,6 +30,10 @@ def assess_learner(have, roles, postings, programs, skills, top_programs=3, fami
                 "growth": t["growth"], "is_new": t["is_new"], "significant": t["significant"],
                 "have": skill_id in have}
 
+    # a basic skill (communication, problem solving...) is never the headline pick
+    # while a job-specific skill is still missing; it stays in the list
+    next_skill = next((s for s in missing if skills[s].category != NEVER_CUT), missing[0] if missing else None)
+
     job_words = roles or [family]
     patterns = role_patterns([w for w in job_words if len(w) >= 3])
     ranked = []
@@ -56,10 +60,11 @@ def assess_learner(have, roles, postings, programs, skills, top_programs=3, fami
 
     return {
         "postings": len(relevant),
+        "low_data": len(relevant) < MIN_POSTINGS,
         "readiness": round(readiness, 1),
         "required": sorted((describe(s) for s in required), key=lambda r: r["share"], reverse=True),
         "missing": [describe(s) for s in missing],
-        "next_skill": describe(missing[0]) if missing else None,
+        "next_skill": describe(next_skill) if next_skill else None,
         "programs": ranked[:top_programs],
         "extra": sorted(skills[s].name for s in have if s not in required and s in skills),
     }

@@ -340,6 +340,21 @@ def test_learner_readiness_and_program_pick(extractor, skills):
     assert [p["name"] for p in report["programs"]] == ["Built for it", "Other job, more overlap"]
     with pytest.raises(ValueError):
         assess_learner(set(), [""], postings, programs, skills)
+    assert report["low_data"]  # 10 postings is under the 30 a program needs
+
+
+def test_electrical_transformers_are_not_machine_learning(extractor):
+    assert extractor.extract("DC motors, transformers, rewinding.") == {"motors"}
+    assert extractor.extract("wiring, motor rewinding, safety") == {"wiring", "motors", "safety"}
+
+
+def test_priority_ignores_chance_growth_and_caps_the_boost():
+    from engine.alignment import priority
+    common = {"share": 0.75, "growth": -0.1, "is_new": False, "significant": False}
+    riser = {"share": 0.29, "growth": 3.06, "is_new": False, "significant": True}
+    noisy = {"share": 0.30, "growth": 0.9, "is_new": False, "significant": False}
+    assert priority(common) > priority(riser)
+    assert priority(noisy) == pytest.approx(0.30)
 
 
 # --- api on the sample data ------------------------------------------------
@@ -386,3 +401,11 @@ def test_json_never_contains_nan():
         assert "NaN" not in text and "Infinity" not in text
         json.loads(text)
     assert not math.isnan(json.loads(api.overview())["avg_alignment"])
+
+
+def test_learner_next_skill_is_job_specific_before_basics(extractor, skills):
+    postings = [posting("Electrician", "2026-Q1", ["problem_solving", "plc", "wiring"]) for _ in range(10)] + \
+        [posting("Electrician", "2026-Q1", ["problem_solving"]) for _ in range(5)]
+    report = assess_learner({"wiring"}, ["electrician"], postings, [], skills)
+    assert report["next_skill"]["id"] == "plc"
+    assert {"problem_solving", "plc"} <= {s["id"] for s in report["missing"]}

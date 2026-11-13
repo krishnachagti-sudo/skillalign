@@ -481,11 +481,13 @@
    "keras",
    "mlops",
    "~ml",
-   "transformers",
    "hugging face",
    "bert",
    "ml algorithms",
-   "machine learning algorithms"
+   "machine learning algorithms",
+   "~transformers",
+   "transformer models",
+   "hugging face transformers"
   ]
  },
  {
@@ -675,7 +677,12 @@
    "power transformer",
    "distribution transformer",
    "transformer maintenance",
-   "transformer winding"
+   "transformer winding",
+   "dc motors",
+   "ac motors",
+   "induction motor",
+   "rewinding",
+   "motors and transformers"
   ]
  },
  {
@@ -764,7 +771,11 @@
    "industrial safety",
    "safety procedure",
    "=PPE",
-   "lockout tagout"
+   "lockout tagout",
+   "safety",
+   "safety rules",
+   "electrical safety",
+   "fire safety"
   ]
  },
  {
