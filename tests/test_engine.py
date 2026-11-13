@@ -409,3 +409,56 @@ def test_learner_next_skill_is_job_specific_before_basics(extractor, skills):
     report = assess_learner({"wiring"}, ["electrician"], postings, [], skills)
     assert report["next_skill"]["id"] == "plc"
     assert {"problem_solving", "plc"} <= {s["id"] for s in report["missing"]}
+
+
+# --- team contributions: these check files that teammates fill in on GitHub --------
+
+import csv as _csv
+import sys as _sys
+
+ROOT = os.path.join(os.path.dirname(__file__), "..")
+
+
+def test_extraction_cases_from_the_team(extractor):
+    # tests/extraction_cases.csv: one row per case, expected skill ids separated by |
+    with open(os.path.join(ROOT, "tests", "extraction_cases.csv"), encoding="utf-8") as f:
+        rows = list(_csv.DictReader(f))
+    assert rows
+    for row in rows:
+        want = {s.strip() for s in row["expected_skills"].split("|") if s.strip()}
+        assert extractor.extract(row["text"]) == want, f'{row["added_by"]}: {row["text"]!r}'
+
+
+def test_translation_files_match_the_page():
+    _sys.path.insert(0, os.path.join(ROOT, "tools"))
+    from i18n_keys import LANGS, page_keys
+    keys = set(page_keys())
+    for lang in LANGS:
+        with open(os.path.join(ROOT, "site", "i18n", f"{lang}.json"), encoding="utf-8") as f:
+            data = json.load(f)
+        assert set(data) == keys, f"{lang}.json: run python3 tools/i18n_keys.py"
+        assert all(isinstance(v, str) for v in data.values())
+
+
+def test_example_syllabi_parse_and_score(extractor, skills):
+    from engine.dataset import parse_example_syllabus
+    folder = os.path.join(ROOT, "data", "example_syllabi")
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".txt"):
+            continue
+        with open(os.path.join(folder, name), encoding="utf-8") as f:
+            ex = parse_example_syllabus(f.read())
+        program = program_from_syllabus(ex["name"], [r.strip() for r in ex["roles"].split(",")], ex["text"], extractor)
+        assert len(program.modules) >= 4, f"{name}: needs at least 4 modules"
+        assert all(m.hours > 0 for m in program.modules), name
+    with pytest.raises(ValueError):
+        parse_example_syllabus("Course: x\nJobs: y\nSource: javascript:alert(1)\nBy: z\n---\nA (1 hrs)")
+
+
+def test_contributed_trade_ads_parse(extractor):
+    with open(os.path.join(ROOT, "data", "contrib", "trade_job_ads.csv"), encoding="utf-8") as f:
+        text = f.read()
+    if text.count("\n") <= 1:
+        return  # header only, nothing added yet
+    postings, problems = parse_postings(text, extractor)
+    assert postings and not problems, problems[:3]

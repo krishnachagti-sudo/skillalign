@@ -530,6 +530,27 @@ $("#s-example").addEventListener("click", () => {
   $("#s-text").value = "Petrol engine servicing and engine overhaul (120 hrs)\nBrakes, clutch and suspension system (60 hrs)\nWorkshop safety and PPE (20 hrs)\nTalking to customers: customer service at the service desk (15 hrs) [mandatory]\nIntroduction to electric vehicles (10 hrs)";
   if (api) renderCourse();
 });
+// real syllabi added by the team (data/example_syllabi/*.txt, bundled by build.py)
+let EXAMPLES = [];
+fetch(`examples.json?v=${VERSION}`).then((r) => (r.ok ? r.json() : [])).then((list) => {
+  EXAMPLES = list;
+  if (!list.length) return;
+  $("#real-examples").innerHTML = `<p class="small mute">Or start from a real syllabus:</p><div class="chips">${list.map((x, i) =>
+    `<button class="chip pick" type="button" data-real="${i}" title="added by ${esc(x.by)}">${esc(x.name)}</button>`).join("")}</div><p class="small mute" id="real-credit"></p>`;
+  $("#real-examples").hidden = false;
+}).catch(() => {});
+$("#real-examples").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-real]");
+  if (!b) return;
+  const x = EXAMPLES[b.dataset.real];
+  $("#s-name").value = x.name;
+  $("#s-roles").value = x.roles;
+  $("#s-text").value = x.text;
+  $$("[data-real]").forEach((y) => y.classList.toggle("on", y === b));
+  $("#real-credit").innerHTML = `Added by ${esc(x.by)} · <a href="${esc(x.source)}" rel="noopener">source</a>`;
+  if (api) renderCourse();
+});
+
 $("#example-courses").addEventListener("click", (e) => {
   const b = e.target.closest("[data-example]");
   if (!b) return;
@@ -616,6 +637,32 @@ $("#reset-sample").addEventListener("click", () => {
   $("#upload-status").textContent = "Back on the practice data.";
   dataChanged();
 });
+
+// ---- language ------------------------------------------------------------------
+// Static text marked data-i18n is translated from site/i18n/<lang>.json, where each
+// key is the English text itself. A missing or empty value shows the English.
+const I18N = $$("[data-i18n]").map((el) => {
+  const node = [...el.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+  return node && { node, en: node.textContent.replace(/\s+/g, " ").trim(), raw: node.textContent };
+}).filter(Boolean);
+
+async function setLang(lang) {
+  let dict = {};
+  if (lang !== "en") {
+    try { dict = await (await fetch(`i18n/${lang}.json?v=${VERSION}`)).json(); } catch { dict = {}; }
+  }
+  for (const { node, en, raw } of I18N) {
+    const t = (dict[en] || "").trim();
+    node.textContent = t ? raw.replace(raw.trim(), t) : raw;
+  }
+  document.documentElement.lang = lang;
+  $("#lang").value = lang;
+  try { localStorage.setItem("skillalign-lang", lang); } catch {}
+}
+$("#lang").addEventListener("change", (e) => setLang(e.target.value));
+let savedLang = "en";
+try { savedLang = localStorage.getItem("skillalign-lang") || "en"; } catch {}
+if (savedLang !== "en") setLang(savedLang);
 
 route();
 lastPage = document.body.dataset.page;

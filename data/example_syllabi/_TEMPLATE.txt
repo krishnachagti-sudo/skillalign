@@ -1,0 +1,9 @@
+Course: ITI Welder (NCVT, 1 year)
+Jobs: welder
+Source: https://link-to-the-official-syllabus-you-used
+By: Your Name
+---
+Workshop safety and first aid (40 hrs)
+Arc welding practice (120 hrs)
+Write one module per line, with its hours in brackets (30 hrs)
+Add [mandatory] after a module the curriculum requires (20 hrs) [mandatory]

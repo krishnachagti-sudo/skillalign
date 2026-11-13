@@ -267,3 +267,28 @@ def program_from_syllabus(name, target_roles, syllabus_text, extractor, nsqf_lev
         "id": "custom", "name": name or "Your program", "provider": "Pasted syllabus",
         "target_roles": target_roles, "modules": modules, "nsqf_level": nsqf_level, "qp_code": qp_code,
     }, extractor)
+
+
+def parse_example_syllabus(text):
+    """Read one contributed example syllabus (data/example_syllabi/*.txt).
+
+    The file starts with "Field: value" lines (Course, Jobs, Source, By),
+    then a line of three dashes, then one module per line with its hours,
+    the same format the "Check my course" box takes.
+    """
+    head, sep, body = text.partition("\n---")
+    if not sep:
+        raise ValueError('missing the "---" line between the details and the modules')
+    fields = {}
+    for line in head.splitlines():
+        key, colon, value = line.partition(":")
+        if colon and value.strip():
+            fields[key.strip().lower()] = value.strip()
+    for need in ("course", "jobs", "source", "by"):
+        if need not in fields:
+            raise ValueError(f'missing the "{need.title()}:" line')
+    if not fields["source"].startswith(("https://", "http://")):
+        raise ValueError('"Source:" must be a web link starting with https://')
+    modules = [line.strip() for line in body.splitlines() if line.strip(" \t•*-")]
+    return {"name": fields["course"], "roles": fields["jobs"], "source": fields["source"],
+            "by": fields["by"], "text": "\n".join(modules)}
