@@ -75,6 +75,21 @@ async function fetchText(url) {
   return res.text();
 }
 
+// Some hosts (conyso.com's nginx) serve .wasm as application/octet-stream.
+// Browsers then refuse WebAssembly.instantiateStreaming, and Pyodide has no
+// fallback, so the engine hangs forever. Retry from the bytes instead.
+if (WebAssembly.instantiateStreaming) {
+  const streaming = WebAssembly.instantiateStreaming.bind(WebAssembly);
+  WebAssembly.instantiateStreaming = async (source, imports) => {
+    const res = await source;
+    try {
+      return await streaming(res.clone(), imports);
+    } catch (err) {
+      return WebAssembly.instantiate(await res.arrayBuffer(), imports);
+    }
+  };
+}
+
 async function boot() {
   const step = $("#boot-step");
   try {
