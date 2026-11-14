@@ -1,0 +1,13 @@
+Course: Warehouse Associate (LSC/Q0101, PSSCIVE vocational curriculum, Grades 9-10, 400 hrs)
+Jobs: warehouse associate
+Source: https://psscive.ac.in/storage/uploads/curriculums/pdf/english/warehouse-associate-english.pdf
+By: Sanskar
+---
+Introduction to Warehousing (10 hrs)
+Picking, Packing, Kitting, Labelling and Binning (35 hrs)
+Loading and Unloading of Goods (30 hrs)
+Health, Safety and Security (20 hrs)
+Handling of Perishable Goods (27 hrs)
+Handling of Fast-Moving Consumer Goods (27 hrs)
+Handling of Automotive Goods (27 hrs)
+Integrity and Ethics (14 hrs)
