@@ -9,7 +9,7 @@ Q: Is anything I type sent to a server?
 A:No. Everything runs directly in your browser, so your information stays on your phone or computer.
 
 Q: Are the job ads real?
-A:Yes. The real dataset contains Indian job postings collected from January to June 2026. However, it is only a sample of companies, not the entire job market.
+A:The site opens on made-up practice ads that show how it works. Switch to "Real job ads" for 19,194 Indian postings from January to June 2026. They are only a sample of companies, not the entire job market.
 
 Q: What does a course score of 51 mean?
 A:A score of 51 means the course covers 51% of the weighted skills that employers commonly ask for, with enough teaching hours. It falls in the Partial category.
@@ -18,5 +18,4 @@ Q: Why does a course say "too few job ads"?
 A:SkillAlign needs at least 30 matching job ads to give a reliable course score. If fewer than 30 relevant ads are available, it cannot score the course.
 
 Q: Can I use it in Hindi or Marathi?
-A:Can I use it in Hindi or Marathi?
 A: Yes. You can change the website language to Hindi or Marathi, and SkillAlign can also recognise some Marathi skill-related words.
