@@ -1,11 +1,41 @@
-# Real job ads for hands-on trade jobs (electrician, welder, plumber, fitter, mechanic, AC technician...).
-# Copy each ad from a public job portal into a block like the example below, then a line of three dashes.
-# Date as YYYY-MM-DD. Put the whole ad text on the "Ad:" line (it can be long).
-# Delete the example block once you've added your first real ad.
+Title: Fitter
+Date: 2026-11-14
+Place: Gurugram, Haryana
+Link: https://www.shivshlok.com/jobs/fitter-jobs-gurugram-haryana-l4yo/
+Ad: Shivshlok Enterprise is hiring 15 Fitters for an industrial project in Gurugram, Haryana. Salary: ₹20,000–₹27,500 per month. Full-time, 2+ years experience and ITI qualification required. Pipe fitters and mechanical fitters are needed for erection, maintenance and shutdown work at refineries, chemical plants and port facilities. Duties include pipe fitting, alignment, flange work, pump and valve maintenance, reading isometric drawings and working with welders and riggers. Food and accommodation provided. Apply before 2026-11-23.
+---
 
-Title: Electrician (EXAMPLE, delete me)
-Date: 2026-11-10
-Place: Pune, Maharashtra
-Link: https://example.com/the-ad
-Ad: Need ITI electrician for factory maintenance. Must know house wiring, motor rewinding and safety. 2 years experience.
+Title: Welder
+Date: 2026-11-14
+Place: Jammu, Jammu & Kashmir
+Link: https://www.shivshlok.com/jobs/welder-jobs-jammu-jammu-kashmir-t7h1/
+Ad: Shivshlok Enterprise is hiring welders for an industrial project in Jammu. Salary: ₹20,000–₹30,000 per month. 25 openings listed. Temporary shutdown work for 1–3 months. Minimum 2 years experience and ITI Welder qualification or proven welding experience required. Work includes SMAW arc welding, GTAW TIG welding, gas cutting, pipe and structural welding, and repair and maintenance during plant shutdowns. 3G/6G certification preferred. Food and accommodation provided. Apply before 2026-11-23.
+---
+
+Title: Electrician
+Date: 2026-11-14
+Place: Coimbatore, Tamil Nadu
+Link: https://www.shivshlok.com/jobs/electrician-jobs-coimbatore-tamil-nadu-mie8/
+Ad: Shivshlok Enterprise is hiring 5 Electricians for an industrial project in Coimbatore, Tamil Nadu. Salary: ₹19,000–₹27,500 per month. Temporary shutdown work for 1–4 weeks. Minimum 2 years experience and ITI Electrician qualification required. Responsibilities include cable laying, termination, glanding, LT panel and MCC installation, lighting, earthing, plant electrical maintenance and fault finding using multimeters and meggers. Food and accommodation provided. Apply before 2026-11-25.
+---
+
+Title: Plumber
+Date: 2026-11-14
+Place: Viman Nagar, Pune, Maharashtra
+Link: https://apna.co/job/pune/plumber-600668380
+Ad: Sodexo requires plumbers for Viman Nagar and Hadapsar locations in Pune. Salary: ₹22,000–₹23,000 per month. Full-time position in the maintenance department. Candidates with any experience can apply. Educational qualification: 10th pass or below. Day shift. No English required. PF and ESI benefits provided. Last date to apply: 2026-11-26.
+---
+
+Title: HVAC Technician
+Date: 2026-11-14
+Place: Mumbai, Maharashtra
+Link: https://apna.co/job/mumbai-bombay/hvac-technician-707052211
+Ad: Oasis Enterprises is hiring HVAC Technicians and Supervisors in Mumbai. Salary: ₹11,000–₹30,000 per month. Full-time field job with day shift. Candidates with any experience can apply. Educational qualification: 10th pass or below. Basic English required. Benefits include overtime pay and annual bonus. Last date to apply: 2026-11-15.
+---
+
+Title: Home Appliance Technician cum AC Technician
+Date: 2026-11-14
+Place: Kolkata, West Bengal
+Link: https://apna-seo.production.infra.apna.co/job/kolkata-calcutta/home-appliance-technician-cum-ac-technician-691978590
+Ad: Technology Infinity is hiring experienced AC and home appliance repair technicians. Salary: ₹12,000–₹18,000 fixed plus average incentives of ₹10,000, with earning potential up to ₹28,000 monthly. Minimum 2 years of relevant experience required. Responsibilities include diagnosing and repairing ACs and home appliances, installation, servicing, maintenance and troubleshooting technical faults. 10th pass or below eligible. Full-time day shift. Benefits include overtime pay, annual bonus, travel allowance, petrol allowance, ESI and accommodation. Walk-in interviews from 2026-11-12 to 2026-11-26, between 10 AM and 4 PM.
 ---
