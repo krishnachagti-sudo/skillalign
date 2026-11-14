@@ -3,19 +3,20 @@
 # Keep the "Q:" lines as they are. Read the "How it works" page on the site first: every answer is in there.
 
 Q: Who is SkillAlign for?
-A:
+A:SkillAlign is for trainers, ITIs, institutes, skill departments and job seekers. It helps check whether courses teach the skills employers are looking for. 
 
 Q: Is anything I type sent to a server?
-A:
+A:No. Everything runs directly in your browser, so your information stays on your phone or computer.
 
 Q: Are the job ads real?
-A:
+A:Yes. The real dataset contains Indian job postings collected from January to June 2026. However, it is only a sample of companies, not the entire job market.
 
 Q: What does a course score of 51 mean?
-A:
+A:A score of 51 means the course covers 51% of the weighted skills that employers commonly ask for, with enough teaching hours. It falls in the Partial category.
 
 Q: Why does a course say "too few job ads"?
-A:
+A:SkillAlign needs at least 30 matching job ads to give a reliable course score. If fewer than 30 relevant ads are available, it cannot score the course.
 
 Q: Can I use it in Hindi or Marathi?
-A:
+A:Can I use it in Hindi or Marathi?
+A: Yes. You can change the website language to Hindi or Marathi, and SkillAlign can also recognise some Marathi skill-related words.
