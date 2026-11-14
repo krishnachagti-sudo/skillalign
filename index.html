@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillAlign</title>
+<meta name="description" content="Do skill courses teach what jobs ask for? Check a course syllabus against real job postings, find what to learn next for a job, and see which skills employers want. Runs entirely in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#10873C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310873C'/%3E%3Cpath d='M9 21l5-6 4 3 6-8' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css?v=468b8d046a">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-course" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5zM4 19.5A1.5 1.5 0 0 0 5.5 21H20v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 10.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-job" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="i-market" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="#home"><span class="mark" aria-hidden="true"></span>SkillAlign</a>
+    <nav class="mainnav" aria-label="Main">
+      <a data-i18n href="#home" data-route="home">Home</a>
+      <a data-i18n href="#course" data-route="course">Check my course</a>
+      <a data-i18n href="#job" data-route="job">What should I learn?</a>
+      <a data-i18n href="#market" data-route="market">Job market</a>
+      <a data-i18n href="#method" data-route="method">How it works</a>
+      <a data-i18n href="#data" data-route="data">Your data</a>
+    </nav>
+    <label class="lang"><span class="sr">Language</span><select id="lang"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select></label>
+    <button class="data-pill" id="data-pill" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="data-menu"><span class="dot" aria-hidden="true"></span><span id="data-pill-text">Practice data</span></button>
+  </div>
+  <div class="data-menu" id="data-menu" hidden>
+    <div class="wrap">
+      <p id="data-explain"></p>
+      <div class="row">
+        <label class="ds"><span class="sr">Job postings to use</span><select id="dataset" disabled><option>Loading…</option></select></label>
+        <span class="small mute" id="source"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <p class="engine-status" id="engine-status" role="status"><span class="spinner sm" aria-hidden="true"></span><span id="boot-step">Getting the engine ready (about 12 MB the first time; after that it works offline)…</span></p>
+
+  <!-- HOME -->
+  <section id="page-home" class="page" aria-labelledby="h-home">
+    <div class="hero">
+      <div class="hero-text">
+        <p data-i18n class="kicker">For trainers, job seekers and skill departments</p>
+        <h1 data-i18n id="h-home">Do skill courses teach what jobs ask for?</h1>
+        <p class="answer" id="home-answer">SkillAlign compares a course's syllabus with job postings and shows what to add, what to expand and what to cut.</p>
+      </div>
+      <svg class="hero-art" viewBox="0 0 360 260" role="img" aria-label="Three learners, each matched to the skills employers ask for">
+        <rect x="10" y="190" width="340" height="56" rx="18" fill="var(--mint-2)"/>
+        <g class="tag t1"><rect x="18" y="22" width="92" height="30" rx="15" fill="#fff" stroke="var(--signal)" stroke-width="1.5"/><text x="64" y="42" text-anchor="middle" class="art-t" fill="var(--signal-dp)">✓ Excel</text></g>
+        <g class="tag t2"><rect x="134" y="6" width="96" height="30" rx="15" fill="#fff" stroke="var(--amber)" stroke-width="1.5"/><text x="182" y="26" text-anchor="middle" class="art-t" fill="#92400E">+ Python</text></g>
+        <g class="tag t3"><rect x="250" y="22" width="98" height="30" rx="15" fill="#fff" stroke="var(--teal)" stroke-width="1.5"/><text x="299" y="42" text-anchor="middle" class="art-t" fill="#0F766E">✓ Wiring</text></g>
+        <path d="M64 56 L82 108 M182 40 L180 96 M299 56 L280 108" stroke="var(--hair)" stroke-width="2" stroke-dasharray="4 5"/>
+        <g class="person p1"><circle cx="86" cy="122" r="22" fill="#F2C9A0"/><path d="M64 118a22 22 0 0 1 44 0c-6-10-34-12-44 0z" fill="#2B2118"/><rect x="56" y="148" width="60" height="62" rx="22" fill="var(--signal)"/><rect x="96" y="166" width="34" height="24" rx="4" fill="#fff" stroke="var(--signal-dp)"/></g>
+        <g class="person p2"><circle cx="180" cy="110" r="24" fill="#C98E62"/><path d="M156 108a24 24 0 0 1 48 0c-2 12-4-6-24-6s-22 18-24 6z" fill="#3B2A20"/><rect x="146" y="138" width="68" height="72" rx="24" fill="var(--amber)"/><circle cx="180" cy="166" r="9" fill="#fff" opacity=".9"/></g>
+        <g class="person p3"><circle cx="276" cy="122" r="22" fill="#8D5B3C"/><path d="M254 116a22 22 0 0 1 44 0z" fill="#1F2937"/><rect x="246" y="148" width="60" height="62" rx="22" fill="var(--teal)"/><path d="M262 170h28M262 182h20" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g>
+      </svg>
+    </div>
+    <h2 data-i18n class="pick">What do you want to do?</h2>
+    <div class="journeys">
+      <a class="journey" href="#course">
+        <span class="j-icon g" aria-hidden="true"><svg><use href="#i-course"/></svg></span>
+        <span><b data-i18n>Check my course</b><span data-i18n class="j-sub">Paste a syllabus. See which skills jobs want that it misses. For trainers, ITIs and institutes.</span></span>
+        <span class="j-go" aria-hidden="true"><svg><use href="#i-arrow"/></svg></span>
+      </a>
+      <a class="journey" href="#job">
+        <span class="j-icon a" aria-hidden="true"><svg><use href="#i-job"/></svg></span>
+        <span><b data-i18n>What should I learn?</b><span data-i18n class="j-sub">Pick the job you want and say what you know. See the one skill to learn next.</span></span>
+        <span class="j-go" aria-hidden="true"><svg><use href="#i-arrow"/></svg></span>
+      </a>
+      <a class="journey" href="#market">
+        <span class="j-icon t" aria-hidden="true"><svg><use href="#i-market"/></svg></span>
+        <span><b data-i18n>See the job market</b><span data-i18n class="j-sub">Which skills employers ask for, which are rising, and how example courses score.</span></span>
+        <span class="j-go" aria-hidden="true"><svg><use href="#i-arrow"/></svg></span>
+      </a>
+    </div>
+    <div class="home-facts" id="home-facts"></div>
+    <p class="small mute">No sign-up. Nothing you type leaves your phone or computer. <a href="#method">How SkillAlign works</a>.</p>
+  </section>
+
+  <!-- CHECK MY COURSE -->
+  <section id="page-course" class="page" aria-labelledby="h-course" hidden>
+    <div class="intro">
+      <p class="crumb"><a href="#home">Home</a> / Check my course</p>
+      <h1 data-i18n id="h-course"><span class="h-icon g" aria-hidden="true"><svg><use href="#i-course"/></svg></span>Check my course</h1>
+      <p data-i18n class="lede">Paste your course outline, one module per line, with hours. SkillAlign compares it with job postings for the jobs the course trains for.</p>
+    </div>
+    <form class="card form" id="syllabus-form">
+      <label data-i18n>Course name <input id="s-name" value="My course"></label>
+      <label data-i18n>Jobs this course trains for <span data-i18n class="hint">comma separated, as they appear in job ads, e.g. "data analyst, MIS executive"</span>
+        <input id="s-roles" list="role-list" value="data analyst" autocomplete="off"></label>
+      <datalist id="role-list"></datalist>
+      <label data-i18n>Syllabus <span data-i18n class="hint">one module per line, with hours, e.g. "Advanced Excel (40 hrs)". Write [mandatory] after modules you are not allowed to drop.</span>
+        <textarea id="s-text" rows="7">Spreadsheets: advanced Excel and pivot tables (40 hrs)
+SQL for reporting (30 hrs)
+Typing and data entry practice (40 hrs)
+Business communication (20 hrs) [mandatory]</textarea></label>
+      <div id="syllabus-detected" class="detected" aria-live="polite"></div>
+      <details class="more-fields"><summary data-i18n>Add NSQF level or QP code (optional)</summary>
+        <div class="row2">
+          <label data-i18n>NSQF level <input id="s-nsqf" inputmode="numeric" placeholder="4"></label>
+          <label data-i18n>Qualification pack code <input id="s-qp" placeholder="as printed on the QP"></label>
+        </div>
+        <p data-i18n class="hint">These are printed on the report for your records. SkillAlign does not look them up.</p>
+      </details>
+      <div class="row"><button data-i18n class="btn" type="submit" id="s-submit">Check this course</button><button data-i18n class="btn ghost" type="button" id="s-example">Try an example (two-wheeler mechanic)</button></div>
+      <div id="real-examples" class="real-examples" hidden></div>
+      <p class="error" id="s-error" role="alert" hidden></p>
+    </form>
+    <div id="syllabus-result"></div>
+    <div class="card examples">
+      <h2 data-i18n>Or open an example course</h2>
+      <p data-i18n class="small mute">Ten made-up courses, already scored, to show what a report looks like.</p>
+      <div class="chips" id="example-courses"></div>
+      <div id="example-result"></div>
+    </div>
+  </section>
+
+  <!-- WHAT SHOULD I LEARN -->
+  <section id="page-job" class="page" aria-labelledby="h-job" hidden>
+    <div class="intro">
+      <p class="crumb"><a href="#home">Home</a> / What should I learn?</p>
+      <h1 data-i18n id="h-job"><span class="h-icon a" aria-hidden="true"><svg><use href="#i-job"/></svg></span>What should I learn next?</h1>
+      <p data-i18n class="lede">Choose the job you want and write what you already know. SkillAlign shows what employers ask for and the one skill to learn next.</p>
+    </div>
+    <form class="card form" id="learner-form">
+      <label data-i18n>The job I want <span data-i18n class="hint">start typing, then pick from the list</span>
+        <input id="l-role" list="l-roles" autocomplete="off" value="data analyst"></label>
+      <datalist id="l-roles"></datalist>
+      <label data-i18n>What I already know <span data-i18n class="hint">skills separated by commas, or paste your resume</span>
+        <textarea id="l-text" rows="3">Excel, basic SQL, communication</textarea></label>
+      <button data-i18n class="btn" type="submit" id="l-submit">Show what to learn</button>
+      <p class="error" id="l-error" role="alert" hidden></p>
+    </form>
+    <div id="learner-result"></div>
+  </section>
+
+  <!-- JOB MARKET -->
+  <section id="page-market" class="page" aria-labelledby="h-market" hidden>
+    <div class="intro">
+      <p class="crumb"><a href="#home">Home</a> / Job market</p>
+      <h1 data-i18n id="h-market"><span class="h-icon t" aria-hidden="true"><svg><use href="#i-market"/></svg></span>The job market</h1>
+      <p data-i18n class="lede" id="market-lede">Which skills employers ask for, which are rising, and how example courses score against them.</p>
+    </div>
+    <div class="filters">
+      <label data-i18n>Sector <select id="f-sector"><option value="">All sectors</option></select></label>
+      <label data-i18n id="f-state-wrap">State <select id="f-state"><option value="">All states</option></select></label>
+      <label data-i18n>District / city <select id="f-district"><option value="">All districts</option></select></label>
+    </div>
+    <nav class="segments" aria-label="Job market views">
+      <a data-i18n href="#market/skills" data-view="skills">Skills in demand</a>
+      <a data-i18n href="#market/courses" data-view="courses">Example courses</a>
+      <a data-i18n href="#market/gaps" data-view="gaps">Gaps</a>
+    </nav>
+
+    <div class="view" id="view-skills">
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <article class="card">
+          <h2 data-i18n>Skills employers ask for most</h2>
+          <p class="mute small" id="top-note">Share of job ads that mention each skill. Tap one to see its trend.</p>
+          <ol class="bars" id="top-skills"></ol>
+        </article>
+        <div class="stack">
+          <article class="card">
+            <h2 data-i18n>Rising</h2>
+            <p data-i18n class="mute small">Up by 30% or more on the year before, and too big to be chance.</p>
+            <ul class="movers" id="emerging"></ul>
+          </article>
+          <article class="card">
+            <h2 data-i18n>Falling</h2>
+            <p data-i18n class="mute small">Down by 20% or more on the year before, and too big to be chance.</p>
+            <ul class="movers" id="declining"></ul>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="view" id="view-courses" hidden>
+      <p class="notice soft">These are <b>made-up example courses</b>, not real institutes. To score your own course, use <a href="#course">Check my course</a>.</p>
+      <div id="program-filter-note"></div>
+      <div id="program-list" class="program-list"></div>
+    </div>
+
+    <div class="view" id="view-gaps" hidden>
+      <p class="lede small-lede">For each example course, its jobs' most-asked skills: <b class="tick">✓</b> taught, <span class="gapword">missing</span> asked for in 15% or more of its jobs but not taught. Each course's report lists every gap.</p>
+      <div id="matrix-filter-note"></div>
+      <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+      <div class="legend"><span><i class="sw" style="--a:.1"></i>rarely asked</span><span><i class="sw" style="--a:.9"></i>asked in most job ads</span><span><b class="tick">✓</b> taught</span><span><i class="sw gap-sw"></i>missing</span></div>
+      <div class="gap-list" id="gap-list"></div>
+    </div>
+  </section>
+
+  <!-- YOUR DATA -->
+  <section id="page-data" class="page" aria-labelledby="h-data" hidden>
+    <div class="intro">
+      <p class="crumb"><a href="#home">Home</a> / Your data</p>
+      <h1 data-i18n id="h-data">Use your own job postings</h1>
+      <p data-i18n class="lede">Have a spreadsheet of job ads from a job portal or your placement cell? Upload it and every score on the site is worked out from your ads. Nothing leaves your browser.</p>
+    </div>
+    <article class="card">
+      <h2 data-i18n>What the file needs</h2>
+      <ul class="dots">
+        <li>A <b>CSV</b> file (in Excel: File → Save As → CSV).</li>
+        <li>Columns <code>title</code> (job title) and <code>date</code> (2025-08-14 or 14/08/2025).</li>
+        <li>A <code>description</code> column, or a <code>skills</code> column like "Python|SQL|Excel".</li>
+        <li>Optional: <code>sector</code>, <code>district</code> or <code>city</code>, <code>state</code>, <code>employer</code> (repeat ads from one employer are then counted once).</li>
+        <li>Two years of ads give trends; less still gives skill shares and course scores.</li>
+      </ul>
+      <div class="row">
+        <label class="btn file">Upload CSV<input type="file" id="upload" accept=".csv,.tsv,.txt,text/csv" hidden></label>
+        <a class="btn ghost" href="sample_postings.csv" download>Download an example file</a>
+        <button data-i18n class="btn ghost" id="reset-sample" type="button">Back to practice data</button>
+      </div>
+      <p id="upload-status" class="small" aria-live="polite"></p>
+    </article>
+    <article class="card">
+      <h2 data-i18n>Try the skill reader</h2>
+      <p data-i18n class="mute small">Type any text to see which skills SkillAlign recognises and the exact words it matched. Marathi skill words work too.</p>
+      <textarea id="x-text" rows="3">Hiring EV service technician. Must know lithium-ion batteries, EV diagnostics and workplace safety. Spoken English a plus, ग्राहक सेवा अनुभव, hydrogen fuel cells.</textarea>
+      <div id="x-out" class="chips" aria-live="polite"></div>
+    </article>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="page-method" class="page prose" aria-labelledby="h-method" hidden>
+    <p class="crumb"><a href="#home">Home</a> / How it works</p>
+    <h1 id="h-method">How it works</h1>
+    <p class="lede">Every number is worked out by a small Python program running in your browser. There is no AI model and no server: the same data always gives the same answer, and every rule below can be checked by hand.</p>
+    <div class="faq" id="faq" hidden></div>
+    <div class="formula card">
+      <h2>The course score in one line</h2>
+      <p><b>Score</b> = the share of what these jobs ask for that the course teaches with enough hours.</p>
+      <p class="mute small">score = 100 × Σ (share of ads asking for skill × credit for skill) ÷ Σ share, over skills in 15% or more of the ads. Credit is 1 when the course gives the skill at least its fair hours, less when it gives fewer, 0 when it is not taught.</p>
+      <p class="mute small">Grades: 75 and above Strong, 50–74 Partial, below 50 Weak. "Borderline" means the score's range crosses a grade line.</p>
+    </div>
+    <h2>1. Reading skills out of text</h2>
+    <p>A list of <span id="m-skills">101</span> skills with <span id="m-syn">820</span> ways of writing them, including ITI trades, business skills and Marathi words. In running text the longest known phrase of up to four words is looked up at each word; short ambiguous words count only in their proper form ("Excel", not "excel at"), and a skill right after "no", "not" or "without" is skipped. A job board's skills list ("python|sql|excel") is read item by item. Skills never come from the job title. Words it cannot read are listed for you.</p>
+    <h2>2. Measuring demand, honestly</h2>
+    <p>A skill's <b>share</b> is the fraction of job ads that mention it, shown with a 95% range. A change compares the latest four quarters with the four before, within the same job roles (a Mantel-Haenszel test), so a change in which roles are hiring is never read as a skill trend. The bar for "beyond chance" is raised for testing many skills at once (Bonferroni). A forecast is drawn only with six or more quarters.</p>
+    <h2>3. Scoring a course</h2>
+    <p>Only ads for the course's own jobs count, and an entry-level course is compared with entry-level jobs only. With fewer than 30 matching ads the course is not scored. Skills in 15% or more of the ads are <b>core</b>. Full credit for a core skill needs half of what a 200-hour reference course would give it, in proportion to its demand, and never less than 5 hours. When one module teaches two skills, its hours are split between them. So shrinking a course lowers its score, padding it with unrelated hours changes nothing, and adding hours to a core skill can only help. The score's 90% range comes from resampling employers 400 times.</p>
+    <h2>4. What to change</h2>
+    <ul class="dots">
+      <li><b>Add</b>: a core skill the course does not teach.</li>
+      <li><b>Expand</b>: taught, but with fewer hours than full credit needs.</li>
+      <li><b>Prepare</b>: not core yet, but rising beyond chance and forecast to reach 15% within a year.</li>
+      <li><b>Reduce</b>: taught, yet in under 5% of the ads and confidently under 15%.</li>
+      <li><b>Review</b>: still asked for, but falling beyond chance within the same roles.</li>
+    </ul>
+    <p>Changes are listed most important first: by how many ads ask for the skill, raised (at most double) when it is rising beyond chance. Nothing in a mandatory module, and no basic skill (communication, English, teamwork, problem solving, computer use), is ever advised to cut: job ads under-report basics.</p>
+    <h2>Checked against the truth</h2>
+    <p>On practice data the true trends are known, so the method can be scored (<a href="https://github.com/krishnachagti-sudo/skillalign/blob/main/docs/validation.md">full results</a>). On trend-free data it reports almost no trends, even when the mix of job roles shifts or employers repost ads. It finds every large change and few modest ones; what it reports points the right way 98% of the time. The 90% score ranges contained the true score 85 to 100% of the time, and forecasts were within their 95% range 91% of the time in a backtest.</p>
+    <h2>Real data</h2>
+    <p>"Real job ads" are 19,194 Indian postings from January to June 2026, published by Fliar Research under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> (<a href="https://huggingface.co/datasets/fliarbi/job-postings-2026">source</a>), cleaned as described in the <a href="https://github.com/krishnachagti-sudo/skillalign/blob/main/docs/DATA-SOURCES.md">data notes</a>. It is a 6% sample of companies, collected unevenly, so its numbers describe that sample, not the whole job market. Two quarters is too short for trends. The skill list recognises 50% of its skill items, and 32% on held-out United States postings it never saw. Only 41 ads (0.2%) are for hands-on trade jobs such as electrician, welder or fitter, so most vocational courses cannot be scored from it.</p>
+    <h2>Limits</h2>
+    <p>Job ads say what employers advertise, mostly in the formal sector, not everything a job needs. A skill outside the list is invisible, so the page shows what it could not read. Thresholds (15% core, 30 ads, 200-hour reference) are judgement calls, stated openly. Nothing yet shows that higher scores lead to more placements.</p>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>SkillAlign is a student prototype for Smart India Hackathon problem SIH26134, "Challenges in aligning skill development programs with industry requirements and emerging job market demands". Built in Python, run in the browser with Pyodide. <a href="#method">How it works</a> · <a href="#data">Your data</a> · <a href="https://github.com/krishnachagti-sudo/skillalign">Source code</a>.</p>
+</footer>
+
+<nav class="bottomnav" aria-label="Main">
+  <a href="#home" data-route="home"><svg aria-hidden="true"><use href="#i-home"/></svg><span data-i18n>Home</span></a>
+  <a href="#course" data-route="course"><svg aria-hidden="true"><use href="#i-course"/></svg><span data-i18n>My course</span></a>
+  <a href="#job" data-route="job"><svg aria-hidden="true"><use href="#i-job"/></svg><span data-i18n>Learn next</span></a>
+  <a href="#market" data-route="market"><svg aria-hidden="true"><use href="#i-market"/></svg><span data-i18n>Market</span></a>
+</nav>
+
+<script src="vendor/pyodide/pyodide.js" defer></script>
+<script>window.SKILLALIGN_VERSION = "468b8d046a";</script>
+<script src="app.js?v=468b8d046a" defer></script>
+</body>
+</html>
